@@ -31,6 +31,12 @@
             <textarea class="text-input textarea-input" id="widgetGreeting" rows="3">Здравствуйте! Я помогу подобрать шкаф, ответить на вопросы и записать вас на консультацию.</textarea>
         </div>
 
+        <div class="setting-group">
+            <label for="widgetScenario">Сценарий ассистента</label>
+            <textarea class="text-input textarea-input" id="widgetScenario" rows="5" placeholder="Опишите правила общения, вопросы квалификации и условия передачи менеджеру.">Представьтесь и уточните задачу клиента. Сначала ответьте по базе знаний, затем предложите подходящий следующий шаг. Если клиент готов купить или оставить контакты, передайте заявку менеджеру.</textarea>
+            <p class="hint">Этот текст задаёт поведение ассистента в диалоге.</p>
+        </div>
+
         <div class="setting-divider"></div>
         <h3>Внешний вид</h3>
 
@@ -79,6 +85,26 @@
                     <input type="radio" name="firstResponder" value="client"> Клиент
                 </label>
             </div>
+        </div>
+
+        <div class="setting-group">
+            <label for="conversationMode">Сценарий начала диалога</label>
+            <select class="text-input" id="conversationMode">
+                <option value="proactive">Ассистент начинает и предлагает помощь</option>
+                <option value="passive">Ждёт вопрос клиента</option>
+                <option value="telegram">Как в Telegram: приветствие и быстрые кнопки</option>
+            </select>
+        </div>
+
+        <div class="setting-group">
+            <label for="quickQuestions">Быстрые вопросы</label>
+            <input class="text-input" type="text" id="quickQuestions" value="Цены и условия; Записаться; Что есть в наличии?" placeholder="Разделяйте вопросы точкой с запятой">
+        </div>
+
+        <div class="setting-group">
+            <label>
+                <input type="checkbox" id="collectLead" checked> Запрашивать контакты, когда клиент готов к заявке
+            </label>
         </div>
 
         <!-- Новое поле: Показывать приветствие -->
@@ -155,6 +181,10 @@
             position: positionSelect.value, // Новый параметр
             firstResponder: Array.from(firstResponderRadios).find(radio => radio.checked)?.value || 'bot', // Новый параметр
             showGreeting: showGreetingCheckbox.checked // Новый параметр
+            ,scenario: document.getElementById('widgetScenario').value.trim()
+            ,conversationMode: document.getElementById('conversationMode').value
+            ,quickQuestions: document.getElementById('quickQuestions').value.trim()
+            ,collectLead: document.getElementById('collectLead').checked
         };
     }
 
@@ -185,6 +215,10 @@
         if (saved.name) nameInput.value = saved.name;
         if (saved.company) companyInput.value = saved.company;
         if (saved.greeting) greetingInput.value = saved.greeting;
+        if (saved.scenario) document.getElementById('widgetScenario').value = saved.scenario;
+        if (saved.conversationMode) document.getElementById('conversationMode').value = saved.conversationMode;
+        if (saved.quickQuestions) document.getElementById('quickQuestions').value = saved.quickQuestions;
+        if (saved.collectLead !== undefined) document.getElementById('collectLead').checked = saved.collectLead;
         if (saved.position) positionSelect.value = saved.position; // Восстановить новую настройку
         if (saved.firstResponder) {
             document.querySelector(`input[name="firstResponder"][value="${saved.firstResponder}"]`).checked = true; // Восстановить новую настройку
@@ -198,7 +232,7 @@
     function updateEmbedCode() {
         const c = getConfig();
         // Добавлены новые параметры: position, firstResponder, showGreeting
-        const src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon + '&name=' + encodeURIComponent(c.name) + '&company=' + encodeURIComponent(c.company) + '&greeting=' + encodeURIComponent(c.greeting) + '&position=' + c.position + '&firstResponder=' + c.firstResponder + '&showGreeting=' + c.showGreeting;
+        const src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon + '&name=' + encodeURIComponent(c.name) + '&company=' + encodeURIComponent(c.company) + '&greeting=' + encodeURIComponent(c.greeting) + '&position=' + c.position + '&firstResponder=' + c.firstResponder + '&showGreeting=' + c.showGreeting + '&scenario=' + encodeURIComponent(c.scenario) + '&conversationMode=' + c.conversationMode + '&quickQuestions=' + encodeURIComponent(c.quickQuestions) + '&collectLead=' + c.collectLead;
         embedCode.textContent = '<script src="' + src + '"><\/script>';
     }
 
@@ -213,7 +247,7 @@
         const c = getConfig();
         // Добавлены новые параметры: position, firstResponder, showGreeting
         const script = document.createElement('script');
-        script.src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon + '&name=' + encodeURIComponent(c.name) + '&company=' + encodeURIComponent(c.company) + '&greeting=' + encodeURIComponent(c.greeting) + '&position=' + c.position + '&firstResponder=' + c.firstResponder + '&showGreeting=' + c.showGreeting;
+        script.src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon + '&name=' + encodeURIComponent(c.name) + '&company=' + encodeURIComponent(c.company) + '&greeting=' + encodeURIComponent(c.greeting) + '&position=' + c.position + '&firstResponder=' + c.firstResponder + '&showGreeting=' + c.showGreeting + '&scenario=' + encodeURIComponent(c.scenario) + '&conversationMode=' + c.conversationMode + '&quickQuestions=' + encodeURIComponent(c.quickQuestions) + '&collectLead=' + c.collectLead;
         document.body.appendChild(script);
     }
 
@@ -258,6 +292,10 @@
     nameInput.addEventListener('input', refresh);
     companyInput.addEventListener('input', refresh);
     greetingInput.addEventListener('input', refresh);
+    document.getElementById('widgetScenario').addEventListener('input', refresh);
+    document.getElementById('conversationMode').addEventListener('change', refresh);
+    document.getElementById('quickQuestions').addEventListener('input', refresh);
+    document.getElementById('collectLead').addEventListener('change', refresh);
     iconBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             iconBtns.forEach(b => b.classList.remove('active'));
@@ -339,5 +377,7 @@
     gap: 6px;
     font-weight: normal;
 }
+
+.setting-group textarea { min-height: 88px; }
 </style>
 {% endblock %}

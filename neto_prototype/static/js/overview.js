@@ -136,13 +136,16 @@ let dashboardLayout = null;
 let widgetConfigs = {};
 let isEditMode = false;
 let chartInstances = {};
+let activeWidgetSettings = null;
 
 // ========== ИНИЦИАЛИЗАЦИЯ ==========
 function initDashboard() {
+    if (window.__dashboardInitialized) return;
     if (typeof window.events === 'undefined') {
         setTimeout(initDashboard, 100);
         return;
     }
+    window.__dashboardInitialized = true;
     loadLayoutAndConfigs();
     renderDashboard();
     initEventListeners();
@@ -860,6 +863,29 @@ function renderTopServices(container, config, eventsData) {
     chartInstances['top-services'] = { main: chart };
 }
 
+function renderRecentClients(container, config, eventsData) {
+    const count = config.count || 3;
+    const { filtered } = smartFilter(eventsData, config);
+    const clients = [...filtered]
+        .sort((a, b) => b.date.localeCompare(a.date) || b.time.localeCompare(a.time))
+        .slice(0, count);
+
+    if (clients.length === 0) {
+        container.innerHTML = '<div class="widget-empty-state soft"><span class="widget-empty-icon"></span><p>Пока нет клиентов.</p></div>';
+        return;
+    }
+
+    const list = document.createElement('div');
+    list.className = 'recent-clients-list';
+    clients.forEach(event => {
+        const item = document.createElement('div');
+        item.className = 'recent-client-item';
+        item.innerHTML = `<strong>${event.client}</strong><span>${event.service} · ${event.date.slice(5)} ${event.time}</span>`;
+        list.appendChild(item);
+    });
+    container.appendChild(list);
+}
+
 // Восстановленная функция renderMiniCalendar
 function renderMiniCalendar(container, config, eventsData) {
     const { filtered } = smartFilter(eventsData, config);
@@ -1291,7 +1317,11 @@ function collectSettings(widgetId) {
 function openWidgetSettingsModal(widgetId, widgetElement, widget) {
     const modal = document.getElementById('widget-modal');
     const form = document.getElementById('widget-settings-form');
+    if (activeWidgetSettings && activeWidgetSettings.widgetId !== widgetId) {
+        saveActiveWidgetSettings();
+    }
     const config = { ...DEFAULT_WIDGET_CONFIGS[widgetId], ...widgetConfigs[widgetId] };
+    activeWidgetSettings = { widgetId, widgetElement, widget };
 
     let html = `<input type="hidden" id="widget-id-input" value="${widgetId}">`;
     html += `<div class="widget-settings-title">${WIDGET_TYPES_INFO[widgetId]?.previewSvg || ''} ${getWidgetName(widgetId)}</div>`;
@@ -1305,24 +1335,38 @@ function openWidgetSettingsModal(widgetId, widgetElement, widget) {
         r.addEventListener('input', sync);
         sync();
     });
+    form.querySelectorAll('.widget-settings-range, select').forEach(control => {
+        control.addEventListener(control.type === 'range' ? 'input' : 'change', saveActiveWidgetSettings);
+    });
 
     modal.style.display = 'flex';
+    modal.classList.add('settings-drawer-open');
+    updateWidgetSettingsStatus('Сохранено');
+}
 
-    document.getElementById('save-widget-settings').onclick = () => {
-        const wId = document.getElementById('widget-id-input').value;
-        const newConfig = collectSettings(wId);
-        widgetConfigs[wId] = { ...widgetConfigs[wId], ...newConfig };
-        // После настройки виджет становится «настроенным» и начинает показывать данные.
-        if (widget) widget.configured = true;
-        saveConfigs();
-        saveLayout();
-        renderDashboard();
-        closeModals();
-    };
+function updateWidgetSettingsStatus(text) {
+    const status = document.getElementById('widget-settings-status');
+    if (status) status.textContent = text;
+}
+
+function saveActiveWidgetSettings() {
+    if (!activeWidgetSettings) return;
+    const wId = activeWidgetSettings.widgetId;
+    const newConfig = collectSettings(wId);
+    widgetConfigs[wId] = { ...widgetConfigs[wId], ...newConfig };
+    activeWidgetSettings.widget.configured = true;
+    saveConfigs();
+    saveLayout();
+    updateWidgetSettingsStatus('Сохраняется...');
+    renderDashboard();
+    updateWidgetSettingsStatus('Сохранено');
 }
 
 function closeModals() {
+    saveActiveWidgetSettings();
     document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+    document.getElementById('widget-modal')?.classList.remove('settings-drawer-open');
+    activeWidgetSettings = null;
 }
 
 // ========== УПРАВЛЕНИЕ ВИДЖЕТАМИ ==========
@@ -1581,20 +1625,14 @@ function bindModalDismiss() {
     if (window.__modalDismissBound) return;
     window.__modalDismissBound = true;
 
-    // 1) Крестик любого модального окна.
-    document.querySelectorAll('.close-modal').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const modal = btn.closest('.modal');
-            if (modal) modal.style.display = 'none';
-        });
-    });
-
-    // 2) Клик по затемнённому фону (сама плашка .modal, вне .modal-content).
     document.querySelectorAll('.modal').forEach(modal => {
+        modal.querySelectorAll('[data-modal-close]').forEach(button => {
+            button.addEventListener('click', () => {
+                closeModals();
+            });
+        });
         modal.addEventListener('click', (e) => {
-            // Закрываем только если кликнули именно по фону, а не по содержимому.
-            if (e.target === modal) modal.style.display = 'none';
+            if (e.target === modal) closeModals();
         });
     });
 
@@ -1602,16 +1640,21 @@ function bindModalDismiss() {
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape') return;
         document.querySelectorAll('.modal').forEach(modal => {
-            if (modal.style.display !== 'none') modal.style.display = 'none';
+            if (modal.style.display !== 'none') closeModals();
         });
     });
 }
 
 // ========== ИНИЦИАЛИЗАЦИЯ СОБЫТИЙ ==========
 function initEventListeners() {
-    document.getElementById('edit-mode-toggle').addEventListener('click', toggleEditMode);
-    document.getElementById('restore-defaults').addEventListener('click', restoreDefaultDashboard);
-    document.getElementById('periodSelector').addEventListener('change', handlePeriodChange);
+    const periodSelector = document.getElementById('periodSelector');
+    const editModeButton = document.getElementById('edit-mode-toggle');
+    const restoreButton = document.getElementById('restore-defaults');
+
+    if (periodSelector) periodSelector.addEventListener('change', handlePeriodChange);
+
+    if (editModeButton) editModeButton.onclick = toggleEditMode;
+    if (restoreButton) restoreButton.onclick = restoreDefaultDashboard;
 
     bindModalDismiss();
 

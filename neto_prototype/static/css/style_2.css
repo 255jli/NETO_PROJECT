@@ -137,7 +137,7 @@
     display: flex;
     align-items: stretch;
     gap: 16px;
-    min-height: 110px;
+    height: 320px;
 }
 
 .row-grid.dnd-target-row {
@@ -227,6 +227,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    min-height: 0;
 }
 
 .widget:hover {
@@ -291,6 +293,7 @@
     flex: 1;
     min-height: 80px;
     position: relative;
+    overflow: auto;
 }
 
 .add-widget-placeholder {
@@ -400,10 +403,31 @@
 .delta-neutral { background: #f0f1f3; color: #6b6f76; }
 
 /* KPI-карточки «Итоги». */
-.summary-stats-grid {
+.summary-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 12px;
+    align-items: stretch;
+    width: 100%;
+}
+.summary-item {
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
+    background: #fafbfc;
+}
+.summary-label,
+.summary-delta {
+    overflow-wrap: anywhere;
+}
+.summary-label {
+    color: var(--yc-text-secondary, #6b6f76);
+    font-size: 11px;
+    font-weight: 600;
+}
+.summary-delta {
+    margin-top: 6px;
 }
 .summary-card {
     background: #fafbfc;
@@ -727,7 +751,7 @@
 
 /* Адаптив: KPI-карточки схлопываются на узких экранах. */
 @media (max-width: 700px) {
-    .summary-stats-grid { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: 1fr; }
 }
 
 /* Режим редактирования */
@@ -1384,6 +1408,45 @@ body.sortable-dragging * {
     max-height: 75vh;
     display: flex;
     flex-direction: column;
+}
+.widget-settings-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(420px, 92vw);
+    max-height: none;
+    border-radius: 0;
+    padding: 28px 24px 24px;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+}
+#widget-modal.settings-drawer-open .widget-settings-modal {
+    transform: translateX(0);
+}
+#widget-modal {
+    background: transparent;
+    pointer-events: auto;
+}
+.widget-settings-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-right: 28px;
+}
+.widget-settings-panel-header h2 { margin: 0 0 2px; }
+.widget-settings-status {
+    flex: 0 0 auto;
+    color: #2e7d32;
+    background: #eaf6ed;
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+.widget-settings-modal .widget-settings-form {
+    max-height: calc(100vh - 120px);
 }
 .widget-picker-modal h2,
 .widget-settings-modal h2 {

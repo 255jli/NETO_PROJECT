@@ -55,6 +55,17 @@
 
     <!-- Безопасность -->
     <section class="card">
+        <h2 class="st-title">Уведомления менеджеру</h2>
+        <p class="st-hint">Выберите, куда отправлять новую заявку после диалога с клиентом.</p>
+        <div class="st-notify-grid">
+            <label class="st-notify-option"><input type="checkbox" id="notifyEmail" checked><span><strong>Почта</strong><small>manager@example.ru</small></span></label>
+            <label class="st-notify-option"><input type="checkbox" id="notifyTelegram"><span><strong>Telegram</strong><small>@manager_neto</small></span></label>
+            <label class="st-notify-option"><input type="checkbox" id="notifyMessenger"><span><strong>Мессенджер</strong><small>WhatsApp / Max</small></span></label>
+        </div>
+        <button type="button" class="btn btn-primary" id="saveNotifyBtn">Сохранить каналы</button>
+    </section>
+
+    <section class="card">
         <h2 class="st-title">Безопасность данных</h2>
         <p class="st-hint">Принципы, заложенные в платформу с первого дня разработки.</p>
         <div class="st-sec-grid">
@@ -95,6 +106,21 @@
     document.getElementById('deleteBtn').addEventListener('click', function() {
         if (typeof showToast === 'function') showToast('Запрос на удаление передан. Мы свяжемся с вами для подтверждения.', 'success');
     });
+
+    var notifyKey = 'neto_notification_channels';
+    var savedChannels = JSON.parse(localStorage.getItem(notifyKey) || '{}');
+    ['Email', 'Telegram', 'Messenger'].forEach(function(channel) {
+        var input = document.getElementById('notify' + channel);
+        if (input && savedChannels[channel.toLowerCase()] !== undefined) input.checked = savedChannels[channel.toLowerCase()];
+    });
+    document.getElementById('saveNotifyBtn').addEventListener('click', function() {
+        localStorage.setItem(notifyKey, JSON.stringify({
+            email: document.getElementById('notifyEmail').checked,
+            telegram: document.getElementById('notifyTelegram').checked,
+            messenger: document.getElementById('notifyMessenger').checked
+        }));
+        if (typeof showToast === 'function') showToast('Каналы уведомлений сохранены.', 'success');
+    });
 })();
 </script>
 
@@ -122,5 +148,10 @@
 .st-policy-ok { color: #1f8a4c; font-weight: 800; flex-shrink: 0; }
 
 .st-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.st-notify-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+.st-notify-option { display: flex; gap: 10px; align-items: flex-start; padding: 14px; border: 1px solid #e6e8eb; border-radius: 10px; cursor: pointer; }
+.st-notify-option span { display: flex; flex-direction: column; gap: 3px; }
+.st-notify-option small { color: #8a8f98; }
+@media (max-width: 700px) { .st-notify-grid { grid-template-columns: 1fr; } }
 </style>
 {% endblock %}

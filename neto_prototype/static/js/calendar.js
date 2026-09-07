@@ -56,13 +56,19 @@
         dayView = document.getElementById('dayView');
         monthView = document.getElementById('monthView');
         periodLabel = document.getElementById('periodLabel');
+        var todayButton = document.getElementById('todayBtn');
+        var previousButton = document.getElementById('navPrev');
+        var nextButton = document.getElementById('navNext');
 
-        document.getElementById('todayBtn').addEventListener('click', function() {
+        if (!weekView || !dayView || !monthView || !periodLabel ||
+                !todayButton || !previousButton || !nextButton) return;
+
+        todayButton.addEventListener('click', function() {
             state.anchor = new Date();
             render();
         });
-        document.getElementById('navPrev').addEventListener('click', function() { shift(-1); });
-        document.getElementById('navNext').addEventListener('click', function() { shift(1); });
+        previousButton.addEventListener('click', function() { shift(-1); });
+        nextButton.addEventListener('click', function() { shift(1); });
 
         var radios = document.querySelectorAll('input[name="calView"]');
         Array.prototype.forEach.call(radios, function(r) {
@@ -270,16 +276,13 @@
     });
 
     function setupModalClose() {
-        document.querySelectorAll('[data-close-modal]').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var modal = btn.closest('.modal-backdrop');
-                if (modal) modal.classList.remove('show');
-            });
-        });
-        document.querySelectorAll('.modal-backdrop').forEach(function(modal) {
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) modal.classList.remove('show');
-            });
+        document.addEventListener('click', function(e) {
+            var closeButton = e.target.closest('[data-close-modal]');
+            var modal = closeButton ? closeButton.closest('.modal-backdrop') : e.target;
+            if (modal && modal.classList.contains('modal-backdrop') &&
+                    (closeButton || e.target === modal)) {
+                modal.classList.remove('show');
+            }
         });
     }
 })();

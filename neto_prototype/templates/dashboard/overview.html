@@ -8,8 +8,8 @@
 <div class="dashboard-container">
     <div class="dashboard-header">
         <h1>Обзор</h1>
-        <button id="restore-defaults" class="btn btn-outline btn-sm" title="Восстановить дашборд по умолчанию">Восстановить</button>
-        <button id="edit-mode-toggle" class="btn btn-primary">Настроить дашборд</button>
+        <button type="button" id="restore-defaults" class="btn btn-outline btn-sm" title="Восстановить дашборд по умолчанию">Восстановить</button>
+        <button type="button" id="edit-mode-toggle" class="btn btn-primary">Настроить дашборд</button>
     </div>
 
     <div id="dnd-hint" class="dnd-hint" hidden>
@@ -23,7 +23,7 @@
     <!-- Модалка выбора виджета -->
     <div id="add-widget-modal" class="modal">
         <div class="modal-content widget-picker-modal">
-            <span class="close-modal" data-modal-close>&times;</span>
+            <button type="button" class="close-modal" data-modal-close aria-label="Закрыть">&times;</button>
             <h2>Добавить виджет</h2>
             <p class="widget-picker-subtitle">Выберите, какой блок разместить на дашборде.</p>
 
@@ -41,7 +41,7 @@
     <!-- Модалка деталей события -->
     <div id="event-modal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" data-modal-close>&times;</span>
+            <button type="button" class="close-modal" data-modal-close aria-label="Закрыть">&times;</button>
             <h2>Детали клиента</h2>
             <div id="event-details"></div>
         </div>
@@ -50,19 +50,21 @@
     <!-- Модалка настроек виджета -->
     <div id="widget-modal" class="modal" style="display:none;">
         <div class="modal-content widget-settings-modal">
-            <span class="close-modal" data-modal-close>&times;</span>
-            <h2>Настройки виджета</h2>
-            <p class="widget-picker-subtitle">Укажите параметры отображения блока.</p>
-            <form id="widget-settings-form" class="widget-settings-form"></form>
-            <div class="widget-settings-footer">
-                <button id="save-widget-settings" class="btn btn-primary">Сохранить</button>
+            <button type="button" class="close-modal" data-modal-close aria-label="Закрыть">&times;</button>
+            <div class="widget-settings-panel-header">
+                <div>
+                    <h2>Настройки виджета</h2>
+                    <p class="widget-picker-subtitle">Изменения сохраняются автоматически.</p>
+                </div>
+                <span class="widget-settings-status" id="widget-settings-status">Сохранено</span>
             </div>
+            <form id="widget-settings-form" class="widget-settings-form"></form>
         </div>
     </div>
 </div>
 
 <script src="{{ url_for('static', filename='js/sortable.js') }}"></script>
-<script src="{{ url_for('static', filename='js/overview.js') }}"></script>
+<script src="{{ url_for('static', filename='js/overview.js') }}?v=20260907-2"></script>
 <script src="{{ url_for('static', filename='js/dashboard-dnd.js') }}"></script>
 <script>
     // Подсказка для режима редактирования.

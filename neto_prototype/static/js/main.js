@@ -546,6 +546,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelBtn = document.getElementById('cancel-btn');
     const saveBtn = document.getElementById('save-btn');
     const integrationForm = document.getElementById('integration-form');
+
+    if (!modal || !closeModal || !cancelBtn || !saveBtn || !integrationForm) return;
     
     // Открытие модального окна
     configureButtons.forEach(button => {

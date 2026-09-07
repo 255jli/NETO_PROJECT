@@ -1,7 +1,21 @@
 from flask import Flask, render_template, jsonify
-from datetime import datetime
+from flask import abort
 
 app = Flask(__name__)
+
+TAB_NAMES = {
+    'onboarding': 'Первые шаги',
+    'overview': 'Обзор',
+    'voice': 'Голосовой ассистент',
+    'widget': 'Виджет',
+    'integration': 'Интеграции',
+    'crm': 'CRM',
+    'parsing': 'Конкуренты',
+    'calendar': 'Календарь',
+    'telephony': 'Настройка номера',
+    'settings': 'Безопасность и номера',
+    'billing': 'Счёт'
+}
 
 @app.route('/')
 def index():
@@ -10,20 +24,10 @@ def index():
 @app.route('/dashboard')
 @app.route('/dashboard/<path:path>')
 def dashboard(path='overview'):
-    tab_names = {
-        'onboarding': 'Первые шаги',
-        'overview': 'Обзор',
-        'voice': 'Голосовой ассистент',
-        'widget': 'Виджет',
-        'integration': 'Интеграции',
-        'crm': 'CRM',
-        'parsing': 'Конкуренты',
-        'calendar': 'Календарь',
-        'telephony': 'Настройка номера',
-        'settings': 'Безопасность и номера',
-        'billing': 'Счёт'
-    }
-    active_tab_name = tab_names.get(path, 'Обзор')
+    if path not in TAB_NAMES:
+        abort(404)
+
+    active_tab_name = TAB_NAMES[path]
     return render_template(f'dashboard/{path}.html', active_tab=path, active_tab_name=active_tab_name)
 
 @app.route('/about')

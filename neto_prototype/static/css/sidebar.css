@@ -189,6 +189,7 @@
   right: 0;
   bottom: 0;
   overflow-y: auto;
+  scrollbar-gutter: stable;
   padding: var(--space-lg, 24px);
   padding-left: calc(var(--sidebar-collapsed-width) + 24px);
   padding-right: calc(var(--avatar-panel-width) + 24px);
