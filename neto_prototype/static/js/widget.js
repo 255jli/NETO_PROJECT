@@ -10,6 +10,10 @@
     var assistantName = params.get('name') || 'Нето';
     var company = params.get('company') || 'вашей компании';
     var greeting = params.get('greeting') || 'Здравствуйте! Я помогу ответить на вопросы и записать вас на консультацию.';
+    // Новые параметры
+    var position = params.get('position') || 'bottom-right'; // bottom-right, bottom-left, top-right, top-left
+    var firstResponder = params.get('firstResponder') || 'bot'; // bot, client
+    var showGreeting = params.get('showGreeting') === 'true'; // true, false
 
     // 2. Если есть глобальная конфигурация, используем её (приоритет выше)
     if (window.NETO_WIDGET_CONFIG) {
@@ -20,6 +24,10 @@
         if (cfg.name) assistantName = cfg.name;
         if (cfg.company) company = cfg.company;
         if (cfg.greeting) greeting = cfg.greeting;
+        // Новые параметры из глобальной конфигурации
+        if (cfg.position) position = cfg.position;
+        if (cfg.firstResponder) firstResponder = cfg.firstResponder;
+        if (cfg.showGreeting !== undefined) showGreeting = cfg.showGreeting;
     }
 
     // 3. SVG иконки
@@ -46,12 +54,45 @@
     // ID позволяет удалять старые стили при повторной загрузке (страница настройки виджета)
     var style = document.createElement('style');
     style.id = 'neto-widget-style';
+    // Вычисляем позиционирование на основе параметра position
+    var btnBottom = '24px';
+    var btnRight = '24px';
+    var btnTop = 'auto';
+    var btnLeft = 'auto';
+    var panelBottom = 'calc(' + size + 'px + 24px + 12px)';
+    var panelRight = '24px';
+    var panelTop = 'auto';
+    var panelLeft = 'auto';
+
+    if (position === 'bottom-left') {
+        btnRight = 'auto';
+        btnLeft = '24px';
+        panelRight = 'auto';
+        panelLeft = '24px';
+    } else if (position === 'top-right') {
+        btnBottom = 'auto';
+        btnTop = '24px';
+        panelBottom = 'auto';
+        panelTop = 'calc(' + size + 'px + 24px + 12px)';
+    } else if (position === 'top-left') {
+        btnBottom = 'auto';
+        btnTop = '24px';
+        btnRight = 'auto';
+        btnLeft = '24px';
+        panelBottom = 'auto';
+        panelTop = 'calc(' + size + 'px + 24px + 12px)';
+        panelRight = 'auto';
+        panelLeft = '24px';
+    }
+
     style.textContent = `
         #neto-widget-container * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
         #neto-widget-btn {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
+            bottom: ${btnBottom};
+            right: ${btnRight};
+            top: ${btnTop};
+            left: ${btnLeft};
             width: ${size}px;
             height: ${size}px;
             border-radius: 50%;
@@ -79,8 +120,10 @@
         }
         #neto-widget-panel {
             position: fixed;
-            bottom: calc(${size}px + 24px + 12px);
-            right: 24px;
+            bottom: ${panelBottom};
+            right: ${panelRight};
+            top: ${panelTop};
+            left: ${panelLeft};
             width: 340px;
             max-height: 460px;
             background: white;
@@ -200,7 +243,10 @@
             #neto-widget-panel {
                 width: calc(100% - 32px);
                 right: 16px;
-                bottom: calc(${size}px + 16px + 12px);
+                left: auto; /* Сбросить для мобильных, если position = left */
+                ${position === 'bottom-left' || position === 'top-left' ? 'right: auto; left: 16px;' : ''}
+                bottom: ${position.startsWith('top') ? 'auto' : `calc(${size}px + 16px + 12px)`};
+                top: ${position.startsWith('top') ? `calc(${size}px + 16px + 12px)` : 'auto'};
                 max-height: 400px;
             }
         }
@@ -246,7 +292,8 @@
     } catch (e) {
         history = [];
     }
-    if (history.length === 0) {
+    // Изменение: добавляем приветствие в историю только если firstResponder === 'bot' и showGreeting === true
+    if (history.length === 0 && firstResponder === 'bot' && showGreeting) {
         history.push({ text: greeting, from: 'bot' });
     }
 
@@ -280,6 +327,7 @@
         if (!text) return;
         addMessage(text, 'user');
         input.value = '';
+        // Если firstResponder === 'client', бот отвечает всегда
         setTimeout(function() {
             addMessage(answerFor(text), 'bot');
         }, 350);
@@ -288,6 +336,10 @@
     btn.addEventListener('click', function() {
         panel.classList.toggle('open');
         if (panel.classList.contains('open')) input.focus();
+        // Если firstResponder === 'client' и история пуста, добавляем приветствие при первом открытии панели
+        if (firstResponder === 'client' && history.length === 0 && showGreeting) {
+             addMessage(greeting, 'bot');
+        }
     });
     closeBtn.addEventListener('click', function() { panel.classList.remove('open'); });
     sendBtn.addEventListener('click', function() { sendMessage(); });
@@ -307,5 +359,5 @@
     }
 
     // 9. Сохраняем конфигурацию для последующих вызовов
-    window.NETO_WIDGET_CONFIG = { color: color, size: size, icon: iconKey, name: assistantName, company: company, greeting: greeting };
+    window.NETO_WIDGET_CONFIG = { color: color, size: size, icon: iconKey, name: assistantName, company: company, greeting: greeting, position: position, firstResponder: firstResponder, showGreeting: showGreeting }; // Обновлено
 })();

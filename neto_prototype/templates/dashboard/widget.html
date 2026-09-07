@@ -34,6 +34,17 @@
         <div class="setting-divider"></div>
         <h3>Внешний вид</h3>
 
+        <!-- Новое поле: Расположение -->
+        <div class="setting-group">
+            <label for="widgetPosition">Расположение на экране</label>
+            <select class="text-input" id="widgetPosition">
+                <option value="bottom-right">Снизу справа</option>
+                <option value="bottom-left">Снизу слева</option>
+                <option value="top-right">Сверху справа</option>
+                <option value="top-left">Сверху слева</option>
+            </select>
+        </div>
+
         <div class="setting-group">
             <label for="widgetColor">Цвет кнопки</label>
             <input type="color" id="widgetColor" value="#005FF9">
@@ -55,6 +66,26 @@
                 <button type="button" class="icon-btn" data-icon="headset" title="Наушники">🎧</button>
             </div>
             <p class="hint">Выберите иконку для кнопки виджета.</p>
+        </div>
+
+        <!-- Новое поле: Кто первый отвечает -->
+        <div class="setting-group">
+            <label>Кто первый отвечает?</label>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="firstResponder" value="bot" checked> Бот
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="firstResponder" value="client"> Клиент
+                </label>
+            </div>
+        </div>
+
+        <!-- Новое поле: Показывать приветствие -->
+        <div class="setting-group">
+            <label>
+                <input type="checkbox" id="showGreeting" checked> Показывать приветствие при открытии
+            </label>
         </div>
     </div>
 
@@ -106,6 +137,11 @@
     const embedCode = document.getElementById('embedCode');
     const copyBtn = document.getElementById('copyEmbedBtn');
 
+    // Новые элементы управления
+    const positionSelect = document.getElementById('widgetPosition');
+    const firstResponderRadios = document.querySelectorAll('input[name="firstResponder"]');
+    const showGreetingCheckbox = document.getElementById('showGreeting');
+
     // ---------- Работа с конфигурацией ----------
     function getConfig() {
         const activeIcon = iconBtns.find(btn => btn.classList.contains('active'));
@@ -115,7 +151,10 @@
             icon: (activeIcon && activeIcon.dataset.icon) || 'chat',
             name: nameInput.value.trim() || 'Нето',
             company: companyInput.value.trim() || 'вашей компании',
-            greeting: greetingInput.value.trim() || 'Здравствуйте! Я помогу ответить на вопросы и записать вас на консультацию.'
+            greeting: greetingInput.value.trim() || 'Здравствуйте! Я помогу ответить на вопросы и записать вас на консультацию.',
+            position: positionSelect.value, // Новый параметр
+            firstResponder: Array.from(firstResponderRadios).find(radio => radio.checked)?.value || 'bot', // Новый параметр
+            showGreeting: showGreetingCheckbox.checked // Новый параметр
         };
     }
 
@@ -146,12 +185,20 @@
         if (saved.name) nameInput.value = saved.name;
         if (saved.company) companyInput.value = saved.company;
         if (saved.greeting) greetingInput.value = saved.greeting;
+        if (saved.position) positionSelect.value = saved.position; // Восстановить новую настройку
+        if (saved.firstResponder) {
+            document.querySelector(`input[name="firstResponder"][value="${saved.firstResponder}"]`).checked = true; // Восстановить новую настройку
+        }
+        if (saved.showGreeting !== undefined) { // Восстановить новую настройку
+            showGreetingCheckbox.checked = saved.showGreeting;
+        }
     }
 
     // ---------- Генерация кода вставки ----------
     function updateEmbedCode() {
         const c = getConfig();
-        const src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon + '&name=' + encodeURIComponent(c.name) + '&company=' + encodeURIComponent(c.company) + '&greeting=' + encodeURIComponent(c.greeting);
+        // Добавлены новые параметры: position, firstResponder, showGreeting
+        const src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon + '&name=' + encodeURIComponent(c.name) + '&company=' + encodeURIComponent(c.company) + '&greeting=' + encodeURIComponent(c.greeting) + '&position=' + c.position + '&firstResponder=' + c.firstResponder + '&showGreeting=' + c.showGreeting;
         embedCode.textContent = '<script src="' + src + '"><\/script>';
     }
 
@@ -164,8 +211,9 @@
         if (oldStyle) oldStyle.remove();
 
         const c = getConfig();
+        // Добавлены новые параметры: position, firstResponder, showGreeting
         const script = document.createElement('script');
-        script.src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon + '&name=' + encodeURIComponent(c.name) + '&company=' + encodeURIComponent(c.company) + '&greeting=' + encodeURIComponent(c.greeting);
+        script.src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon + '&name=' + encodeURIComponent(c.name) + '&company=' + encodeURIComponent(c.company) + '&greeting=' + encodeURIComponent(c.greeting) + '&position=' + c.position + '&firstResponder=' + c.firstResponder + '&showGreeting=' + c.showGreeting;
         document.body.appendChild(script);
     }
 
@@ -277,6 +325,19 @@
     font-size: 14px;
     color: #64748b;
     margin-top: 4px;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: normal;
 }
 </style>
 {% endblock %}
