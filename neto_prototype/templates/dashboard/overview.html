@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Обзор — NETO{% endblock %}
+
+{% block breadcrumbs %}Панель управления / Обзор{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Обзор</h1>
+        <button id="restore-defaults" class="btn btn-outline btn-sm" title="Восстановить дашборд по умолчанию">Восстановить</button>
+        <button id="edit-mode-toggle" class="btn btn-primary">Настроить дашборд</button>
+    </div>
+
+    <div id="dnd-hint" class="dnd-hint" hidden>
+        <span class="dnd-hint-dot"></span> Перетаскивайте виджеты, чтобы поменять их местами или перенести в другой ряд. Наведите курсор на промежуток между виджетами или рядами — появится «+» для добавления нового блока. Пустые ряды удаляются автоматически.
+    </div>
+
+    <div id="dashboard-rows" class="dashboard-rows"></div>
+
+    <!-- Модалка выбора виджета -->
+    <div id="add-widget-modal" class="modal">
+        <div class="modal-content widget-picker-modal">
+            <span class="close-modal" data-modal-close>&times;</span>
+            <h2>Добавить виджет</h2>
+            <p class="widget-picker-subtitle">Выберите, какой блок разместить на дашборде.</p>
+
+            <div class="widget-picker-search">
+                <input type="text" id="widget-picker-search-input" class="widget-picker-search-input"
+                       placeholder="Найти виджет…" autocomplete="off">
+            </div>
+
+            <div id="widget-picker-tabs" class="widget-picker-tabs"></div>
+
+            <div id="widget-types-list" class="widget-types-list"></div>
+        </div>
+    </div>
+
+    <!-- Модалка деталей события -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" data-modal-close>&times;</span>
+            <h2>Детали клиента</h2>
+            <div id="event-details"></div>
+        </div>
+    </div>
+
+    <!-- Модалка настроек виджета -->
+    <div id="widget-modal" class="modal" style="display:none;">
+        <div class="modal-content widget-settings-modal">
+            <span class="close-modal" data-modal-close>&times;</span>
+            <h2>Настройки виджета</h2>
+            <p class="widget-picker-subtitle">Укажите параметры отображения блока.</p>
+            <form id="widget-settings-form" class="widget-settings-form"></form>
+            <div class="widget-settings-footer">
+                <button id="save-widget-settings" class="btn btn-primary">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/data.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sortable.js') }}"></script>
+<script src="{{ url_for('static', filename='js/overview.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard-dnd.js') }}"></script>
+<script>
+    // Подсказка для режима редактирования.
+    document.addEventListener('DOMContentLoaded', function () {
+        const hint = document.getElementById('dnd-hint');
+        if (!hint) return;
+        const syncHint = function () {
+            hint.hidden = !document.body.classList.contains('edit-mode');
+        };
+        const observer = new MutationObserver(syncHint);
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        syncHint();
+    });
+</script>
+{% endblock %}

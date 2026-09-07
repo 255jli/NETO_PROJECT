@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Календарь — NETO{% endblock %}
+
+{% block breadcrumbs %}Панель управления / Календарь{% endblock %}
+
+{% block content %}
+<div class="calendar-page">
+
+    <!-- Панель инструментов как в Google Calendar -->
+    <div class="calendar-toolbar">
+        <div class="cal-nav">
+            <button type="button" class="btn btn-outline btn-sm" id="todayBtn">Сегодня</button>
+            <button type="button" class="btn btn-outline btn-icon" id="navPrev" title="Назад">‹</button>
+            <button type="button" class="btn btn-outline btn-icon" id="navNext" title="Вперёд">›</button>
+        </div>
+        <div class="cal-period" id="periodLabel">Неделя</div>
+        <div class="calendar-mode-switch cal-views">
+            <label class="mode-option"><input type="radio" name="calView" value="day"> День</label>
+            <label class="mode-option"><input type="radio" name="calView" value="week" checked> Неделя</label>
+            <label class="mode-option"><input type="radio" name="calView" value="month"> Месяц</label>
+        </div>
+    </div>
+
+    <div class="calendar-container">
+        <!-- Неделя -->
+        <div class="cal-week" id="weekView"></div>
+        <!-- День -->
+        <div class="cal-day" id="dayView" hidden></div>
+        <!-- Месяц -->
+        <div class="cal-month" id="monthView" hidden></div>
+    </div>
+</div>
+
+<!-- Модалка деталей события -->
+<div class="modal-backdrop" id="eventModal">
+    <div class="modal-card modal-lg">
+        <div class="modal-header">
+            <h3 id="eventModalTitle">Детали обращения</h3>
+            <button class="close-btn" data-close-modal>✕</button>
+        </div>
+        <div class="modal-body" id="eventModalBody"></div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/data.js') }}"></script>
+<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+
+<style>
+.cal-nav { display: flex; align-items: center; gap: 8px; }
+.cal-nav .btn-icon { font-size: 18px; line-height: 1; padding: 4px 12px; }
+.cal-period { font-size: 20px; font-weight: 700; color: #1c1c1f; white-space: nowrap; }
+.cal-views .mode-option { color: #6b6f76; font-size: 14px; }
+.cal-views .mode-option input { margin-right: 4px; accent-color: #005FF9; }
+
+/* Общий контейнер видов */
+.cal-week, .cal-day, .cal-month { flex: 1; min-height: 0; overflow: auto; }
+
+/* ---- Недельный вид (Google-подобный) ---- */
+.week-grid {
+    display: grid;
+    grid-template-columns: 48px repeat(7, 1fr);
+    min-width: 720px;
+}
+.week-head {
+    padding: 8px 6px;
+    text-align: center;
+    font-size: 13px;
+    color: #6b6f76;
+    border-bottom: 1px solid #EDEEF0;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.week-head strong { display: block; color: #1c1c1f; font-size: 16px; }
+.week-head.cal-today { color: #005FF9; }
+.week-head.cal-today strong {
+    background: #005FF9; color: #fff; border-radius: 50%;
+    width: 28px; height: 28px; line-height: 28px; margin: 0 auto;
+}
+.week-time {
+    font-size: 11px; color: #8a8f98; text-align: right; padding-right: 6px;
+    border-bottom: 1px solid #f0f1f3; position: relative;
+}
+.week-cell {
+    border-left: 1px solid #f0f1f3; border-bottom: 1px solid #f0f1f3;
+    min-height: 44px; position: relative; padding: 2px;
+}
+.week-cell:hover { background: #f8fafc; }
+.week-cell.is-today { background: rgba(0, 95, 249, 0.04); }
+.cal-event-block {
+    display: block; width: 100%; text-align: left;
+    border: none; border-left: 3px solid #005FF9; border-radius: 4px;
+    background: #e3f0ff; color: #1c1c1f;
+    padding: 2px 6px; margin-bottom: 2px; cursor: pointer;
+    font-size: 12px; line-height: 1.3; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.cal-event-block:hover { background: #cfe3ff; }
+.cal-event-block.st-notbooked { border-left-color: #9aa0a8; background: #eef1f5; }
+.cal-event-block.st-refused { border-left-color: #e5484d; background: #fdecec; }
+
+/* ---- Дневной вид ---- */
+.day-grid {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    min-width: 420px;
+}
+.day-cell { border-bottom: 1px solid #f0f1f3; min-height: 44px; padding: 2px; }
+
+/* ---- Месячный вид ---- */
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+.month-weekday { text-align: center; font-size: 12px; color: #6b6f76; padding: 6px 0; }
+.month-day {
+    border: 1px solid #EDEEF0; border-radius: 8px; min-height: 72px; padding: 4px 6px;
+    cursor: pointer; position: relative; transition: background .15s;
+}
+.month-day:hover { background: #f8fafc; }
+.month-day.empty { border: none; cursor: default; background: transparent; }
+.month-day.cal-today { border-color: #005FF9; box-shadow: inset 0 0 0 1px #005FF9; }
+.month-day .mday-num { font-size: 14px; font-weight: 600; color: #3c4043; }
+.month-day.cal-today .mday-num { color: #005FF9; }
+.mday-item { font-size: 11px; color: #005FF9; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-top: 2px; }
+</style>
+{% endblock %}

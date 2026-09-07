@@ -1,0 +1,39 @@
+<!-- Сайдбар + аватарка -->
+<aside class="sidebar" id="sidebar">
+    <a href="/dashboard/onboarding" class="logo" title="Первые шаги">
+        <img src="{{ url_for('static', filename='img/logo_blue_neto.svg') }}" alt="NETO">
+    </a>
+    <nav class="nav">
+        <a href="/dashboard/overview" class="nav-item {% if active_tab == 'overview' %}active{% endif %}">
+            <i class="icon-dashboard"></i><span class="nav-text"><span>Обзор</span></span>
+        </a>
+        <a href="/dashboard/voice" class="nav-item {% if active_tab == 'voice' %}active{% endif %}">
+            <i class="icon-voice-assistant"></i><span class="nav-text"><span>Голос</span></span>
+        </a>
+        <a href="/dashboard/widget" class="nav-item {% if active_tab == 'widget' %}active{% endif %}">
+            <i class="icon-chat-assistant"></i><span class="nav-text"><span>Виджет</span></span>
+        </a>
+        <a href="/dashboard/integration" class="nav-item {% if active_tab == 'integration' %}active{% endif %}">
+            <i class="icon-link"></i><span class="nav-text"><span>Интеграции</span></span>
+        </a>
+        <a href="/dashboard/crm" class="nav-item {% if active_tab == 'crm' %}active{% endif %}">
+            <i class="icon-users"></i><span class="nav-text"><span>CRM</span></span>
+        </a>
+        <a href="/dashboard/parsing" class="nav-item {% if active_tab == 'parsing' %}active{% endif %}">
+            <i class="icon-search"></i><span class="nav-text"><span>Конкуренты</span></span>
+        </a>
+        <a href="/dashboard/calendar" class="nav-item {% if active_tab == 'calendar' %}active{% endif %}">
+            <i class="icon-shield-check"></i><span class="nav-text"><span>Календарь</span></span>
+        </a>
+        <a href="/dashboard/telephony" class="nav-item {% if active_tab == 'telephony' %}active{% endif %}">
+            <i class="icon-phone-outgoing"></i><span class="nav-text"><span>Телефон</span></span>
+        </a>
+        <!-- Добавлены пункты настроек и счёта -->
+        <a href="/dashboard/settings" class="nav-item {% if active_tab == 'settings' %}active{% endif %}">
+            <i class="icon-settings"></i><span class="nav-text"><span>Настройки</span></span>
+        </a>
+        <a href="/dashboard/billing" class="nav-item {% if active_tab == 'billing' %}active{% endif %}">
+            <i class="icon-billing"></i><span class="nav-text"><span>Счёт</span></span>
+        </a>
+        </nav>
+</aside>

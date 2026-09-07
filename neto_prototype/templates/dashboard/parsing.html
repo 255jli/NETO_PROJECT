@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Конкуренты — анализ рынка NETO{% endblock %}
+
+{% block breadcrumbs %}Панель управления / Конкуренты{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Конкуренты</h1>
+    <p>Этичный сбор публичных данных о ценах и предложениях на рынке — без ручной работы.</p>
+</div>
+
+<div class="mkt-stack">
+
+    <!-- Показатели -->
+    <div class="row-grid">
+        <div class="card mkt-kpi"><div class="mkt-kpi-num">128</div><div class="mkt-kpi-label">товаров под контролем</div></div>
+        <div class="card mkt-kpi"><div class="mkt-kpi-num">14</div><div class="mkt-kpi-label">конкурентов в выборке</div></div>
+        <div class="card mkt-kpi"><div class="mkt-kpi-num">1×/нед</div><div class="mkt-kpi-label">обновление данных</div></div>
+        <div class="card mkt-kpi"><div class="mkt-kpi-num">6 ч</div><div class="mkt-kpi-label">сэкономлено в неделю</div></div>
+    </div>
+
+    <!-- Что отслеживаем -->
+    <section class="card">
+        <h2 class="mkt-title">Что мы отслеживаем</h2>
+        <p class="mkt-hint">Собираются только публичные данные — так же, как сделал бы человек, но без ошибок.</p>
+        <div class="mkt-grid">
+            <div class="mkt-item"><span class="mkt-item-icon">🏷️</span><div><strong>Цены конкурентов</strong><span>Текущие и изменившиеся цены на ключевые позиции.</span></div></div>
+            <div class="mkt-item"><span class="mkt-item-icon">📦</span><div><strong>Ассортимент</strong><span>Новые позиции и исчезновение товаров с витрин.</span></div></div>
+            <div class="mkt-item"><span class="mkt-item-icon">🎉</span><div><strong>Акции и скидки</strong><span>Спецпредложения, чтобы вы оставались конкурентоспособны.</span></div></div>
+            <div class="mkt-item"><span class="mkt-item-icon">⭐</span><div><strong>Отзывы и рейтинги</strong><span>Как клиенты оценивают конкурентов — ваши точки роста.</span></div></div>
+        </div>
+    </section>
+
+    <!-- Пример отчёта -->
+    <section class="card">
+        <div class="mkt-head">
+            <div>
+                <h2 class="mkt-title">Пример отчёта по ценам</h2>
+                <p class="mkt-hint">Демонстрация. Реальные данные появятся после подключения ваших товаров.</p>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm">Настроить список товаров</button>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Ваша цена</th>
+                    <th>Средняя по рынку</th>
+                    <th>Дешевле всех</th>
+                    <th>Дороже всех</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Букет «Сезонный»</td><td>1 900 ₽</td><td>2 050 ₽</td><td>1 750 ₽</td><td>2 400 ₽</td></tr>
+                <tr><td>Розы, 101 шт.</td><td>4 500 ₽</td><td>4 900 ₽</td><td>4 200 ₽</td><td>5 600 ₽</td></tr>
+                <tr><td>Доставка по городу</td><td>350 ₽</td><td>420 ₽</td><td>0 ₽ (при заказе)</td><td>600 ₽</td></tr>
+                <tr><td>Открытка в подарок</td><td>Бесплатно</td><td>—</td><td>—</td><td>—</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Этичность -->
+    <section class="card">
+        <h2 class="mkt-title">Этичный сбор данных</h2>
+        <div class="mkt-ethics">
+            <div class="mkt-ethic"><span class="mkt-ethic-ok">✓</span> Только публичные данные сайтов и каталогов</div>
+            <div class="mkt-ethic"><span class="mkt-ethic-ok">✓</span> Без взлома, обхода ограничений и личных данных</div>
+            <div class="mkt-ethic"><span class="mkt-ethic-ok">✓</span> Соответствие 152-ФЗ — данные хранятся в РФ</div>
+            <div class="mkt-ethic"><span class="mkt-ethic-ok">✓</span> Умеренная частота запросов — не мешает сайтам</div>
+        </div>
+    </section>
+
+</div>
+
+<style>
+.mkt-stack { display: flex; flex-direction: column; gap: 16px; max-width: 1080px; }
+
+.mkt-kpi { text-align: center; padding: 20px; margin: 0; flex: 1 1 150px; min-width: 140px; }
+.mkt-kpi-num { font-size: 26px; font-weight: 800; color: #005FF9; }
+.mkt-kpi-label { font-size: 13px; color: #6b6f76; margin-top: 4px; }
+
+.mkt-title { font-size: 18px; margin: 0 0 8px; color: #1c1c1f; }
+.mkt-hint { font-size: 14px; color: #6b6f76; margin: 0 0 14px; }
+
+.mkt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.mkt-item { display: flex; gap: 12px; align-items: flex-start; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px; }
+.mkt-item-icon { font-size: 24px; }
+.mkt-item div { display: flex; flex-direction: column; gap: 3px; }
+.mkt-item strong { color: #1c1c1f; font-size: 15px; }
+.mkt-item span { color: #6b6f76; font-size: 13px; }
+
+.mkt-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 6px; flex-wrap: wrap; }
+
+.mkt-ethics { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.mkt-ethic { display: flex; align-items: center; gap: 10px; border: 1px solid #cde6d3; background: #f4faf6; border-radius: 10px; padding: 12px 14px; font-size: 14px; color: #1c1c1f; }
+.mkt-ethic-ok { color: #1f8a4c; font-weight: 800; flex-shrink: 0; }
+</style>
+{% endblock %}

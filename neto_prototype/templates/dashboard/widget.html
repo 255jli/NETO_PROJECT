@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block title %}Настройка виджета — NETO{% endblock %}
+
+{% block breadcrumbs %}Панель управления / Настройка виджета{% endblock %}
+
+{% block content %}
+<div class="page-header page-header-slim">
+    <h1>Настройка виджета</h1>
+    <p>Настройте внешний вид виджета и получите код для вставки на ваш сайт.</p>
+</div>
+
+<div class="widget-settings-grid">
+    <div class="settings-panel card">
+        <h2>Параметры виджета</h2>
+
+        <div class="setting-group">
+            <label for="widgetColor">Цвет кнопки</label>
+            <input type="color" id="widgetColor" value="#005FF9">
+        </div>
+
+        <div class="setting-group">
+            <label for="widgetSize">Размер кнопки (px)</label>
+            <input type="range" id="widgetSize" min="40" max="120" value="80">
+            <span id="widgetSizeValue">80px</span>
+        </div>
+
+        <div class="setting-group">
+            <label>Иконка</label>
+            <div class="icon-options" id="iconOptions">
+                <button type="button" class="icon-btn active" data-icon="chat" title="Чат">💬</button>
+                <button type="button" class="icon-btn" data-icon="message" title="Сообщение">📩</button>
+                <button type="button" class="icon-btn" data-icon="support" title="Поддержка">🛠️</button>
+                <button type="button" class="icon-btn" data-icon="help" title="Помощь">❓</button>
+                <button type="button" class="icon-btn" data-icon="headset" title="Наушники">🎧</button>
+            </div>
+            <p class="hint">Выберите иконку для кнопки виджета.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Блок с кодом вставки -->
+<div class="embed-code-section card" style="margin-top: 24px;">
+    <h3>Код для вставки на ваш сайт</h3>
+    <p>Скопируйте этот код и вставьте на ваш сайт (подходит для любых конструкторов и CMS):</p>
+    <div class="code-block">
+        <pre><code id="embedCode"><script src="/static/js/widget.js"></script></code></pre>
+    </div>
+    <button type="button" class="btn btn-secondary" id="copyEmbedBtn">Копировать код</button>
+    <p class="hint">При изменении настроек код обновится автоматически.</p>
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // Ключ хранения конфигурации
+    const STORAGE_KEY = 'neto_widget_config';
+    // Путь к реальному скрипту виджета (единый источник логики)
+    const WIDGET_SRC = '/static/js/widget.js';
+
+    // ---------- Элементы управления ----------
+    const colorInput = document.getElementById('widgetColor');
+    const sizeInput = document.getElementById('widgetSize');
+    const sizeValue = document.getElementById('widgetSizeValue');
+    const iconBtns = Array.from(document.querySelectorAll('.icon-btn'));
+    const embedCode = document.getElementById('embedCode');
+    const copyBtn = document.getElementById('copyEmbedBtn');
+
+    // ---------- Работа с конфигурацией ----------
+    function getConfig() {
+        const activeIcon = iconBtns.find(btn => btn.classList.contains('active'));
+        return {
+            color: colorInput.value.replace('#', ''),
+            size: sizeInput.value,
+            icon: (activeIcon && activeIcon.dataset.icon) || 'chat'
+        };
+    }
+
+    function saveConfig() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(getConfig()));
+    }
+
+    // Восстановление конфигурации из localStorage
+    function restoreConfig() {
+        let saved = null;
+        try {
+            saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        } catch (e) {
+            saved = null;
+        }
+        if (!saved) return;
+
+        if (saved.color) {
+            colorInput.value = '#' + saved.color;
+        }
+        if (saved.size) {
+            sizeInput.value = saved.size;
+            sizeValue.textContent = saved.size + 'px';
+        }
+        if (saved.icon) {
+            iconBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.icon === saved.icon));
+        }
+    }
+
+    // ---------- Генерация кода вставки ----------
+    function updateEmbedCode() {
+        const c = getConfig();
+        const src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon;
+        embedCode.textContent = '<script src="' + src + '"><\/script>';
+    }
+
+    // ---------- Предпросмотр виджета ----------
+    // Удаляет старый виджет (контейнер и его стили) и загружает актуальный widget.js
+    function renderPageWidget() {
+        const oldContainer = document.getElementById('neto-widget-container');
+        if (oldContainer) oldContainer.remove();
+        const oldStyle = document.getElementById('neto-widget-style');
+        if (oldStyle) oldStyle.remove();
+
+        const c = getConfig();
+        const script = document.createElement('script');
+        script.src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon;
+        document.body.appendChild(script);
+    }
+
+    function refresh() {
+        saveConfig();
+        updateEmbedCode();
+        renderPageWidget();
+    }
+
+    // ---------- Копирование кода ----------
+    function copyEmbedCode() {
+        const code = embedCode.textContent;
+        const done = () => showToast('Код скопирован!', 'success');
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code).then(done).catch(() => fallbackCopy(code, done));
+        } else {
+            fallbackCopy(code, done);
+        }
+    }
+
+    function fallbackCopy(text, onDone) {
+        const range = document.createRange();
+        range.selectNode(embedCode);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        try {
+            document.execCommand('copy');
+            onDone();
+        } finally {
+            sel.removeAllRanges();
+        }
+    }
+
+    // ---------- События ----------
+    colorInput.addEventListener('input', refresh);
+    sizeInput.addEventListener('input', function() {
+        sizeValue.textContent = this.value + 'px';
+        refresh();
+    });
+    iconBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            iconBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            refresh();
+        });
+    });
+    copyBtn.addEventListener('click', copyEmbedCode);
+
+    // ---------- Инициализация ----------
+    restoreConfig();
+    updateEmbedCode();
+    renderPageWidget();
+})();
+</script>
+
+<style>
+/* Ширина панелей определяется сеткой .widget-settings-grid (style_3.css),
+   поэтому принудительная width: 100% не требуется. */
+.setting-group {
+    margin-bottom: 20px;
+}
+
+.setting-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.setting-group input[type="range"] {
+    vertical-align: middle;
+}
+
+.setting-group #widgetSizeValue {
+    margin-left: 8px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.icon-options {
+    display: flex;
+    gap: 10px;
+}
+
+.icon-btn {
+    width: 44px;
+    height: 44px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.icon-btn:hover {
+    border-color: #005FF9;
+}
+
+.icon-btn.active {
+    border-color: #005FF9;
+    background: #e8f0fe;
+}
+
+.hint {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 4px;
+}
+</style>
+{% endblock %}

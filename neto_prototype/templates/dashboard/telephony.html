@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Телефон — настройка номера NETO{% endblock %}
+
+{% block breadcrumbs %}Панель управления / Телефон{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Номер и телефон</h1>
+    <p>Подключите виртуальный номер — голосовой ассистент начнёт принимать звонки. Оплата только за реальные минуты.</p>
+</div>
+
+<div class="tl-stack">
+
+    <!-- Статус номера -->
+    <section class="card">
+        <div class="tl-status">
+            <div>
+                <h2 class="tl-title">Ваш номер</h2>
+                <div class="tl-phone">+7 (495) 000-00-00</div>
+                <p class="tl-hint">На этот номер будут поступать входящие звонки клиентов.</p>
+            </div>
+            <button type="button" class="btn btn-primary" id="toggleNumber">Деактивировать номер</button>
+        </div>
+        <div class="tl-status-pills">
+            <span class="tl-pill tl-pill-on" id="statusPill">● Активен</span>
+            <span class="tl-pill">Звонков сегодня: 42</span>
+            <span class="tl-pill">Средняя длительность: 1:45</span>
+        </div>
+    </section>
+
+    <!-- Тарифы -->
+    <section class="card">
+        <h2 class="tl-title">Оплата за использование</h2>
+        <p class="tl-hint">Без абонентской платы и стартовых взносов — платите за фактическое потребление.</p>
+        <div class="tl-plan-grid">
+            <div class="tl-plan"><span class="tl-plan-icon">📞</span><div><strong>Голосовой канал</strong><span>от 0,50 ₽ / минута разговора</span></div></div>
+            <div class="tl-plan"><span class="tl-plan-icon">💬</span><div><strong>Текстовый канал</strong><span>от 0,25 ₽ / запрос (чат-виджет)</span></div></div>
+            <div class="tl-plan"><span class="tl-plan-icon">🛡️</span><div><strong>Хранение записей</strong><span>бесплатно, до 12 месяцев</span></div></div>
+        </div>
+    </section>
+
+    <!-- Шаги подключения -->
+    <section class="card">
+        <h2 class="tl-title">Как это работает</h2>
+        <div class="tl-steps">
+            <div class="tl-step"><div class="tl-step-num">1</div><div><strong>Выберите номер</strong><span>Городской, мобильный или бесплатный 8-800.</span></div></div>
+            <div class="tl-step"><div class="tl-step-num">2</div><div><strong>Перенаправьте звонки</strong><span>Укажите оператора или используйте номер NETO напрямую.</span></div></div>
+            <div class="tl-step"><div class="tl-step-num">3</div><div><strong>Готово</strong><span>Ассистент принимает звонки, записи и заявки уходят в CRM.</span></div></div>
+        </div>
+        <div class="tl-actions">
+            <button type="button" class="btn btn-primary" id="changeTariffBtn">Сменить тариф</button>
+        </div>
+    </section>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+    var active = true;
+    var toggleBtn = document.getElementById('toggleNumber');
+    var statusPill = document.getElementById('statusPill');
+
+    toggleBtn.addEventListener('click', function() {
+        active = !active;
+        if (active) {
+            toggleBtn.textContent = 'Деактивировать номер';
+            statusPill.className = 'tl-pill tl-pill-on';
+            statusPill.textContent = '● Активен';
+        } else {
+            toggleBtn.textContent = 'Активировать номер';
+            statusPill.className = 'tl-pill tl-pill-off';
+            statusPill.textContent = '○ Не активен';
+        }
+        if (typeof showToast === 'function') showToast(active ? 'Номер активирован' : 'Номер деактивирован', active ? 'success' : 'error');
+    });
+
+    var tariffBtn = document.getElementById('changeTariffBtn');
+    if (tariffBtn) {
+        tariffBtn.addEventListener('click', function() {
+            if (typeof showToast === 'function') showToast('Вы перешли к выбору тарифа. На текущих условиях ~1500 ₽/мес.', 'success');
+        });
+    }
+})();
+</script>
+
+<style>
+.tl-stack { display: flex; flex-direction: column; gap: 16px; max-width: 1080px; }
+
+.tl-title { font-size: 18px; margin: 0 0 8px; color: #1c1c1f; }
+.tl-hint { font-size: 14px; color: #6b6f76; margin: 0 0 14px; }
+
+.tl-status { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+.tl-phone { font-size: 22px; font-weight: 700; color: #1c1c1f; }
+.tl-status-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.tl-pill { font-size: 13px; color: #6b6f76; background: #f2f4f7; border-radius: 999px; padding: 6px 14px; }
+.tl-pill-on { color: #1f8a4c; background: #e6f4eb; font-weight: 600; }
+.tl-pill-off { color: #b45309; background: #fff4e5; font-weight: 600; }
+
+.tl-plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.tl-plan { display: flex; gap: 12px; align-items: center; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px; }
+.tl-plan-icon { font-size: 24px; }
+.tl-plan div { display: flex; flex-direction: column; gap: 3px; }
+.tl-plan strong { color: #1c1c1f; font-size: 15px; }
+.tl-plan span { color: #6b6f76; font-size: 13px; }
+
+.tl-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.tl-step { display: flex; gap: 14px; align-items: center; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px; }
+.tl-step-num { width: 34px; height: 34px; border-radius: 50%; background: #005FF9; color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tl-step div { display: flex; flex-direction: column; gap: 2px; }
+.tl-step strong { color: #1c1c1f; font-size: 15px; }
+.tl-step span { color: #6b6f76; font-size: 13px; }
+
+.tl-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+</style>
+{% endblock %}

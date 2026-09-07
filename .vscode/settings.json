@@ -1,0 +1,5 @@
+{
+    "workbench.browser.showInTitleBar": "whenOpen",
+    "workbench.browser.openLocalhostLinks": true,
+    "workbench.browser.dataStorage": "ephemeral"
+}

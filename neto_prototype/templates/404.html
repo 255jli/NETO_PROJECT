@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Страница не найдена — NETO{% endblock %}
+
+{% block breadcrumbs %}404{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>404</h1>
+    <p>Страница, которую вы ищете, не существует.</p>
+</div>
+<div class="card" style="text-align: center; padding: 60px 20px;">
+    <i class="icon-search" style="font-size: 64px; color: var(--yc-text-disable);"></i>
+    <h2 style="margin: 20px 0 10px;">Ничего не найдено</h2>
+    <p style="color: var(--yc-text-secondary);">Возможно, страница была удалена или адрес введён неверно.</p>
+    <a href="/" class="btn btn-primary" style="margin-top: 20px;">Вернуться на главную</a>
+</div>
+{% endblock %}

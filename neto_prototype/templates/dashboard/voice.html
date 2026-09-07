@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Голос — голосовой ассистент NETO{% endblock %}
+
+{% block breadcrumbs %}Панель управления / Голос{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Голосовой ассистент</h1>
+    <p>Принимает звонки 24/7, понимает намерение клиента, записывает и передаёт заявки в CRM. Ни один вызов не остаётся без ответа.</p>
+</div>
+
+<div class="vc-stack">
+
+    <!-- Показатели -->
+    <div class="row-grid">
+        <div class="card vc-kpi"><div class="vc-kpi-num">42</div><div class="vc-kpi-label">звонков сегодня</div></div>
+        <div class="card vc-kpi"><div class="vc-kpi-num vc-green">42</div><div class="vc-kpi-label">принято ассистентом</div></div>
+        <div class="card vc-kpi"><div class="vc-kpi-num vc-blue">0</div><div class="vc-kpi-label">пропущено</div></div>
+        <div class="card vc-kpi"><div class="vc-kpi-num">1:45</div><div class="vc-kpi-label">средняя длительность</div></div>
+    </div>
+
+    <!-- Возможности -->
+    <section class="card">
+        <h2 class="vc-title">Возможности</h2>
+        <div class="vc-grid">
+            <div class="vc-item"><span class="vc-item-icon">📞</span><div><strong>Приём звонков 24/7</strong><span>Никогда не кладёт трубку и всегда отвечает — даже ночью и в выходные.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🧠</span><div><strong>Понимает намерение</strong><span>Отличает запись на услугу от вопроса о цене и действует по сценарию.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🗒️</span><div><strong>Запись клиента</strong><span>Фиксирует имя, телефон и удобное время визита, создаёт карточку в CRM.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🛒</span><div><strong>Фиксация заказа</strong><span>Оформляет заказ и передаёт его в CRM или на почту без оператора.</span></div></div>
+        </div>
+    </section>
+
+    <!-- Как ассистент думает -->
+    <section class="card">
+        <h2 class="vc-title">Как ассистент думает</h2>
+        <p class="vc-hint">Технологическая основа из презентации — то, что отличает NETO от простого автоответчика.</p>
+        <div class="vc-grid">
+            <div class="vc-item"><span class="vc-item-icon">🎙️</span><div><strong>Распознавание речи</strong><span>Комбинация Whisper и Yandex SpeechKit — точность даже с акцентами и шумом.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">💡</span><div><strong>Понимание намерений</strong><span>Дообученные NLP-модели на базе GigaChat воспроизводят логику менеджера по продажам.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🔁</span><div><strong>Контекстная память</strong><span>Возвращается к ранее обсуждённым условиям и не переспрашивает дважды.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🛡️</span><div><strong>152-ФЗ</strong><span>Записи и данные хранятся только на серверах в РФ.</span></div></div>
+        </div>
+    </section>
+
+    <!-- Аналитика обращений -->
+    <section class="card">
+        <div class="vc-head">
+            <div>
+                <h2 class="vc-title">Аналитика обращений</h2>
+                <p class="vc-hint">Каждый звонок ассистент размечает сам: намерение, результат, тональность. Без ручной работы.</p>
+            </div>
+        </div>
+        <table class="data-table" id="vcTable">
+            <thead>
+                <tr>
+                    <th>Время</th>
+                    <th>Клиент</th>
+                    <th>Намерение</th>
+                    <th>Результат</th>
+                    <th>Тональность</th>
+                    <th>Длит.</th>
+                </tr>
+            </thead>
+            <tbody id="vcBody"></tbody>
+        </table>
+        <div class="vc-footnote">Расшифровка и полная запись разговора доступны при нажатии на строку (демо).</div>
+    </section>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    var seed = [
+        { time: '09:12', client: 'Иван Петров', intent: 'Запись на диагностику', result: 'Записан на 10:00', tone: 'positive', dur: '2:10' },
+        { time: '10:04', client: 'Мария Смирнова', intent: 'Вопрос о ценах', result: 'Отправлен прайс в SMS', tone: 'neutral', dur: '1:32' },
+        { time: '11:47', client: 'Олег Кузнецов', intent: 'Оформление заказа', result: 'Заказ создан в CRM', tone: 'positive', dur: '3:05' },
+        { time: '12:20', client: 'Анна Волкова', intent: 'График работы', result: 'Ответила, контакт сохранён', tone: 'neutral', dur: '0:58' },
+        { time: '13:41', client: 'Дмитрий Соколов', intent: 'Жалоба на сервис', result: 'Переведён на менеджера', tone: 'negative', dur: '2:44' }
+    ];
+    var calls = seed.map(function(c) { return Object.assign({}, c); });
+    var tones = { positive: '😊 Позитивно', neutral: '😐 Нейтрально', negative: '😞 Негативно' };
+    var body = document.getElementById('vcBody');
+
+    function render() {
+        body.innerHTML = '';
+        calls.forEach(function(c) {
+            var tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td>' + c.time + '</td>' +
+                '<td>' + c.client + '</td>' +
+                '<td>' + c.intent + '</td>' +
+                '<td>' + c.result + '</td>' +
+                '<td><span class="vc-tone vc-tone-' + c.tone + '">' + (tones[c.tone] || c.tone) + '</span></td>' +
+                '<td>' + c.dur + '</td>';
+            body.appendChild(tr);
+        });
+    }
+
+    render();
+})();
+</script>
+
+<style>
+.vc-stack { display: flex; flex-direction: column; gap: 16px; max-width: 1080px; }
+
+.vc-kpi { text-align: center; padding: 20px; margin: 0; flex: 1 1 150px; min-width: 140px; }
+.vc-kpi-num { font-size: 26px; font-weight: 800; color: #1c1c1f; }
+.vc-kpi-num.vc-green { color: #1f8a4c; }
+.vc-kpi-num.vc-blue { color: #005FF9; }
+.vc-kpi-label { font-size: 13px; color: #6b6f76; margin-top: 4px; }
+
+.vc-title { font-size: 18px; margin: 0 0 8px; color: #1c1c1f; }
+.vc-hint { font-size: 14px; color: #6b6f76; margin: 0 0 14px; }
+
+.vc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.vc-item { display: flex; gap: 12px; align-items: flex-start; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px; }
+.vc-item-icon { font-size: 24px; }
+.vc-item div { display: flex; flex-direction: column; gap: 3px; }
+.vc-item strong { color: #1c1c1f; font-size: 15px; }
+.vc-item span { color: #6b6f76; font-size: 13px; }
+
+.vc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+
+.vc-tone { display: inline-block; font-size: 13px; padding: 3px 10px; border-radius: 999px; }
+.vc-tone-positive { background: #e6f4eb; color: #1f8a4c; }
+.vc-tone-neutral { background: #f2f4f7; color: #6b6f76; }
+.vc-tone-negative { background: #fdecea; color: #c0392b; }
+
+.vc-footnote { font-size: 12px; color: #8a8f98; margin-top: 12px; }
+</style>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Безопасность и номера — NETO{% endblock %}
+
+{% block breadcrumbs %}Панель управления / Безопасность{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Безопасность и номера</h1>
+    <p>Управляйте всеми подключёнными номерами и данными. NETO соответствует 152-ФЗ: всё хранится на серверах в РФ.</p>
+</div>
+
+<div class="st-stack">
+
+    <!-- Номера -->
+    <section class="card">
+        <div class="st-head">
+            <div>
+                <h2 class="st-title">Номера</h2>
+                <p class="st-hint">Один аккаунт — несколько виртуальных номеров под разные города и направления бизнеса.</p>
+            </div>
+            <button type="button" class="btn btn-primary" id="addNumberBtn">+ Добавить номер</button>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Номер</th>
+                    <th>Город</th>
+                    <th>Назначение</th>
+                    <th>Статус</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>+7 (495) 000-00-01</td>
+                    <td>Москва</td>
+                    <td>Основной приём звонков</td>
+                    <td><span class="st-badge st-badge-on">Активен</span></td>
+                    <td><button type="button" class="btn btn-outline btn-sm">Настроить</button></td>
+                </tr>
+                <tr>
+                    <td>+7 (812) 000-00-02</td>
+                    <td>Санкт-Петербург</td>
+                    <td>Филиал</td>
+                    <td><span class="st-badge st-badge-off">Приостановлен</span></td>
+                    <td><button type="button" class="btn btn-outline btn-sm">Настроить</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="st-note">Добавленный номер сразу переводится на голосового ассистента. Оплата — только за реальные минуты разговора.</div>
+    </section>
+
+    <!-- Безопасность -->
+    <section class="card">
+        <h2 class="st-title">Безопасность данных</h2>
+        <p class="st-hint">Принципы, заложенные в платформу с первого дня разработки.</p>
+        <div class="st-sec-grid">
+            <div class="st-sec"><span class="st-sec-icon">🇷🇺</span><div><strong>Хранение в РФ</strong><span>Записи и данные клиентов обрабатываются только на серверах, физически расположенных в России.</span></div></div>
+            <div class="st-sec"><span class="st-sec-icon">🔒</span><div><strong>Шифрование</strong><span>Записи разговоров и персональные данные передаются и хранятся в зашифрованном виде.</span></div></div>
+            <div class="st-sec"><span class="st-sec-icon">⚖️</span><div><strong>Соответствие 152-ФЗ</strong><span>Обработка персональных данных — в соответствии с законом о персональных данных.</span></div></div>
+            <div class="st-sec"><span class="st-sec-icon">🗑️</span><div><strong>Контроль доступа</strong><span>Вы вправе запросить выгрузку или удаление данных клиентов в любой момент.</span></div></div>
+        </div>
+    </section>
+
+    <!-- Правовой блок -->
+    <section class="card">
+        <h2 class="st-title">Политика обработки</h2>
+        <div class="st-policy">
+            <div class="st-policy-row"><span class="st-policy-ok">✓</span> Записи хранятся до 12 месяцев (настраивается)</div>
+            <div class="st-policy-row"><span class="st-policy-ok">✓</span> Ассистент информирует клиента о записи разговора</div>
+            <div class="st-policy-row"><span class="st-policy-ok">✓</span> Данные не передаются третьим лицам без согласия</div>
+            <div class="st-policy-row"><span class="st-policy-ok">✓</span> Полный аудит доступа к записям и карточкам</div>
+        </div>
+        <div class="st-actions">
+            <button type="button" class="btn btn-outline" id="exportBtn">Экспортировать данные</button>
+            <button type="button" class="btn btn-outline" id="deleteBtn">Запросить удаление</button>
+        </div>
+    </section>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    document.getElementById('addNumberBtn').addEventListener('click', function() {
+        if (typeof showToast === 'function') showToast('Запрос на новый номер отправлен. Выберите регион и назначение.', 'success');
+    });
+    document.getElementById('exportBtn').addEventListener('click', function() {
+        if (typeof showToast === 'function') showToast('Выгрузка данных подготовлена и придёт на вашу почту.', 'success');
+    });
+    document.getElementById('deleteBtn').addEventListener('click', function() {
+        if (typeof showToast === 'function') showToast('Запрос на удаление передан. Мы свяжемся с вами для подтверждения.', 'success');
+    });
+})();
+</script>
+
+<style>
+.st-stack { display: flex; flex-direction: column; gap: 16px; max-width: 1080px; }
+
+.st-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.st-title { font-size: 18px; margin: 0 0 8px; color: #1c1c1f; }
+.st-hint { font-size: 14px; color: #6b6f76; margin: 0 0 14px; }
+.st-note { font-size: 13px; color: #8a8f98; margin-top: 12px; }
+
+.st-badge { display: inline-block; font-size: 13px; padding: 3px 10px; border-radius: 999px; }
+.st-badge-on { background: #e6f4eb; color: #1f8a4c; font-weight: 600; }
+.st-badge-off { background: #f2f4f7; color: #8a8f98; }
+
+.st-sec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.st-sec { display: flex; gap: 12px; align-items: flex-start; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px; }
+.st-sec-icon { font-size: 24px; }
+.st-sec div { display: flex; flex-direction: column; gap: 3px; }
+.st-sec strong { color: #1c1c1f; font-size: 15px; }
+.st-sec span { color: #6b6f76; font-size: 13px; }
+
+.st-policy { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.st-policy-row { display: flex; align-items: center; gap: 10px; border: 1px solid #cde6d3; background: #f4faf6; border-radius: 10px; padding: 12px 14px; font-size: 14px; color: #1c1c1f; }
+.st-policy-ok { color: #1f8a4c; font-weight: 800; flex-shrink: 0; }
+
+.st-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+</style>
+{% endblock %}
