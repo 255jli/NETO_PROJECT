@@ -7,12 +7,32 @@
 {% block content %}
 <div class="page-header page-header-slim">
     <h1>Настройка виджета</h1>
-    <p>Настройте внешний вид виджета и получите код для вставки на ваш сайт.</p>
+    <p>Настройте AI-консультанта под бизнес клиента и проверьте сценарий общения в живом preview.</p>
 </div>
 
 <div class="widget-settings-grid">
     <div class="settings-panel card">
-        <h2>Параметры виджета</h2>
+        <h2>Настройка ассистента</h2>
+        <p class="panel-description">Ассистент встречает посетителя, отвечает по базе знаний компании и помогает перейти к заявке или консультации.</p>
+
+        <div class="setting-group">
+            <label for="widgetName">Имя ассистента</label>
+            <input class="text-input" type="text" id="widgetName" value="Нето">
+        </div>
+
+        <div class="setting-group">
+            <label for="widgetCompany">Компания или магазин</label>
+            <input class="text-input" type="text" id="widgetCompany" value="магазина шкафов">
+            <p class="hint">Используется в ответах и помогает показать персонализацию.</p>
+        </div>
+
+        <div class="setting-group">
+            <label for="widgetGreeting">Приветствие</label>
+            <textarea class="text-input textarea-input" id="widgetGreeting" rows="3">Здравствуйте! Я помогу подобрать шкаф, ответить на вопросы и записать вас на консультацию.</textarea>
+        </div>
+
+        <div class="setting-divider"></div>
+        <h3>Внешний вид</h3>
 
         <div class="setting-group">
             <label for="widgetColor">Цвет кнопки</label>
@@ -37,10 +57,26 @@
             <p class="hint">Выберите иконку для кнопки виджета.</p>
         </div>
     </div>
+
+    <div class="settings-panel card widget-value-panel">
+        <div class="preview-heading">
+            <div>
+                <h2>Что получает клиент</h2>
+                <p class="panel-description">Не теряет обращение, даже когда менеджер занят или магазин закрыт.</p>
+            </div>
+            <span class="live-badge"><span></span> Live preview</span>
+        </div>
+        <div class="value-list">
+            <div><strong>24/7</strong><span>отвечает на типовые вопросы</span></div>
+            <div><strong>1 диалог</strong><span>от вопроса о товаре до записи</span></div>
+            <div><strong>Без кода</strong><span>подключается одной строкой</span></div>
+        </div>
+        <div class="preview-note"><strong>Попробуйте виджет внизу справа</strong><span>Нажмите на быстрый вопрос или напишите: «Сколько стоит шкаф?»</span></div>
+    </div>
 </div>
 
 <!-- Блок с кодом вставки -->
-<div class="embed-code-section card" style="margin-top: 24px;">
+<div class="embed-code-section card widget-embed-section">
     <h3>Код для вставки на ваш сайт</h3>
     <p>Скопируйте этот код и вставьте на ваш сайт (подходит для любых конструкторов и CMS):</p>
     <div class="code-block">
@@ -63,6 +99,9 @@
     const colorInput = document.getElementById('widgetColor');
     const sizeInput = document.getElementById('widgetSize');
     const sizeValue = document.getElementById('widgetSizeValue');
+    const nameInput = document.getElementById('widgetName');
+    const companyInput = document.getElementById('widgetCompany');
+    const greetingInput = document.getElementById('widgetGreeting');
     const iconBtns = Array.from(document.querySelectorAll('.icon-btn'));
     const embedCode = document.getElementById('embedCode');
     const copyBtn = document.getElementById('copyEmbedBtn');
@@ -73,7 +112,10 @@
         return {
             color: colorInput.value.replace('#', ''),
             size: sizeInput.value,
-            icon: (activeIcon && activeIcon.dataset.icon) || 'chat'
+            icon: (activeIcon && activeIcon.dataset.icon) || 'chat',
+            name: nameInput.value.trim() || 'Нето',
+            company: companyInput.value.trim() || 'вашей компании',
+            greeting: greetingInput.value.trim() || 'Здравствуйте! Я помогу ответить на вопросы и записать вас на консультацию.'
         };
     }
 
@@ -101,12 +143,15 @@
         if (saved.icon) {
             iconBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.icon === saved.icon));
         }
+        if (saved.name) nameInput.value = saved.name;
+        if (saved.company) companyInput.value = saved.company;
+        if (saved.greeting) greetingInput.value = saved.greeting;
     }
 
     // ---------- Генерация кода вставки ----------
     function updateEmbedCode() {
         const c = getConfig();
-        const src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon;
+        const src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon + '&name=' + encodeURIComponent(c.name) + '&company=' + encodeURIComponent(c.company) + '&greeting=' + encodeURIComponent(c.greeting);
         embedCode.textContent = '<script src="' + src + '"><\/script>';
     }
 
@@ -120,7 +165,7 @@
 
         const c = getConfig();
         const script = document.createElement('script');
-        script.src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon;
+        script.src = WIDGET_SRC + '?color=' + c.color + '&size=' + c.size + '&icon=' + c.icon + '&name=' + encodeURIComponent(c.name) + '&company=' + encodeURIComponent(c.company) + '&greeting=' + encodeURIComponent(c.greeting);
         document.body.appendChild(script);
     }
 
@@ -162,6 +207,9 @@
         sizeValue.textContent = this.value + 'px';
         refresh();
     });
+    nameInput.addEventListener('input', refresh);
+    companyInput.addEventListener('input', refresh);
+    greetingInput.addEventListener('input', refresh);
     iconBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             iconBtns.forEach(b => b.classList.remove('active'));

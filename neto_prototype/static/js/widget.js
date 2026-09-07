@@ -5,15 +5,21 @@
     var src = script ? script.src : '';
     var params = new URLSearchParams(src.split('?')[1] || '');
     var color = params.get('color') || '005FF9';
-    var size = parseInt(params.get('size')) || 72;
+    var size = parseInt(params.get('size'), 10) || 72;
     var iconKey = params.get('icon') || 'chat';
+    var assistantName = params.get('name') || 'Нето';
+    var company = params.get('company') || 'вашей компании';
+    var greeting = params.get('greeting') || 'Здравствуйте! Я помогу ответить на вопросы и записать вас на консультацию.';
 
     // 2. Если есть глобальная конфигурация, используем её (приоритет выше)
     if (window.NETO_WIDGET_CONFIG) {
         var cfg = window.NETO_WIDGET_CONFIG;
         if (cfg.color) color = cfg.color;
-        if (cfg.size) size = parseInt(cfg.size);
+        if (cfg.size) size = parseInt(cfg.size, 10);
         if (cfg.icon) iconKey = cfg.icon;
+        if (cfg.name) assistantName = cfg.name;
+        if (cfg.company) company = cfg.company;
+        if (cfg.greeting) greeting = cfg.greeting;
     }
 
     // 3. SVG иконки
@@ -140,6 +146,22 @@
             border-bottom-left-radius: 4px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.06);
         }
+        #neto-widget-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 10px 14px 2px;
+            background: #F8FAFC;
+        }
+        .neto-suggestion {
+            background: white;
+            border: 1px solid #${color};
+            color: #${color};
+            border-radius: 14px;
+            padding: 6px 9px;
+            font-size: 11px;
+            cursor: pointer;
+        }
         #neto-widget-input-area {
             display: flex;
             border-top: 1px solid #EDEEF0;
@@ -192,10 +214,15 @@
         <button id="neto-widget-btn">${iconSvg}</button>
         <div id="neto-widget-panel">
             <div id="neto-widget-header">
-                <span>NETO Ассистент</span>
+                <div><strong>${assistantName}</strong><small>Онлайн и готов помочь</small></div>
                 <button id="neto-widget-close">✕</button>
             </div>
             <div id="neto-widget-messages"></div>
+            <div id="neto-widget-suggestions">
+                <button class="neto-suggestion" data-question="Какие у вас цены?">Цены и условия</button>
+                <button class="neto-suggestion" data-question="Хочу записаться на консультацию">Записаться</button>
+                <button class="neto-suggestion" data-question="Что есть в наличии?">Что в наличии?</button>
+            </div>
             <div id="neto-widget-input-area">
                 <input id="neto-widget-input" placeholder="Напишите сообщение..." />
                 <button id="neto-widget-send">➤</button>
@@ -211,11 +238,16 @@
     var sendBtn = document.getElementById('neto-widget-send');
     var messages = document.getElementById('neto-widget-messages');
 
-    // История в localStorage (с привязкой к цвету, чтобы сбросить при изменении)
-    var storageKey = 'neto_chat_history';
-    var history = JSON.parse(localStorage.getItem(storageKey)) || [];
+    // История разделена по компании, чтобы демо-конфигурации не смешивались.
+    var storageKey = 'neto_chat_history_' + company;
+    var history = [];
+    try {
+        history = JSON.parse(localStorage.getItem(storageKey)) || [];
+    } catch (e) {
+        history = [];
+    }
     if (history.length === 0) {
-        history.push({ text: 'Здравствуйте! Чем могу помочь?', from: 'bot' });
+        history.push({ text: greeting, from: 'bot' });
     }
 
     function renderMessages() {
@@ -233,15 +265,24 @@
         renderMessages();
     }
 
-    function sendMessage() {
-        var text = input.value.trim();
+    function answerFor(text) {
+        var normalized = text.toLowerCase();
+        if (/цен|стоим|сколько|прайс/.test(normalized)) return 'Подскажу стоимость и помогу подобрать подходящий вариант. Оставьте номер телефона, и менеджер пришлёт точный расчёт.';
+        if (/запис|консультац|встреч|позвон/.test(normalized)) return 'Конечно. Оставьте удобный способ связи и желаемое время, а мы подтвердим запись.';
+        if (/налич|размер|цвет|модел|товар/.test(normalized)) return 'Проверю актуальные варианты в базе знаний ' + company + '. Напишите, что именно вы ищете, или оставьте контакты для точного ответа.';
+        if (/достав|срок|оплат/.test(normalized)) return 'Расскажу об условиях доставки и оплаты для вашего города. Напишите город, чтобы ответ был точнее.';
+        if (/привет|здравств|добрый/.test(normalized)) return greeting;
+        return 'Понял вопрос. Я могу ответить по товарам и услугам, условиям, наличию и доставке, а также записать вас на консультацию. Что важно узнать первым?';
+    }
+
+    function sendMessage(question) {
+        var text = question || input.value.trim();
         if (!text) return;
         addMessage(text, 'user');
         input.value = '';
-        // Имитация ответа бота
         setTimeout(function() {
-            addMessage('Спасибо за ваш запрос! Наш ассистент обрабатывает его. В ближайшее время с вами свяжется менеджер.', 'bot');
-        }, 600);
+            addMessage(answerFor(text), 'bot');
+        }, 350);
     }
 
     btn.addEventListener('click', function() {
@@ -249,9 +290,14 @@
         if (panel.classList.contains('open')) input.focus();
     });
     closeBtn.addEventListener('click', function() { panel.classList.remove('open'); });
-    sendBtn.addEventListener('click', sendMessage);
+    sendBtn.addEventListener('click', function() { sendMessage(); });
     input.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') sendMessage();
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.neto-suggestion'), function(suggestion) {
+        suggestion.addEventListener('click', function() {
+            sendMessage(suggestion.getAttribute('data-question'));
+        });
     });
 
     function escapeHtml(text) {
@@ -261,5 +307,5 @@
     }
 
     // 9. Сохраняем конфигурацию для последующих вызовов
-    window.NETO_WIDGET_CONFIG = { color, size, icon: iconKey };
+    window.NETO_WIDGET_CONFIG = { color: color, size: size, icon: iconKey, name: assistantName, company: company, greeting: greeting };
 })();
