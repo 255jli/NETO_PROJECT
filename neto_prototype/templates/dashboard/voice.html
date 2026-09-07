@@ -7,10 +7,11 @@
 {% block content %}
 <div class="page-header">
     <h1>Голосовой ассистент</h1>
-    <p>Принимает звонки 24/7, понимает намерение клиента, записывает и передаёт заявки в CRM. Ни один вызов не остаётся без ответа.</p>
+    <p>Принимает звонки 24/7, понимает намерение клиента, записывает и передаёт заявки в CRM. Все вызовы принимаются.</p>
 </div>
 
 <div class="vc-stack">
+    <span class="demo-badge">Демонстрационный сценарий: Магазин мебели</span>
 
     <!-- Показатели -->
     <div class="row-grid">
@@ -27,17 +28,17 @@
             <div class="vc-item"><span class="vc-item-icon">📞</span><div><strong>Приём звонков 24/7</strong><span>Никогда не кладёт трубку и всегда отвечает — даже ночью и в выходные.</span></div></div>
             <div class="vc-item"><span class="vc-item-icon">🧠</span><div><strong>Понимает намерение</strong><span>Отличает запись на услугу от вопроса о цене и действует по сценарию.</span></div></div>
             <div class="vc-item"><span class="vc-item-icon">🗒️</span><div><strong>Запись клиента</strong><span>Фиксирует имя, телефон и удобное время визита, создаёт карточку в CRM.</span></div></div>
-            <div class="vc-item"><span class="vc-item-icon">🛒</span><div><strong>Фиксация заказа</strong><span>Оформляет заказ и передаёт его в CRM или на почту без оператора.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🛒</span><div><strong>Фиксация заказа</strong><span>Оформляет заказ и передаёт его в CRM или на почту автоматически.</span></div></div>
         </div>
     </section>
 
     <!-- Как ассистент думает -->
     <section class="card">
         <h2 class="vc-title">Как ассистент думает</h2>
-        <p class="vc-hint">Технологическая основа из презентации — то, что отличает NETO от простого автоответчика.</p>
+        <p class="vc-hint">Принципы работы ассистента, которые отличают NETO от простого автоответчика.</p>
         <div class="vc-grid">
-            <div class="vc-item"><span class="vc-item-icon">🎙️</span><div><strong>Распознавание речи</strong><span>Комбинация Whisper и Yandex SpeechKit — точность даже с акцентами и шумом.</span></div></div>
-            <div class="vc-item"><span class="vc-item-icon">💡</span><div><strong>Понимание намерений</strong><span>Дообученные NLP-модели на базе GigaChat воспроизводят логику менеджера по продажам.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🎙️</span><div><strong>Распознавание речи</strong><span>Комбинированный движок распознавания речи обрабатывает речь с акцентами и шумом.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">💡</span><div><strong>Понимание намерений</strong><span>Исполнительное ядро на базе LLM воспроизводит логику менеджера по продажам.</span></div></div>
             <div class="vc-item"><span class="vc-item-icon">🔁</span><div><strong>Контекстная память</strong><span>Возвращается к ранее обсуждённым условиям и не переспрашивает дважды.</span></div></div>
             <div class="vc-item"><span class="vc-item-icon">🛡️</span><div><strong>152-ФЗ</strong><span>Записи и данные хранятся только на серверах в РФ.</span></div></div>
         </div>
@@ -48,7 +49,7 @@
         <div class="vc-head">
             <div>
                 <h2 class="vc-title">Аналитика обращений</h2>
-                <p class="vc-hint">Каждый звонок ассистент размечает сам: намерение, результат, тональность. Без ручной работы.</p>
+                <p class="vc-hint">Каждый звонок ассистент размечает сам: намерение и результат.</p>
             </div>
         </div>
         <table class="data-table" id="vcTable">
@@ -58,7 +59,6 @@
                     <th>Клиент</th>
                     <th>Намерение</th>
                     <th>Результат</th>
-                    <th>Тональность</th>
                     <th>Длит.</th>
                 </tr>
             </thead>
@@ -73,28 +73,19 @@
 (function() {
     'use strict';
 
-    var seed = [
-        { time: '09:12', client: 'Иван Петров', intent: 'Запись на диагностику', result: 'Записан на 10:00', tone: 'positive', dur: '2:10' },
-        { time: '10:04', client: 'Мария Смирнова', intent: 'Вопрос о ценах', result: 'Отправлен прайс в SMS', tone: 'neutral', dur: '1:32' },
-        { time: '11:47', client: 'Олег Кузнецов', intent: 'Оформление заказа', result: 'Заказ создан в CRM', tone: 'positive', dur: '3:05' },
-        { time: '12:20', client: 'Анна Волкова', intent: 'График работы', result: 'Ответила, контакт сохранён', tone: 'neutral', dur: '0:58' },
-        { time: '13:41', client: 'Дмитрий Соколов', intent: 'Жалоба на сервис', result: 'Переведён на менеджера', tone: 'negative', dur: '2:44' }
-    ];
-    var calls = seed.map(function(c) { return Object.assign({}, c); });
-    var tones = { positive: '😊 Позитивно', neutral: '😐 Нейтрально', negative: '😞 Негативно' };
     var body = document.getElementById('vcBody');
+    var resultLabels = { 'записан': 'Запись оформлена', 'не записан': 'Запись не оформлена', 'отказ': 'Клиент отказался' };
+    var durations = ['1:18', '1:42', '2:05', '2:24', '2:51'];
 
     function render() {
         body.innerHTML = '';
-        calls.forEach(function(c) {
+        window.events.forEach(function(event, index) {
             var tr = document.createElement('tr');
-            tr.innerHTML =
-                '<td>' + c.time + '</td>' +
-                '<td>' + c.client + '</td>' +
-                '<td>' + c.intent + '</td>' +
-                '<td>' + c.result + '</td>' +
-                '<td><span class="vc-tone vc-tone-' + c.tone + '">' + (tones[c.tone] || c.tone) + '</span></td>' +
-                '<td>' + c.dur + '</td>';
+            [event.time, event.client, event.service, resultLabels[event.status] || event.status, durations[index % durations.length]].forEach(function(value) {
+                var td = document.createElement('td');
+                td.textContent = value;
+                tr.appendChild(td);
+            });
             body.appendChild(tr);
         });
     }

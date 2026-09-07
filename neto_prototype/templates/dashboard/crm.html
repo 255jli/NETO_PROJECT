@@ -11,9 +11,11 @@
 </div>
 
 <div class="dashboard-container">
+    <span class="demo-badge">Демонстрационный сценарий: Магазин мебели</span>
+
     <div class="dashboard-header">
         <h1>Ваши клиенты работают на вас</h1>
-        <p class="dashboard-subtitle">Все звонки обработаны, уведомления отправлены, клиенты довольны — без ваших действий</p>
+        <p class="dashboard-subtitle">Все звонки обработаны, уведомления отправлены, клиенты довольны. Работа ведётся автоматически.</p>
     </div>
 
     <div class="auto-stats-grid">
@@ -30,7 +32,7 @@
         <div class="stat-card">
             <div class="stat-value">12:17</div>
             <div class="stat-label">Среднее время ответа</div>
-            <div class="stat-detail">Без вашего участия</div>
+            <div class="stat-detail">Автоматическая обработка</div>
         </div>
     </div>
 
@@ -58,104 +60,50 @@
         </div>
     </div>
 
+    <section class="card">
+        <h2 class="crm-title">Клиенты</h2>
+        <table class="data-table" id="crmTable">
+            <thead>
+                <tr>
+                    <th>Клиент</th>
+                    <th>Телефон</th>
+                    <th>Последнее обращение</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody id="crmBody"></tbody>
+        </table>
+    </section>
+
     <div class="pricing-note">
         <strong>Всё это за 1490 ₽/мес</strong> — меньше, чем час работы менеджера.
-        Никаких скрытых платежей, никаких действий с вашей стороны.
+        Скрытые платежи отсутствуют, основные действия выполняются автоматически.
     </div>
-
 </div>
 
 <script>
 (function() {
     'use strict';
 
-    var seed = [
-        { name: 'Иван Петров', phone: '+7 (900) 123-45-67', status: 'active', history: 'Диагностика (май), замена масла (июнь)' },
-        { name: 'Мария Смирнова', phone: '+7 (901) 234-56-78', status: 'new', history: 'Консультация по услугам' },
-        { name: 'Олег Кузнецов', phone: '+7 (902) 345-67-89', status: 'won', history: 'Полный ТО, ремонт подвески' }
-    ];
-    var customers = seed.map(function(c) { return Object.assign({}, c); });
-    var statuses = ['new', 'active', 'won', 'returning', 'loss'];
-    var labels = { new: 'Новый', active: 'Активный', won: 'Выигран', returning: 'Вернулся', loss: 'Потерян' };
-
     var body = document.getElementById('crmBody');
+    var statusLabels = { 'записан': 'Активный', 'не записан': 'Новый', 'отказ': 'Отложен' };
+    var customers = [];
 
-    function render() {
-        body.innerHTML = '';
-        if (customers.length === 0) {
-            body.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#8a8f98;padding:24px;">Клиентов пока нет. Нажмите «Добавить клиента».</td></tr>';
-        } else {
-            customers.forEach(function(c, i) {
-                var tr = document.createElement('tr');
-                tr.innerHTML =
-                    '<td><input type="text" value="' + c.name + '" data-field="name" data-idx="' + i + '"></td>' +
-                    '<td><input type="text" value="' + c.phone + '" data-field="phone" data-idx="' + i + '"></td>' +
-                    '<td><select data-field="status" data-idx="' + i + '">' +
-                        statuses.map(function(s) { return '<option value="' + s + '"' + (s === c.status ? ' selected' : '') + '>' + labels[s] + '</option>'; }).join('') +
-                    '</select></td>' +
-                    '<td><input type="text" value="' + c.history + '" data-field="history" data-idx="' + i + '"></td>' +
-                    '<td class="row-actions-cell"><button type="button" class="icon-btn" title="Удалить клиента" data-del="' + i + '">✕</button></td>';
-                body.appendChild(tr);
-            });
+    window.events.forEach(function(event) {
+        if (!customers.some(function(customer) { return customer.phone === event.phone; })) {
+            customers.push(event);
         }
-        updateStats();
-    }
-
-    function updateStats() {
-        var by = {};
-        customers.forEach(function(c) { by[c.status] = (by[c.status] || 0) + 1; });
-        document.getElementById('crmTotal').textContent = customers.length;
-        document.getElementById('crmNew').textContent = by.new || 0;
-        document.getElementById('crmActive').textContent = by.active || 0;
-        document.getElementById('crmWon').textContent = by.won || 0;
-    }
-
-    body.addEventListener('input', function(e) {
-        var el = e.target;
-        if (el.dataset.field) customers[+el.dataset.idx][el.dataset.field] = el.value;
-        updateStats();
-    });
-    body.addEventListener('change', function(e) {
-        if (e.target.dataset.field === 'status') { customers[+e.target.dataset.idx].status = e.target.value; render(); }
-    });
-    body.addEventListener('click', function(e) {
-        var del = e.target.closest('button[data-del]');
-        if (!del) return;
-        customers.splice(+del.dataset.del, 1);
-        render();
     });
 
-    function addCustomer() {
-        customers.push({ name: 'Новый клиент', phone: '+7 (___) ___-__-__', status: 'new', history: '' });
-        render();
-    }
-
-    document.getElementById('addCrmBtn').addEventListener('click', addCustomer);
-    render();
+    customers.forEach(function(customer) {
+        var tr = document.createElement('tr');
+        [customer.client, customer.phone, customer.date + ' ' + customer.time, statusLabels[customer.status] || customer.status].forEach(function(value) {
+            var td = document.createElement('td');
+            td.textContent = value;
+            tr.appendChild(td);
+        });
+        body.appendChild(tr);
+    });
 })();
 </script>
-
-<style>
-.crm-stack { display: flex; flex-direction: column; gap: 16px; max-width: 1080px; }
-
-/* KPI */
-.crm-kpi { text-align: center; padding: 20px; margin: 0; flex: 1 1 150px; min-width: 140px; }
-.crm-kpi-num { font-size: 26px; font-weight: 800; color: #1c1c1f; }
-.crm-kpi-num.crm-accent-blue { color: #005FF9; }
-.crm-kpi-num.crm-accent-green { color: #1f8a4c; }
-.crm-kpi-num.crm-accent-violet { color: #7b2ff7; }
-.crm-kpi-label { font-size: 13px; color: #6b6f76; margin-top: 4px; }
-
-.crm-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.crm-title { font-size: 18px; margin: 0; color: #1c1c1f; }
-.crm-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-.crm-hint { font-size: 12px; color: #8a8f98; }
-
-.crm-stack input[type="text"], .crm-stack select {
-    width: 100%; border: 1px solid #e6e8eb; border-radius: 8px; padding: 7px 10px; font-size: 14px;
-    font-family: inherit; color: #1c1c1f; background: #fff;
-}
-.crm-stack input[type="text"]:focus, .crm-stack select:focus { outline: none; border-color: #005FF9; }
-.crm-stack .icon-btn { width: 34px; height: 34px; }
-</style>
 {% endblock %}
