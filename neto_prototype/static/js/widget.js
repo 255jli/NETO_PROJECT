@@ -7,7 +7,7 @@
     var color = params.get('color') || '005FF9';
     var size = parseInt(params.get('size'), 10) || 72;
     var iconKey = params.get('icon') || 'chat';
-    var assistantName = params.get('name') || 'Нето';
+    var assistantName = params.get('name') || 'Neto';
     var company = params.get('company') || 'вашей компании';
     var greeting = params.get('greeting') || 'Здравствуйте! Я помогу ответить на вопросы и записать вас на консультацию.';
     // Новые параметры
@@ -18,6 +18,7 @@
     var conversationMode = params.get('conversationMode') || 'proactive';
     var quickQuestions = params.get('quickQuestions') || 'Цены и условия; Записаться; Что в наличии?';
     var collectLead = params.get('collectLead') !== 'false';
+    var windowMode = params.get('windowMode') || 'dynamic'; // dynamic | static
 
     // 2. Если есть глобальная конфигурация, используем её (приоритет выше)
     if (window.NETO_WIDGET_CONFIG) {
@@ -36,6 +37,7 @@
         if (cfg.conversationMode) conversationMode = cfg.conversationMode;
         if (cfg.quickQuestions) quickQuestions = cfg.quickQuestions;
         if (cfg.collectLead !== undefined) collectLead = cfg.collectLead;
+        if (cfg.windowMode) windowMode = cfg.windowMode;
     }
 
     // 3. SVG иконки
@@ -133,7 +135,7 @@
             top: ${panelTop};
             left: ${panelLeft};
             width: 340px;
-            max-height: 460px;
+            ${windowMode === 'static' ? 'height: 460px; max-height: 460px;' : 'max-height: 460px;'}
             background: white;
             border-radius: 16px;
             box-shadow: 0 8px 40px rgba(0,0,0,0.15);
@@ -183,6 +185,7 @@
             word-wrap: break-word;
             font-size: 14px;
             line-height: 1.5;
+            white-space: pre-line;
         }
         .neto-msg.user {
             background: #${color};
@@ -196,6 +199,30 @@
             align-self: flex-start;
             border-bottom-left-radius: 4px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+        }
+        .neto-study {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .neto-study-label {
+            font-size: 13px;
+            color: #64748b;
+        }
+        .neto-study-dots { display: inline-flex; gap: 4px; }
+        .neto-study-dots i {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #005FF9;
+            opacity: .25;
+            animation: netoStudyPulse 1s infinite ease-in-out;
+        }
+        .neto-study-dots i:nth-child(2) { animation-delay: .2s; }
+        .neto-study-dots i:nth-child(3) { animation-delay: .4s; }
+        @keyframes netoStudyPulse {
+            0%, 100% { opacity: .25; }
+            50% { opacity: 1; }
         }
         #neto-widget-suggestions {
             display: flex;
@@ -330,12 +357,39 @@
         return 'Понял вопрос. Я могу ответить по товарам и услугам, условиям, наличию и доставке, а также записать вас на консультацию. Что важно узнать первым?';
     }
 
+    function isAvailabilityQuestion(text) {
+        var n = text.toLowerCase();
+        return /налич/.test(n) || /что в наличии/.test(n) || /есть в наличии/.test(n);
+    }
+
+    function availabilityAnswer() {
+        return 'Сейчас в наличии:\n\u2022 Шкаф «Лидия» — 12 900 \u20bd\n\u2022 Шкаф «Модерн» — 18 500 \u20bd\n\u2022 Шкаф-купе «Прага» — 24 900 \u20bd\nПодберу под вашу комнату и бюджет. Оставьте номер, и менеджер уточнит детали.';
+    }
+
     function sendMessage(question) {
         var text = question || input.value.trim();
         if (!text) return;
         addMessage(text, 'user');
         input.value = '';
-        // Если firstResponder === 'client', бот отвечает всегда
+
+        // Специальный сценарий: вопрос о наличии — с анимацией «изучение»
+        if (isAvailabilityQuestion(text)) {
+            addMessage('Сейчас посмотрю\u2026', 'bot');
+
+            var study = document.createElement('div');
+            study.className = 'neto-msg bot neto-study';
+            study.innerHTML = '<span class="neto-study-label">Изучаю базу знаний\u2026</span><span class="neto-study-dots"><i></i><i></i><i></i></span>';
+            messages.appendChild(study);
+            messages.scrollTop = messages.scrollHeight;
+
+            setTimeout(function() {
+                study.remove();
+                addMessage(availabilityAnswer(), 'bot');
+            }, 1600);
+            return;
+        }
+
+        // Обычный ответ
         setTimeout(function() {
             addMessage(answerFor(text), 'bot');
         }, 350);
@@ -345,7 +399,7 @@
         panel.classList.toggle('open');
         if (panel.classList.contains('open')) input.focus();
         // Если firstResponder === 'client' и история пуста, добавляем приветствие при первом открытии панели
-        if ((conversationMode === 'proactive' || conversationMode === 'telegram') && firstResponder === 'bot' && history.length === 0 && showGreeting) {
+        if ((conversationMode === 'proactive' || conversationMode === 'messenger') && firstResponder === 'bot' && history.length === 0 && showGreeting) {
              addMessage(greeting, 'bot');
         }
     });
@@ -367,5 +421,5 @@
     }
 
     // 9. Сохраняем конфигурацию для последующих вызовов
-    window.NETO_WIDGET_CONFIG = { color: color, size: size, icon: iconKey, name: assistantName, company: company, greeting: greeting, position: position, firstResponder: firstResponder, showGreeting: showGreeting, scenario: scenario, conversationMode: conversationMode, quickQuestions: quickQuestions, collectLead: collectLead };
+    window.NETO_WIDGET_CONFIG = { color: color, size: size, icon: iconKey, name: assistantName, company: company, greeting: greeting, position: position, firstResponder: firstResponder, showGreeting: showGreeting, scenario: scenario, conversationMode: conversationMode, quickQuestions: quickQuestions, collectLead: collectLead, windowMode: windowMode };
 })();

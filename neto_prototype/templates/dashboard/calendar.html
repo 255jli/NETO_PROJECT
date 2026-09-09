@@ -32,6 +32,49 @@
     </div>
 </div>
 
+<!-- Личная CRM платформы NETO: все обращения за 9 месяцев -->
+<div class="crm-panel card">
+    <div class="crm-panel-head">
+        <div>
+            <h2 class="crm-panel-title">Клиенты</h2>
+            <p class="crm-panel-hint">Личная база NETO: звонки и чат-виджет за последние 9 месяцев. Всё, что собирает платформа, хранится здесь — без внешней CRM.</p>
+        </div>
+        <div class="crm-panel-filters">
+            <input type="search" id="clientSearch" class="form-control crm-search" placeholder="Поиск по имени или телефону…">
+            <select id="channelFilter" class="form-control crm-channel">
+                <option value="all">Все каналы</option>
+                <option value="голос">📞 Голос</option>
+                <option value="виджет">💬 Чат-виджет</option>
+            </select>
+        </div>
+    </div>
+    <table class="data-table crm-table">
+        <thead>
+            <tr>
+                <th>Клиент</th>
+                <th>Телефон</th>
+                <th>Обращений</th>
+                <th>Последний контакт</th>
+                <th>Канал</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="clientsBody"></tbody>
+    </table>
+    <div class="crm-panel-foot">Всего клиентов: <strong id="clientsCount">0</strong> · Клик по строке — история обращений и диалоги с ИИ.</div>
+</div>
+
+<!-- Модалка карточки клиента (история + диалоги с ИИ) -->
+<div class="modal-backdrop" id="clientModal">
+    <div class="modal-card modal-lg">
+        <div class="modal-header">
+            <h3 id="clientModalTitle">Клиент</h3>
+            <button class="close-btn" data-close-modal>✕</button>
+        </div>
+        <div class="modal-body" id="clientModalBody"></div>
+    </div>
+</div>
+
 <!-- Модалка деталей события -->
 <div class="modal-backdrop" id="eventModal">
     <div class="modal-card modal-lg">
@@ -125,5 +168,32 @@
 .month-day .mday-num { font-size: 14px; font-weight: 600; color: #3c4043; }
 .month-day.cal-today .mday-num { color: #005FF9; }
 .mday-item { font-size: 11px; color: #005FF9; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-top: 2px; }
+
+/* ---- Личная CRM (панель клиентов) ---- */
+.crm-panel { margin-top: 18px; }
+.crm-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.crm-panel-title { font-size: 18px; margin: 0 0 4px; color: #1c1c1f; }
+.crm-panel-hint { font-size: 13px; color: #6b6f76; margin: 0; max-width: 560px; }
+.crm-panel-filters { display: flex; gap: 10px; flex-wrap: wrap; }
+.crm-search { min-width: 220px; }
+.crm-channel { width: 170px; }
+.crm-table td, .crm-table th { padding: 10px 12px; }
+.crm-table tbody tr { cursor: pointer; }
+.crm-table tbody tr:hover { background: #f8fafc; }
+.crm-channel-badge { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; }
+.crm-channel-badge.voice { background: #e8f0fe; color: #005FF9; }
+.crm-channel-badge.widget { background: #e6f4eb; color: #1f8a4c; }
+.crm-panel-foot { font-size: 12px; color: #8a8f98; margin-top: 12px; }
+
+/* Карточка клиента в модалке */
+.client-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.client-avatar { width: 52px; height: 52px; border-radius: 50%; background: #005FF9; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; flex-shrink: 0; }
+.client-card-meta strong { font-size: 18px; color: #1c1c1f; }
+.client-card-meta span { display: block; color: #6b6f76; font-size: 13px; }
+.client-event { border: 1px solid #e6e8eb; border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; }
+.client-event-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.client-event-top strong { font-size: 14px; color: #1c1c1f; }
+.client-event-time { font-size: 12px; color: #8a8f98; }
+.client-event-chat { background: #f7f9fc; border-radius: 8px; padding: 8px 10px; font-size: 12px; color: #3c4043; white-space: pre-wrap; margin: 0; }
 </style>
 {% endblock %}

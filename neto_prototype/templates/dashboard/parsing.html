@@ -14,13 +14,6 @@
 
 <div class="mkt-stack">
 
-    <!-- Показатели -->
-    <div class="row-grid">
-        <div class="card mkt-kpi"><div class="mkt-kpi-num">128</div><div class="mkt-kpi-label">товаров под контролем</div></div>
-        <div class="card mkt-kpi"><div class="mkt-kpi-num">14</div><div class="mkt-kpi-label">конкурентов в выборке</div></div>
-        <div class="card mkt-kpi"><div class="mkt-kpi-num">1×/нед</div><div class="mkt-kpi-label">обновление данных</div></div>
-        <div class="card mkt-kpi"><div class="mkt-kpi-num">6 ч</div><div class="mkt-kpi-label">сэкономлено в неделю</div></div>
-    </div>
 
     <!-- Что отслеживаем -->
     <section class="card">
@@ -62,13 +55,73 @@
         </table>
     </section>
 
+    <!-- Зона конкурентов на карте -->
+    <section class="card mkt-map-card">
+        <div class="mkt-map-layout">
+
+            <!-- Левая колонка: текст и поиск -->
+            <div class="mkt-map-side">
+                <h2 class="mkt-title">Зона охвата конкурентов</h2>
+                <p class="mkt-hint">Выберите радиус вокруг точки продаж — система подсветит конкурентов в зоне и соберёт по ним публичные данные.</p>
+
+                <div class="mkt-search">
+                    <span class="mkt-search-ico">&#128269;</span>
+                    <input type="text" id="mkt-search" class="text-input" placeholder="Найти конкурента или адрес…" autocomplete="off">
+                    <button type="button" class="btn btn-primary btn-sm mkt-search-btn" id="mkt-search-btn">Найти</button>
+                </div>
+
+                <div class="mkt-radius">
+                    <label class="mkt-radius-label" for="mkt-radius">Радиус зоны</label>
+                    <input type="range" id="mkt-radius" min="1" max="30" value="12">
+                    <span class="mkt-radius-val" id="mkt-radius-val">12 км</span>
+                </div>
+
+                <div class="mkt-selected" id="mkt-selected">
+                    <div class="mkt-selected-empty">Конкурент не выбран. Нажмите на метку на карте.</div>
+                </div>
+
+                <div class="mkt-count" id="mkt-count">Найдено конкурентов в зоне: <strong>7</strong></div>
+
+                <div class="mkt-legend">
+                    <span class="mkt-legend-item"><i class="mkt-dot mkt-dot-active"></i>Активный</span>
+                    <span class="mkt-legend-item"><i class="mkt-dot mkt-dot-zone"></i>В зоне</span>
+                    <span class="mkt-legend-item"><i class="mkt-dot mkt-dot-out"></i>Вне зоны</span>
+                </div>
+            </div>
+
+            <!-- Правая колонка: лже-карта -->
+            <div class="mkt-map-wrap">
+                <div class="mkt-map-toolbar">
+                    <span class="mkt-map-toolbar-title">Карта рынка · Москва и область</span>
+                    <span class="mkt-map-badge">API: demo-geo</span>
+                </div>
+                <div class="mkt-map-canvas" id="mkt-map">
+                    <img src="{{ url_for('static', filename='img/Moscow_map_screen.png') }}" alt="Карта рынка" class="mkt-map-img">
+                    <button type="button" class="mkt-marker" data-name="Химки" data-addr="Ленинградское ш., 8 км от МКАД" data-price="2 150 ₽" data-note="Онлайн-каталог + пункт выдачи" style="left:22%; top:16%"></button>
+                    <button type="button" class="mkt-marker" data-name="Красногорск" data-addr="Волоколамское ш., 6 км от МКАД" data-price="2 000 ₽" data-note="Цены ниже рынка на 5%" style="left:12%; top:30%"></button>
+                    <button type="button" class="mkt-marker" data-name="Мытищи" data-addr="Осташковское ш., 5 км от МКАД" data-price="2 300 ₽" data-note="Широкий ассортимент" style="left:82%; top:18%"></button>
+                    <button type="button" class="mkt-marker" data-name="Королёв" data-addr="ул. Дзержинского, 4 км от МКАД" data-price="2 400 ₽" data-note="Быстрая доставка" style="left:74%; top:30%"></button>
+                    <button type="button" class="mkt-marker" data-name="Балашиха" data-addr="Горьковское ш., 7 км от МКАД" data-price="1 950 ₽" data-note="Сезонные акции" style="left:88%; top:42%"></button>
+                    <button type="button" class="mkt-marker" data-name="Люберцы" data-addr="Новорязанское ш., 3 км от МКАД" data-price="2 100 ₽" data-note="Высокий рейтинг" style="left:72%; top:58%"></button>
+                    <button type="button" class="mkt-marker" data-name="Подольск" data-addr="Симферопольское ш., 12 км от МКАД" data-price="2 050 ₽" data-note="Большой ассортимент" style="left:38%; top:84%"></button>
+                    <button type="button" class="mkt-marker" data-name="Одинцово" data-addr="Минское ш., 9 км от МКАД" data-price="2 200 ₽" data-note="Премиальный сегмент" style="left:16%; top:58%"></button>
+                </div>
+                <div class="mkt-map-foot">
+                    <span id="mkt-map-status">Данные: публичные источники</span>
+                    <button type="button" class="btn btn-outline btn-sm" id="mkt-scan">Сканировать зону</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <!-- Этичность -->
     <section class="card">
         <h2 class="mkt-title">Этичный сбор данных</h2>
         <div class="mkt-ethics">
             <div class="mkt-ethic"><span class="mkt-ethic-ok">✓</span> Только публичные данные сайтов и каталогов</div>
             <div class="mkt-ethic"><span class="mkt-ethic-ok">✓</span> Только публичные данные, исключены взлом и обход ограничений</div>
-            <div class="mkt-ethic"><span class="mkt-ethic-ok">✓</span> Соответствие 152-ФЗ — данные хранятся в РФ</div>
+            <div class="mkt-ethic"><span class="mkt-ethic-ok">✓</span> Данные обрабатываются и хранятся на серверах в РФ</div>
             <div class="mkt-ethic"><span class="mkt-ethic-ok">✓</span> Умеренная частота запросов — не мешает сайтам</div>
         </div>
     </section>
@@ -97,5 +150,210 @@
 .mkt-ethics { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
 .mkt-ethic { display: flex; align-items: center; gap: 10px; border: 1px solid #cde6d3; background: #f4faf6; border-radius: 10px; padding: 12px 14px; font-size: 14px; color: #1c1c1f; }
 .mkt-ethic-ok { color: #1f8a4c; font-weight: 800; flex-shrink: 0; }
+
+/* === Зона конкурентов на карте === */
+.mkt-map-card { max-width: 1080px; padding: 20px; }
+.mkt-map-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 340px) 1fr;
+    gap: 18px;
+    align-items: stretch;
+}
+.mkt-map-side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.mkt-map-side .mkt-title,
+.mkt-map-side .mkt-hint { margin: 0; }
+
+.mkt-search { display: flex; gap: 8px; align-items: center; position: relative; }
+.mkt-search .text-input { padding-left: 34px; }
+.mkt-search-ico {
+    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    font-size: 15px; color: #9aa0a8; pointer-events: none; line-height: 1;
+}
+.mkt-search-btn { flex-shrink: 0; white-space: nowrap; }
+
+.mkt-radius { display: flex; align-items: center; gap: 12px; }
+.mkt-radius-label { font-size: 13px; color: #6b6f76; white-space: nowrap; }
+.mkt-radius input[type="range"] { flex: 1; accent-color: #005FF9; }
+.mkt-radius-val {
+    font-size: 13px; font-weight: 700; color: #005FF9;
+    background: #f0f4ff; border: 1px solid #c9dcff; border-radius: 6px;
+    padding: 3px 8px; min-width: 52px; text-align: center;
+}
+
+.mkt-selected {
+    border: 1px dashed #c9dcff; background: #f7faff;
+    border-radius: 10px; padding: 12px 14px; min-height: 84px;
+    display: flex; align-items: flex-start;
+}
+.mkt-selected-empty { color: #8a9099; font-size: 13px; line-height: 1.5; }
+.mkt-sel-head { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.mkt-sel-name { font-size: 15px; font-weight: 700; color: #1c1c1f; }
+.mkt-sel-price { font-size: 15px; font-weight: 800; color: #005FF9; }
+.mkt-sel-addr { font-size: 13px; color: #6b6f76; margin-top: 3px; }
+.mkt-sel-note { font-size: 13px; color: #1f8a4c; margin-top: 6px; display: flex; gap: 6px; align-items: center; }
+
+.mkt-count { font-size: 14px; color: #1c1c1f; }
+.mkt-count strong { color: #005FF9; }
+
+.mkt-legend { display: flex; gap: 14px; flex-wrap: wrap; }
+.mkt-legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #6b6f76; }
+.mkt-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.mkt-dot-active { background: #005FF9; box-shadow: 0 0 0 3px rgba(0,95,249,.18); }
+.mkt-dot-zone { background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,.18); }
+.mkt-dot-out { background: #d3d7dd; }
+
+.mkt-map-wrap {
+    border: 1px solid #e6e8eb; border-radius: 12px; overflow: hidden;
+    display: flex; flex-direction: column; min-width: 0;
+}
+.mkt-map-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-bottom: 1px solid #e6e8eb; background: #fafbfc;
+}
+.mkt-map-toolbar-title { font-size: 13px; font-weight: 600; color: #1c1c1f; }
+.mkt-map-badge {
+    font-size: 11px; font-weight: 600; color: #6b6f76;
+    background: #eef0f3; border-radius: 5px; padding: 2px 7px;
+}
+.mkt-map-canvas {
+    position: relative; flex: 1; min-height: 380px; overflow: hidden;
+    background: #eef1f4;
+}
+.mkt-map-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.mkt-marker {
+    position: absolute; width: 18px; height: 18px; border-radius: 50%;
+    background: #005FF9; border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,.35);
+    cursor: pointer; padding: 0; transform: translate(-50%, -50%);
+    transition: background .15s ease;
+}
+.mkt-marker:hover { background: #0040a8; }
+.mkt-marker.mkt-active { background: #22c55e; box-shadow: 0 0 0 5px rgba(34,197,94,.35); }
+.mkt-marker.mkt-dim { background: #c6cbd1; box-shadow: 0 2px 6px rgba(0,0,0,.2); }
+
+.mkt-map-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-top: 1px solid #e6e8eb; background: #fafbfc; gap: 10px;
+}
+.mkt-map-foot span { font-size: 12px; color: #8a9099; }
+
+@media (max-width: 880px) {
+    .mkt-map-layout { grid-template-columns: 1fr; }
+}
 </style>
+
+<script>
+(function () {
+    'use strict';
+
+    var markers = document.querySelectorAll('.mkt-marker');
+    var selected = document.getElementById('mkt-selected');
+    var countEl = document.getElementById('mkt-count');
+    var radiusInput = document.getElementById('mkt-radius');
+    var radiusVal = document.getElementById('mkt-radius-val');
+    var searchInput = document.getElementById('mkt-search');
+    var searchBtn = document.getElementById('mkt-search-btn');
+    var scanBtn = document.getElementById('mkt-scan');
+    var mapStatus = document.getElementById('mkt-map-status');
+
+    var total = markers.length;
+    var active = null;
+
+    function renderCount() {
+        var inZone = 0;
+        markers.forEach(function (m) {
+            if (!m.classList.contains('mkt-dim')) { inZone++; }
+        });
+        countEl.innerHTML = 'Найдено конкурентов в зоне: <strong>' + inZone + '</strong>';
+    }
+
+    function applyZone(radius) {
+        radiusVal.textContent = radius + ' км';
+        markers.forEach(function (m) {
+            // Чем больше радиус — тем больше конкурентов в зоне (иллюзия масштаба).
+            var idx = parseInt(m.getAttribute('data-name').length, 10) || 5;
+            var threshold = 4 + idx; // 9..14
+            var inZone = radius >= threshold;
+            m.classList.toggle('mkt-dim', !inZone);
+        });
+        renderCount();
+    }
+
+    function selectMarker(marker) {
+        if (marker.classList.contains('mkt-dim')) {
+            showToast('Конкурент вне зоны — увеличьте радиус', 'info');
+            return;
+        }
+        markers.forEach(function (m) { m.classList.remove('mkt-active'); });
+        marker.classList.add('mkt-active');
+        active = marker;
+
+        var name = marker.getAttribute('data-name');
+        var addr = marker.getAttribute('data-addr');
+        var price = marker.getAttribute('data-price');
+        var note = marker.getAttribute('data-note');
+
+        selected.innerHTML =
+            '<div style="width:100%">' +
+                '<div class="mkt-sel-head">' +
+                    '<span class="mkt-sel-name">' + name + '</span>' +
+                    '<span class="mkt-sel-price">' + price + '</span>' +
+                '</div>' +
+                '<div class="mkt-sel-addr">' + addr + '</div>' +
+                '<div class="mkt-sel-note"><span>&#128310;</span>' + note + '</div>' +
+            '</div>';
+
+        mapStatus.textContent = 'Данные: публичные источники · ' + name;
+        showToast('Конкурент «' + name + '» добавлен в отслеживание', 'success');
+    }
+
+    markers.forEach(function (m) {
+        m.addEventListener('click', function () { selectMarker(m); });
+    });
+
+    radiusInput.addEventListener('input', function () {
+        applyZone(parseInt(radiusInput.value, 10));
+    });
+
+    searchBtn.addEventListener('click', function () { doSearch(); });
+    searchInput.addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') { doSearch(); }
+    });
+
+    function doSearch() {
+        var q = (searchInput.value || '').trim().toLowerCase();
+        var found = null;
+        markers.forEach(function (m) {
+            var name = m.getAttribute('data-name').toLowerCase();
+            if (q && name.indexOf(q) !== -1) {
+                found = m;
+                m.style.boxShadow = '0 0 0 6px rgba(245,158,11,.7)';
+            } else {
+                m.style.boxShadow = '';
+            }
+        });
+        if (found) {
+            selectMarker(found);
+            mapStatus.textContent = 'Поиск: найдено — ' + found.getAttribute('data-name');
+        } else {
+            mapStatus.textContent = q ? 'Поиск: совпадений не найдено' : 'Данные: публичные источники';
+            if (q) { showToast('По запросу ничего не найдено', 'info'); }
+        }
+    }
+
+    scanBtn.addEventListener('click', function () {
+        mapStatus.textContent = 'Сканирование зоны…';
+        scanBtn.disabled = true;
+        setTimeout(function () {
+            mapStatus.textContent = 'Сканирование завершено · собрано данных: ' + (active ? 1 : total) + ' источников';
+            scanBtn.disabled = false;
+            showToast('Зона отсканирована, данные обновлены', 'success');
+        }, 1200);
+    });
+
+    // Инициализация
+    applyZone(parseInt(radiusInput.value, 10));
+})();
+</script>
 {% endblock %}

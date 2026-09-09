@@ -14,14 +14,12 @@
 
     <!-- ===== 1. Источник данных: CRM или внутри NETO ===== -->
     <section class="card int-section">
-        <h2 class="int-title">Откуда ассистент возьмёт данные о клиентах</h2>
-        <div class="int-seg" id="sourceSeg">
-            <button type="button" data-src="crm" class="active">У меня есть CRM</button>
-            <button type="button" data-src="builtin">Работаю внутри NETO</button>
-        </div>
+        <h2 class="int-title">NETO сам работает как ваша CRM</h2>
+        <p class="int-hint">База клиентов уже есть внутри платформы — ассистент ведёт её автоматически из звонков и чатов. Подключите собственную БД или CRM — данные будут <strong>дублироваться</strong> в обе системы и использоваться и ассистентом, и платформой.</p>
 
+        <!-- Подключение своей CRM / БД -->
         <div class="int-src-panel" id="srcCrm">
-            <p class="int-hint">Подключите свою систему — ассистент сам подтянет карточки клиентов и историю обращений.</p>
+            <p class="int-hint">Подключите свою систему — ассистент подтянет карточки и историю, изменения синхронизируются в обе стороны.</p>
             <div class="int-crm-grid">
                 <div class="int-crm-tile" data-crm="amoCRM">
                     <div class="int-crm-name">amoCRM</div>
@@ -35,14 +33,39 @@
                     <div class="int-crm-name">1С</div>
                     <button type="button" class="btn btn-sm btn-outline int-crm-btn">Подключить</button>
                 </div>
+                <div class="int-crm-tile" data-crm="Своя БД">
+                    <div class="int-crm-name">Своя БД</div>
+                    <button type="button" class="btn btn-sm btn-outline int-crm-btn">Подключить</button>
+                </div>
             </div>
-            <p class="int-note">После подключения данные появятся автоматически. Вы всегда можете посмотреть базу клиентов на вкладке «CRM».</p>
+            <p class="int-note">NETO продолжает работать как полноценная CRM: карточки создаются из звонков и чатов и синхронизируются с подключённой системой. База доступна на вкладке «CRM».</p>
         </div>
 
-        <div class="int-src-panel" id="srcBuiltin" hidden>
-            <p class="int-hint">Внутренняя база NETO хранит клиентов прямо здесь. Заполните её вручную или разрешите ассистенту создавать карточки из звонков и чатов.</p>
-            <div class="int-src-cta">
-                <a href="/dashboard/crm" class="btn btn-primary">Перейти к базе клиентов</a>
+        <!-- Какие данные можно брать -->
+        <div class="int-access">
+            <strong class="int-access-title">Какие данные разрешить брать</strong>
+            <p class="int-hint">Выберите поля, которые ассистент и платформа могут читать и использовать.</p>
+            <div class="int-access-grid" id="accessGrid">
+                <label class="int-access-item"><input type="checkbox" checked> Имя и контакты</label>
+                <label class="int-access-item"><input type="checkbox" checked> История обращений</label>
+                <label class="int-access-item"><input type="checkbox" checked> Покупки и заказы</label>
+                <label class="int-access-item"><input type="checkbox" checked> Условия и договорённости</label>
+                <label class="int-access-item"><input type="checkbox"> Паспортные данные</label>
+                <label class="int-access-item"><input type="checkbox"> Финансовые данные</label>
+            </div>
+        </div>
+
+        <!-- Для программиста -->
+        <div class="int-dev">
+            <strong class="int-dev-title">Для разработчиков</strong>
+            <p class="int-hint">Подключите любую систему через API — поддерживаются все ключи доступа.</p>
+            <div class="int-dev-row">
+                <input type="text" class="text-input" id="devApiKey" placeholder="Ваш API-ключ">
+                <button type="button" class="btn btn-primary" id="devSaveKey">Сохранить ключ</button>
+            </div>
+            <div class="int-dev-actions">
+                <button type="button" class="btn btn-outline" id="devDocs">Открыть документацию API</button>
+                <button type="button" class="btn btn-outline" id="devTest">Проверить подключение</button>
             </div>
         </div>
     </section>
@@ -207,18 +230,9 @@
     }
 
     // ---------- 1. Источник данных ----------
-    var seg = document.getElementById('sourceSeg');
-    seg.addEventListener('click', function(e) {
-        var btn = e.target.closest('button[data-src]');
-        if (!btn) return;
-        state.source = btn.dataset.src;
-        seg.querySelectorAll('button').forEach(function(b) { b.classList.toggle('active', b === btn); });
-        document.getElementById('srcCrm').hidden = state.source !== 'crm';
-        document.getElementById('srcBuiltin').hidden = state.source !== 'builtin';
-        renderSummary();
-    });
+    // Источник определяется автоматически (NETO как CRM + дублирование в подключённую систему).
 
-    // Подключение CRM (переключатель)
+    // Подключение CRM / БД (переключатель)
     document.querySelectorAll('.int-crm-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
             var tile = btn.closest('.int-crm-tile');
@@ -229,6 +243,40 @@
             renderSummary();
         });
     });
+
+    // Разрешения на данные (лже-чекбоксы)
+    document.querySelectorAll('#accessGrid input[type="checkbox"]').forEach(function(cb) {
+        cb.addEventListener('change', function() {
+            if (typeof showToast === 'function') {
+                showToast(cb.checked ? 'Доступ к данным включён' : 'Доступ к данным отключён', 'success');
+            }
+        });
+    });
+
+    // Для разработчиков (лже-кнопки)
+    var devKey = document.getElementById('devApiKey');
+    var devSave = document.getElementById('devSaveKey');
+    var devDocs = document.getElementById('devDocs');
+    var devTest = document.getElementById('devTest');
+
+    if (devSave) {
+        devSave.addEventListener('click', function() {
+            var key = devKey ? devKey.value.trim() : '';
+            if (typeof showToast === 'function') {
+                showToast(key ? 'API-ключ сохранён (демо)' : 'Введите API-ключ', key ? 'success' : 'info');
+            }
+        });
+    }
+    if (devDocs) {
+        devDocs.addEventListener('click', function() {
+            if (typeof showToast === 'function') showToast('Документация API открыта (демо)', 'info');
+        });
+    }
+    if (devTest) {
+        devTest.addEventListener('click', function() {
+            if (typeof showToast === 'function') showToast('Подключение проверяется… всё в порядке', 'success');
+        });
+    }
 
     // ---------- 2. Навигация по методам ----------
     document.getElementById('methodGrid').addEventListener('click', function(e) {
@@ -402,6 +450,26 @@
 .int-crm-tile.connected { border-color: #cde6d3; background: #f4faf6; }
 .int-crm-name { font-weight: 700; color: #1c1c1f; }
 .int-src-cta { margin-top: 4px; }
+
+/* Разрешения на данные */
+.int-access { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e6e8eb; }
+.int-access-title { font-size: 15px; color: #1c1c1f; display: block; margin-bottom: 2px; }
+.int-access .int-hint { margin-bottom: 10px; }
+.int-access-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.int-access-item {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid #e6e8eb; border-radius: 10px;
+    padding: 10px 12px; font-size: 13px; color: #3c4043; cursor: pointer;
+}
+.int-access-item input { accent-color: #005FF9; }
+
+/* Для разработчиков */
+.int-dev { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e6e8eb; }
+.int-dev-title { font-size: 15px; color: #1c1c1f; display: block; margin-bottom: 2px; }
+.int-dev .int-hint { margin-bottom: 12px; }
+.int-dev-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.int-dev-row .text-input { flex: 1; min-width: 220px; }
+.int-dev-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
 /* Методы */
 .int-methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }

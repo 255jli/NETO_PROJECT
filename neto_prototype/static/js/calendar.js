@@ -85,6 +85,8 @@
 
         setupModalClose();
         render();
+        renderClientsPanel();
+        bindClientsPanel();
     });
 
     function shift(dir) {
@@ -284,5 +286,114 @@
                 modal.classList.remove('show');
             }
         });
+    }
+
+    // ===== Личная CRM: панель клиентов =====
+    // Все клиенты за 9 месяцев (из window.events), группировка по имени.
+    function buildClients() {
+        var map = {};
+        events().forEach(function(e) {
+            if (!map[e.client]) {
+                map[e.client] = { name: e.client, phone: e.phone, count: 0, lastDate: '', lastTime: '', channels: {} };
+            }
+            var c = map[e.client];
+            c.count++;
+            c.channels[e.channel] = true;
+            var key = e.date + 'T' + e.time;
+            if (key > (c.lastDate + 'T' + c.lastTime)) {
+                c.lastDate = e.date;
+                c.lastTime = e.time;
+            }
+            if (!c.phone) c.phone = e.phone;
+        });
+        return Object.keys(map).map(function(k) { return map[k]; });
+    }
+
+    function renderClientsPanel() {
+        var body = document.getElementById('clientsBody');
+        if (!body) return;
+
+        var searchEl = document.getElementById('clientSearch');
+        var channelEl = document.getElementById('channelFilter');
+        var search = (searchEl && searchEl.value) || '';
+        var channel = (channelEl && channelEl.value) || 'all';
+
+        var clients = buildClients();
+        var query = search.trim().toLowerCase();
+
+        var filtered = clients.filter(function(c) {
+            if (query && (c.name.toLowerCase().indexOf(query) === -1) &&
+                (c.phone || '').toLowerCase().indexOf(query) === -1) return false;
+            if (channel !== 'all' && !c.channels[channel]) return false;
+            return true;
+        });
+
+        var totalCountEl = document.getElementById('clientsCount');
+        if (totalCountEl) totalCountEl.textContent = filtered.length;
+
+        body.innerHTML = '';
+        if (filtered.length === 0) {
+            body.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#8a8f98;padding:24px;">Клиентов не найдено.</td></tr>';
+            return;
+        }
+
+        filtered.sort(function(a, b) { return b.lastDate.localeCompare(a.lastDate); });
+
+        filtered.forEach(function(c) {
+            var mainChannel = c.channels['голос'] ? 'голос' : 'виджет';
+            var both = c.channels['голос'] && c.channels['виджет'];
+            var badge = '<span class="crm-channel-badge ' + (mainChannel === 'голос' ? 'voice' : 'widget') + '">' +
+                        (mainChannel === 'голос' ? '📞 Голос' : '💬 Виджет') + (both ? ' + 💬' : '') + '</span>';
+            var tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td><strong>' + esc(c.name) + '</strong></td>' +
+                '<td>' + esc(c.phone || '—') + '</td>' +
+                '<td>' + c.count + '</td>' +
+                '<td>' + c.lastDate.slice(5) + ' ' + c.lastTime + '</td>' +
+                '<td>' + badge + '</td>' +
+                '<td>›</td>';
+            tr.addEventListener('click', function() { openClientModal(c.name); });
+            body.appendChild(tr);
+        });
+    }
+
+    function openClientModal(name) {
+        var list = events().filter(function(e) { return e.client === name; })
+                           .sort(function(a, b) { return b.date.localeCompare(a.date); });
+        if (list.length === 0) return;
+
+        var c = list[0];
+        var initials = (c.client || '?').trim().split(/\s+/).map(function(w) { return w[0]; }).slice(0, 2).join('').toUpperCase();
+        document.getElementById('clientModalTitle').textContent = 'Клиент: ' + c.client;
+
+        var html =
+            '<div class="client-card-head">' +
+                '<div class="client-avatar">' + esc(initials) + '</div>' +
+                '<div class="client-card-meta">' +
+                    '<strong>' + esc(c.client) + '</strong>' +
+                    '<span>' + esc(c.phone) + ' · обращений: ' + list.length + ' за 9 месяцев</span>' +
+                '</div>' +
+            '</div>';
+
+        html += '<h4 style="margin:0 0 10px;color:#1c1c1f;">История обращений и диалоги с ИИ</h4>';
+        list.forEach(function(e) {
+            var badge = '<span class="crm-channel-badge ' + (e.channel === 'голос' ? 'voice' : 'widget') + '">' +
+                        (e.channel === 'голос' ? '📞 Голос' : '💬 Виджет') + '</span>';
+            html += '<div class="client-event">' +
+                '<div class="client-event-top"><strong>' + esc(e.service) + ' · ' + esc(e.status) + '</strong>' +
+                '<span class="client-event-time">' + e.date.slice(5) + ' ' + e.time + ' · ' + badge + '</span></div>' +
+                '<pre class="client-event-chat">' + esc(e.transcript) + '</pre>' +
+            '</div>';
+        });
+
+        document.getElementById('clientModalBody').innerHTML = html;
+        document.getElementById('clientModal').classList.add('show');
+    }
+
+    function bindClientsPanel() {
+        var search = document.getElementById('clientSearch');
+        var channel = document.getElementById('channelFilter');
+        if (search) search.addEventListener('input', renderClientsPanel);
+        if (channel) channel.addEventListener('change', renderClientsPanel);
     }
 })();

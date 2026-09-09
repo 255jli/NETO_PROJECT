@@ -12,10 +12,6 @@
         <button type="button" id="edit-mode-toggle" class="btn btn-primary">Настроить дашборд</button>
     </div>
 
-    <div id="dnd-hint" class="dnd-hint" hidden>
-        <span class="dnd-hint-dot"></span> Перетаскивайте виджеты, чтобы поменять их местами или перенести в другой ряд. Наведите курсор на промежуток между виджетами или рядами — появится «+» для добавления нового блока. Пустые ряды удаляются автоматически.
-    </div>
-
     <span class="demo-badge">Демонстрационный сценарий: Магазин мебели</span>
 
     <div id="dashboard-rows" class="dashboard-rows"></div>
@@ -63,8 +59,9 @@
     </div>
 </div>
 
+<script src="{{ url_for('static', filename='js/data.js') }}"></script>
 <script src="{{ url_for('static', filename='js/sortable.js') }}"></script>
-<script src="{{ url_for('static', filename='js/overview.js') }}?v=20260907-2"></script>
+<script src="{{ url_for('static', filename='js/overview.js') }}?v=20260907-3"></script>
 <script src="{{ url_for('static', filename='js/dashboard-dnd.js') }}"></script>
 <script>
     // Подсказка для режима редактирования.

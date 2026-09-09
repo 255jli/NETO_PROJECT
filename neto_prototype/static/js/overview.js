@@ -1021,6 +1021,52 @@ function renderHourlyActivity(container, config, eventsData) {
     chartInstances['hourly-activity'] = { main: chart };
 }
 
+// Активность по дням недели (столбчатый график) — вызывается виджетом 'weekly-bar'
+function renderWeeklyBar(container, config, eventsData) {
+    const { filtered } = smartFilter(eventsData, config);
+    const labels = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    const counts = [0, 0, 0, 0, 0, 0, 0];
+    filtered.forEach(e => {
+        const d = new Date(e.date + 'T12:00:00');
+        if (!isNaN(d.getTime())) {
+            const dow = (d.getDay() + 6) % 7; // Пн=0
+            counts[dow]++;
+        }
+    });
+
+    const hasData = counts.some(c => c > 0);
+    const peakIdx = hasData ? counts.indexOf(Math.max(...counts)) : -1;
+
+    const summary = document.createElement('div');
+    summary.className = 'widget-insight';
+    summary.innerHTML = hasData && peakIdx >= 0
+        ? 'Пик активности — <strong>' + labels[peakIdx] + '</strong>'
+        : 'Пока нет обращений — график заполнится автоматически';
+    container.appendChild(summary);
+
+    const canvas = document.createElement('canvas');
+    canvas.height = 200;
+    container.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: counts,
+                backgroundColor: counts.map((c, i) => i === peakIdx ? '#FF8F00' : '#005FF9')
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+    chartInstances['weekly-bar'] = { main: chart };
+}
+
 // Восстановленная функция renderRecentCallsTable
 function renderRecentCallsTable(container, config, eventsData) {
     const count = config.count || 5;

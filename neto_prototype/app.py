@@ -28,7 +28,10 @@ def dashboard(path='overview'):
         abort(404)
 
     active_tab_name = TAB_NAMES[path]
-    return render_template(f'dashboard/{path}.html', active_tab=path, active_tab_name=active_tab_name)
+    # «Телефон» и «Голос» объединены в одну страницу (voice.html) —
+    # обе ссылки сайдбара ведут на единый раздел «Голос и номер».
+    template = 'voice' if path == 'telephony' else path
+    return render_template(f'dashboard/{template}.html', active_tab=path, active_tab_name=active_tab_name)
 
 @app.route('/about')
 def about():

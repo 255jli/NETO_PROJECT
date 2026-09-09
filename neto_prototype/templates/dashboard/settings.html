@@ -7,7 +7,7 @@
 {% block content %}
 <div class="page-header">
     <h1>Безопасность и номера</h1>
-    <p>Управляйте всеми подключёнными номерами и данными. NETO соответствует 152-ФЗ: всё хранится на серверах в РФ.</p>
+    <p>Управляйте всеми подключёнными номерами и данными клиентов.</p>
 </div>
 
 <span class="demo-badge">Демонстрационный сценарий: Магазин мебели</span>
@@ -59,8 +59,8 @@
         <p class="st-hint">Выберите, куда отправлять новую заявку после диалога с клиентом.</p>
         <div class="st-notify-grid">
             <label class="st-notify-option"><input type="checkbox" id="notifyEmail" checked><span><strong>Почта</strong><small>manager@example.ru</small></span></label>
-            <label class="st-notify-option"><input type="checkbox" id="notifyTelegram"><span><strong>Telegram</strong><small>@manager_neto</small></span></label>
-            <label class="st-notify-option"><input type="checkbox" id="notifyMessenger"><span><strong>Мессенджер</strong><small>WhatsApp / Max</small></span></label>
+            <label class="st-notify-option"><input type="checkbox" id="notifymessetele"><span><strong>Мессенджер</strong><small>@manager_neto</small></span></label>
+            <label class="st-notify-option"><input type="checkbox" id="notifyMessenger"><span><strong>Messenger</strong><small>@manager_neto</small></span></label>
         </div>
         <button type="button" class="btn btn-primary" id="saveNotifyBtn">Сохранить каналы</button>
     </section>
@@ -71,7 +71,7 @@
         <div class="st-sec-grid">
             <div class="st-sec"><span class="st-sec-icon">🇷🇺</span><div><strong>Хранение в РФ</strong><span>Записи и данные клиентов обрабатываются только на серверах, физически расположенных в России.</span></div></div>
             <div class="st-sec"><span class="st-sec-icon">🔒</span><div><strong>Шифрование</strong><span>Записи разговоров и персональные данные передаются и хранятся в зашифрованном виде.</span></div></div>
-            <div class="st-sec"><span class="st-sec-icon">⚖️</span><div><strong>Соответствие 152-ФЗ</strong><span>Обработка персональных данных — в соответствии с законом о персональных данных.</span></div></div>
+            <div class="st-sec"><span class="st-sec-icon">⚖️</span><div><strong>Защита персональных данных</strong><span>Обработка данных клиентов выполняется с соблюдением требований законодательства.</span></div></div>
             <div class="st-sec"><span class="st-sec-icon">🗑️</span><div><strong>Контроль доступа</strong><span>Вы вправе запросить выгрузку или удаление данных клиентов в любой момент.</span></div></div>
         </div>
     </section>
@@ -109,14 +109,14 @@
 
     var notifyKey = 'neto_notification_channels';
     var savedChannels = JSON.parse(localStorage.getItem(notifyKey) || '{}');
-    ['Email', 'Telegram', 'Messenger'].forEach(function(channel) {
+    ['Email', 'Messenger', 'Messenger'].forEach(function(channel) {
         var input = document.getElementById('notify' + channel);
         if (input && savedChannels[channel.toLowerCase()] !== undefined) input.checked = savedChannels[channel.toLowerCase()];
     });
     document.getElementById('saveNotifyBtn').addEventListener('click', function() {
         localStorage.setItem(notifyKey, JSON.stringify({
             email: document.getElementById('notifyEmail').checked,
-            telegram: document.getElementById('notifyTelegram').checked,
+            messetele: document.getElementById('notifymessetele').checked,
             messenger: document.getElementById('notifyMessenger').checked
         }));
         if (typeof showToast === 'function') showToast('Каналы уведомлений сохранены.', 'success');

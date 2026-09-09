@@ -17,12 +17,12 @@
 
         <div class="setting-group">
             <label for="widgetName">Имя ассистента</label>
-            <input class="text-input" type="text" id="widgetName" value="Нето">
+            <input class="text-input" type="text" id="widgetName" value="Neto">
         </div>
 
         <div class="setting-group">
             <label for="widgetCompany">Компания или магазин</label>
-            <input class="text-input" type="text" id="widgetCompany" value="магазина шкафов">
+            <input class="text-input" type="text" id="widgetCompany" value="магазин мебели">
             <p class="hint">Используется в ответах и помогает показать персонализацию.</p>
         </div>
 
@@ -62,14 +62,28 @@
             <span id="widgetSizeValue">80px</span>
         </div>
 
+        <!-- Новое поле: Размер окна чата -->
+        <div class="setting-group">
+            <label>Размер окна чата</label>
+            <div class="radio-group window-radio" id="windowModeGroup">
+                <label class="radio-option">
+                    <input type="radio" name="windowMode" value="dynamic" checked> Изменяемый (по содержимому)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="windowMode" value="static"> Статичный (фиксированный)
+                </label>
+            </div>
+            <p class="hint">В изменяемом режиме окно растёт вместе с диалогом, в статичном — сохраняет постоянный размер.</p>
+        </div>
+
         <div class="setting-group">
             <label>Иконка</label>
             <div class="icon-options" id="iconOptions">
-                <button type="button" class="icon-btn active" data-icon="chat" title="Чат">💬</button>
-                <button type="button" class="icon-btn" data-icon="message" title="Сообщение">📩</button>
-                <button type="button" class="icon-btn" data-icon="support" title="Поддержка">🛠️</button>
-                <button type="button" class="icon-btn" data-icon="help" title="Помощь">❓</button>
-                <button type="button" class="icon-btn" data-icon="headset" title="Наушники">🎧</button>
+                <button type="button" class="icon-btn active" data-icon="chat" title="Чат"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                <button type="button" class="icon-btn" data-icon="message" title="Сообщение"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H8l-4 4V6c0-1.1.9-2 2-2z"/></svg></button>
+                <button type="button" class="icon-btn" data-icon="support" title="Поддержка"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
+                <button type="button" class="icon-btn" data-icon="help" title="Помощь"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
+                <button type="button" class="icon-btn" data-icon="headset" title="Наушники"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-3a8 8 0 0 1 16 0v3"/><path d="M18 19c0 1.1-.9 2-2 2h-2a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3z"/><path d="M6 19c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3z"/></svg></button>
             </div>
             <p class="hint">Выберите иконку для кнопки виджета.</p>
         </div>
@@ -92,7 +106,8 @@
             <select class="text-input" id="conversationMode">
                 <option value="proactive">Ассистент начинает и предлагает помощь</option>
                 <option value="passive">Ждёт вопрос клиента</option>
-                <option value="telegram">Как в Telegram: приветствие и быстрые кнопки</option>
+                <option value="messetele">Как в Мессенджер: приветствие и быстрые кнопки</option>
+                <option value="messenger">Как в Messenger: приветствие и быстрые кнопки</option>
             </select>
         </div>
 
@@ -167,6 +182,7 @@
     const positionSelect = document.getElementById('widgetPosition');
     const firstResponderRadios = document.querySelectorAll('input[name="firstResponder"]');
     const showGreetingCheckbox = document.getElementById('showGreeting');
+    const windowModeRadios = document.querySelectorAll('input[name="windowMode"]');
 
     // ---------- Работа с конфигурацией ----------
     function getConfig() {
@@ -175,7 +191,7 @@
             color: colorInput.value.replace('#', ''),
             size: sizeInput.value,
             icon: (activeIcon && activeIcon.dataset.icon) || 'chat',
-            name: nameInput.value.trim() || 'Нето',
+            name: nameInput.value.trim() || 'Neto',
             company: companyInput.value.trim() || 'вашей компании',
             greeting: greetingInput.value.trim() || 'Здравствуйте! Я помогу ответить на вопросы и записать вас на консультацию.',
             position: positionSelect.value, // Новый параметр
