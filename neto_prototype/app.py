@@ -33,9 +33,9 @@ def dashboard(path='overview'):
     template = 'voice' if path == 'telephony' else path
     return render_template(f'dashboard/{template}.html', active_tab=path, active_tab_name=active_tab_name)
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
+@app.route('/documentation')
+def documentation():
+    return render_template('documentation.html')
 
 # Обработчик 404
 @app.errorhandler(404)

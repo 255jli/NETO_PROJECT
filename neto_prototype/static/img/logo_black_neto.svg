@@ -9,7 +9,6 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <g
-     filter="url(#filter0_d_43_2)"
      id="g3">
     <mask
        id="path-1-outside-1_43_2"
@@ -41,14 +40,7 @@
        id="path3"
        style="fill:#ffffff;fill-opacity:1" />
   </g>
-  <rect
-     x="50"
-     y="225"
-     width="610"
-     height="25"
-     fill="#252525"
-     fill-opacity="0.5"
-     id="rect3" />
+
   <rect
      x="47.5"
      y="217.5"
