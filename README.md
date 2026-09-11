@@ -22,7 +22,7 @@ NETO решает проблему потерянных звонков и обр
 - **Структура CSS:**
   - [style_1.css](file://d:\PTP\NETO_PROJECT\neto_prototype\static\css\style_1.css): Основная вёрстка (не более 800 строк).
   - [style_2.css](file://d:\PTP\NETO_PROJECT\neto_prototype\static\css\style_2.css): Стили панели управления (не более 200 строк).
-  - [style_3.css](file://d:\PTP\NETO_PROJECT\neto_prototype\static\css\style_3.css): Дополнительные стили (не более 800 строк).
+  - [style_3.css](file://d:\PTP\NETO_PROJECT\neto_prototype\static\css\style_3.css): Дополнительные стили (не более 800 строки).
   - [sidebar.css](file://d:\PTP\NETO_PROJECT\neto_prototype\static\css\sidebar.css): Стили боковой панели.
 - **Отметки интеграции:** Код, связанный с будущими API-вызовами, помечен комментарием `// API HOOK`.
 
@@ -35,9 +35,30 @@ NETO решает проблему потерянных звонков и обр
 ## Локальный запуск
 
 ```bash
-pip install flask
-python app.py
+pip install -r requirements.txt
+python -m neto_prototype.app
 ```
+
+## Генерация статических файлов с помощью Frozen-Flask
+
+Для преобразования Flask-приложения в статические файлы (HTML, CSS, JS), которые можно разместить на любом хостинге, используется Frozen-Flask:
+
+```bash
+# Установка зависимостей
+pip install -r requirements.txt
+
+# Генерация статических файлов
+python freeze_app.py
+```
+
+После выполнения скрипта `freeze_app.py` будут созданы статические файлы в папке `build/`. Для локального просмотра сгенерированного сайта:
+
+```bash
+cd build
+python -m http.server 8000
+```
+
+Затем откройте в браузере `http://localhost:8000`.
 
 ## Документация и правила
 

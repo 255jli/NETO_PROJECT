@@ -1,7 +1,18 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, send_from_directory
 from flask import abort
+import os
+
+try:
+    from flask_frozen import Freezer
+except ImportError:
+    # If Frozen-Flask is not installed, define a dummy Freezer class
+    class Freezer:
+        def __init__(self, app): pass
+        def register_generator(self, func): return func
+        def freeze(self): print("Freezer not installed. Run 'pip install Frozen-Flask'")
 
 app = Flask(__name__)
+freezer = Freezer(app)
 
 TAB_NAMES = {
     'onboarding': 'Первые шаги',
@@ -37,13 +48,31 @@ def dashboard(path='overview'):
 def documentation():
     return render_template('documentation.html')
 
+# Serve static files normally during development
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
+
 # Обработчик 404
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
+# Generator for freezer to know all the paths for dashboard
+@freezer.register_generator
+def dashboard():
+    # Yield the base dashboard route
+    yield {}
+    # Yield all the specific dashboard routes with path parameter
+    for tab in TAB_NAMES.keys():
+        yield {'path': tab}
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == 'freeze':
+        freezer.freeze()
+    else:
+        app.run(debug=True)
 
 
 # Townscaper web
