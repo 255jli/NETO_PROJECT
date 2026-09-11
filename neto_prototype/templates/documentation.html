@@ -24,8 +24,8 @@
 
         /* Левая колонка — навигация */
         .nav-col {
-            width: 272px;
-            min-width: 272px;
+            width: 264px;
+            min-width: 264px;
             border-right: 1px solid #e6e6e6;
             overflow-y: auto;
             background: #fff;
@@ -82,6 +82,7 @@
             text-overflow: ellipsis;
         }
         .anchor:hover { color: #005ff9; }
+        .anchor.active-anchor { background: #ececec; color: #333; border-radius: 6px; }
         .anchor.sub { padding-left: 52px; font-size: 12px; color: #888; }
 
         /* Контент справа */
@@ -131,6 +132,83 @@
         .docs th, .docs td { border: 1px solid #e6e6e6; padding: 8px 12px; text-align: left; }
         .docs th { background: #fafafa; }
         .empty { color: #888; }
+
+        /* Поле поиска в левом меню */
+        .search-box {
+            position: relative;
+            margin: -10px 10px 20px;
+        }
+        .search-box svg {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            stroke: #9a9a9a;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            pointer-events: none;
+        }
+        .search-input {
+            width: 100%;
+            padding: 8px 30px 8px 32px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1f2326;
+            background: #f5f5f5;
+            border: 1px solid #e6e6e6;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.15s ease, background 0.15s ease;
+        }
+        .search-input:focus {
+            border-color: #c4c4c4;
+            background: #fff;
+        }
+        .search-input::placeholder { color: #9a9a9a; }
+        .search-clear {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            color: #9a9a9a;
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 2px 4px;
+            display: none;
+        }
+        .search-clear:hover { color: #1f2326; }
+
+        /* Серые кастомные скроллбары для навигации и контента */
+        .nav-col::-webkit-scrollbar,
+        .content::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .nav-col::-webkit-scrollbar-track,
+        .content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .nav-col::-webkit-scrollbar-thumb,
+        .content::-webkit-scrollbar-thumb {
+            background: #d4d4d4;
+            border-radius: 6px;
+            border: 2px solid #fff;
+        }
+        .nav-col::-webkit-scrollbar-thumb:hover,
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #bdbdbd;
+        }
+        .nav-col,
+        .content {
+            scrollbar-width: thin;
+            scrollbar-color: #d4d4d4 transparent;
+        }
     </style>
 </head>
 <body>
@@ -139,6 +217,14 @@
     <aside class="nav-col">
         <div class="brand">
             <img src="{{ url_for('static', filename='img/logo_black_neto.svg') }}" alt="NETO">
+        </div>
+        <div class="search-box">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Поиск по документации…">
+            <button type="button" class="search-clear" id="searchClear" title="Очистить">×</button>
         </div>
         <div id="nav"></div>
     </aside>
@@ -155,11 +241,19 @@
     'use strict';
 
     const FILE_NAMES = [
-        'main',
-        'dashboard',
-        '*',
-        '*',
-        '*'
+        'MAIN',
+        'PRODUCT',
+        'INTERFACE',
+        'USER_JOURNEY',
+        'USER_GUIDE',
+        'TECH_NOTES',
+        'ROADMAP',
+        'SECURITY',
+        'PRICING',
+        'INTEGRATIONS',
+        'PARSING',
+        'FAQ',
+        'CHANGELOG'
     ];
 
     let PAGES = [];
@@ -347,7 +441,137 @@
         return s;
     }
 
+    // Внутренние ссылки на статьи (.md) открываем прямо в документации,
+    // а не переходим по URL (иначе браузер просто скачает файл).
+    function handleDocClick(e) {
+        var el = e.target;
+        while (el && el !== docsEl && el.tagName !== 'A') {
+            el = el.parentNode;
+        }
+        if (!el || el === docsEl || el.tagName !== 'A') return;
+
+        var href = el.getAttribute('href');
+        if (!href) return;
+
+        // Ссылки на страницы дашборда оставляем нативной навигацией
+        if (href.indexOf('/dashboard') === 0) return;
+        // Обрабатываем только внутренние ссылки на markdown-статьи
+        if (href.indexOf('.md') === -1) return;
+
+        e.preventDefault();
+        var fileName = href.replace(/\.md$/, '');
+
+        var page = null;
+        PAGES.forEach(function (p) {
+            if (p.file === fileName) page = p;
+        });
+        if (page) loadPage(page);
+    }
+
+    docsEl.addEventListener('click', handleDocClick);
+
+    // Поиск по документации: фильтрует статьи и подзаголовки в левом меню
+    function applySearch(query) {
+        var q = query.trim().toLowerCase();
+        var hasQuery = q.length > 0;
+        var clearBtn = document.getElementById('searchClear');
+        if (clearBtn) clearBtn.style.display = hasQuery ? 'block' : 'none';
+
+        var items = navEl.querySelectorAll('.page');
+        items.forEach(function (item) {
+            var page = item._page;
+
+            // Статья подходит, если запрос найден в названии или в одном из заголовков
+            var matchPage = false;
+            if (page.title.toLowerCase().indexOf(q) !== -1) matchPage = true;
+            if (!matchPage) {
+                page.headings.forEach(function (h) {
+                    if (h.text.toLowerCase().indexOf(q) !== -1) matchPage = true;
+                });
+            }
+
+            var list = item._list;
+            var anchors = list.querySelectorAll('.anchor');
+
+            if (!hasQuery) {
+                item.style.display = '';
+                anchors.forEach(function (a) { a.style.display = ''; });
+            } else if (matchPage) {
+                item.style.display = '';
+                // При активном поиске показываем только совпавшие подзаголовки
+                anchors.forEach(function (a) {
+                    var matches = a.textContent.toLowerCase().indexOf(q) !== -1;
+                    a.style.display = matches ? '' : 'none';
+                });
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    var searchInput = document.getElementById('searchInput');
+    var searchClear = document.getElementById('searchClear');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            applySearch(searchInput.value);
+        });
+    }
+    if (searchClear) {
+        searchClear.addEventListener('click', function () {
+            if (searchInput) searchInput.value = '';
+            applySearch('');
+            if (searchInput) searchInput.focus();
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', initDocumentation);
+})();
+</script>
+
+<script>
+(function () {
+    'use strict';
+
+    var navEl = document.getElementById('nav');
+    var docsEl = document.getElementById('docs');
+    // Контент скроллится в .content (родитель #docs), именно на нём нужно ловить scroll
+    var contentEl = document.querySelector('.content');
+
+    if (!navEl || !docsEl) return;
+
+    // Подсветка активного якоря (#, ##, ###) в левом меню при прокрутке
+    function updateActiveAnchor() {
+        var headings = docsEl.querySelectorAll('h1, h2, h3');
+        var currentText = null;
+
+        // Точка отслеживания — чуть ниже верха видимой области скролл-контейнера
+        var containerTop = contentEl ? contentEl.getBoundingClientRect().top : 0;
+        var threshold = 96; // px от верха контейнера
+
+        headings.forEach(function (h) {
+            if (h.getBoundingClientRect().top - containerTop <= threshold) {
+                currentText = h.textContent.trim();
+            }
+        });
+
+        // Подсвечиваем только соответствующий якорь в левой навигации
+        var anchors = navEl.querySelectorAll('.anchor');
+        anchors.forEach(function (a) {
+            var isActive = currentText !== null && a.textContent.trim() === currentText;
+            a.classList.toggle('active-anchor', isActive);
+        });
+    }
+
+    // Обновляем при прокрутке контента (скроллируется .content)
+    if (contentEl) contentEl.addEventListener('scroll', updateActiveAnchor, { passive: true });
+    window.addEventListener('scroll', updateActiveAnchor, { passive: true });
+    window.addEventListener('resize', updateActiveAnchor);
+    window.addEventListener('load', updateActiveAnchor);
+
+    // Пересчитываем при загрузке новой страницы документации (асинхронный fetch)
+    var observer = new MutationObserver(updateActiveAnchor);
+    observer.observe(docsEl, { childList: true, subtree: true });
 })();
 </script>
 </body>
