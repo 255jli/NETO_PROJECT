@@ -32,8 +32,12 @@ TAB_NAMES = {
 def index():
     return render_template('index.html')
 
+# Trailing-slash варианты маршрутов нужны, чтобы Frozen-Flask создавал
+# каталоги с index.html (иначе страница сохраняется файлом без расширения).
 @app.route('/dashboard')
+@app.route('/dashboard/')
 @app.route('/dashboard/<path:path>')
+@app.route('/dashboard/<path:path>/')
 def dashboard(path='overview'):
     if path not in TAB_NAMES:
         abort(404)
@@ -45,6 +49,7 @@ def dashboard(path='overview'):
     return render_template(f'dashboard/{template}.html', active_tab=path, active_tab_name=active_tab_name)
 
 @app.route('/documentation')
+@app.route('/documentation/')
 def documentation():
     return render_template('documentation.html')
 
@@ -58,14 +63,24 @@ def static_files(filename):
 def page_not_found(e):
     return render_template('404.html'), 404
 
-# Generator for freezer to know all the paths for dashboard
+# Generators for freezer to know all the static routes.
+# Важно: здесь yield задаются ЯВНЫЕ URL-пути (строки), а не dict —
+# иначе Frozen-Flask не соберёт под-пути дашборда.
+@freezer.register_generator
+def index():
+    yield '/'
+
+@freezer.register_generator
+def documentation():
+    yield '/documentation/'
+
 @freezer.register_generator
 def dashboard():
-    # Yield the base dashboard route
-    yield {}
-    # Yield all the specific dashboard routes with path parameter
+    # Base dashboard route
+    yield '/dashboard/'
+    # All the specific dashboard routes with path parameter
     for tab in TAB_NAMES.keys():
-        yield {'path': tab}
+        yield '/dashboard/' + tab + '/'
 
 if __name__ == '__main__':
     import sys

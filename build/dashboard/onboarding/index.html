@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добро пожаловать в NETO</title>
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../static/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../static/fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: italic;
+            font-display: swap;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .demo-badge {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 4px 8px;
+            border: 1px solid #c9dcff;
+            border-radius: 4px;
+            background: #f0f4ff;
+            color: #315ea8;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+    <link rel="stylesheet" href="../../static/css/style_1.css">
+    <link rel="stylesheet" href="../../static/css/icons.css">
+    <link rel="stylesheet" href="../../static/css/style_2.css">
+    <link rel="stylesheet" href="../../static/css/style_3.css">
+    <link rel="stylesheet" href="../../static/css/sidebar.css">
+    <script src="../../static/js/data.js"></script>
+</head>
+<body>
+
+    <!-- Сайдбар + аватарка -->
+<aside class="sidebar" id="sidebar">
+    <a href="/dashboard/onboarding" class="logo" title="Первые шаги">
+        <img src="../../static/img/logo_blue_neto.svg" alt="NETO">
+    </a>
+    <nav class="nav">
+        <a href="/dashboard/overview" class="nav-item ">
+            <i class="icon-dashboard"></i><span class="nav-text"><span>Обзор</span></span>
+        </a>
+        <a href="/dashboard/widget" class="nav-item ">
+            <i class="icon-chat-assistant"></i><span class="nav-text"><span>Виджет</span></span>
+        </a>
+        <a href="/dashboard/integration" class="nav-item ">
+            <i class="icon-link"></i><span class="nav-text"><span>Интеграции</span></span>
+        </a>
+        <a href="/dashboard/crm" class="nav-item ">
+            <i class="icon-users"></i><span class="nav-text"><span>CRM</span></span>
+        </a>
+        <a href="/dashboard/parsing" class="nav-item ">
+            <i class="icon-search"></i><span class="nav-text"><span>Конкуренты</span></span>
+        </a>
+        <a href="/dashboard/calendar" class="nav-item ">
+            <i class="icon-shield-check"></i><span class="nav-text"><span>Календарь</span></span>
+        </a>
+        <a href="/dashboard/telephony" class="nav-item ">
+            <i class="icon-phone-outgoing"></i><span class="nav-text"><span>Телефон</span></span>
+        </a>
+        <!-- Добавлены пункты настроек и счёта -->
+        <a href="/dashboard/settings" class="nav-item ">
+            <i class="icon-settings"></i><span class="nav-text"><span>Настройки</span></span>
+        </a>
+        <a href="/dashboard/billing" class="nav-item ">
+            <i class="icon-billing"></i><span class="nav-text"><span>Счёт</span></span>
+        </a>
+        </nav>
+</aside>
+
+    <!-- Основной контент -->
+    <main class="content-wrapper">
+        
+<div class="ob-page">
+
+    <!-- Приветствие -->
+    <div class="ob-hello">
+        <div>
+            <h1>Добро пожаловать в NETO 👋</h1>
+            <p>Аккаунт создан. Осталось несколько шагов, чтобы ассистент начал принимать звонки и чаты за вас.</p>
+        </div>
+        <div class="ob-progress-block">
+            <div class="ob-progress-num" id="obCount">0 из 5</div>
+            <div class="ob-progress"><div class="ob-progress-fill" id="obBar"></div></div>
+        </div>
+    </div>
+
+    <div class="ob-cols">
+
+        <!-- Чек-лист первых шагов -->
+        <section class="card ob-list">
+            <h2 class="ob-title">Первые шаги</h2>
+
+            <div class="ob-step" data-key="number">
+                <div class="ob-step-check"><span></span></div>
+                <div class="ob-step-body">
+                    <div class="ob-step-head">
+                        <strong>1. Подключите номер</strong>
+                        <a href="/dashboard/telephony" class="btn btn-outline btn-sm">Настроить</a>
+                    </div>
+                    <p>Выберите виртуальный номер — ассистент начнёт принимать звонки.</p>
+                </div>
+            </div>
+
+            <div class="ob-step" data-key="company">
+                <div class="ob-step-check"><span></span></div>
+                <div class="ob-step-body">
+                    <div class="ob-step-head">
+                        <strong>2. Расскажите о компании</strong>
+                        <a href="/dashboard/integration" class="btn btn-outline btn-sm">Заполнить</a>
+                    </div>
+                    <p>Умный опрос или резюме — так ассистент узнает, чем вы занимаетесь.</p>
+                </div>
+            </div>
+
+            <div class="ob-step" data-key="widget">
+                <div class="ob-step-check"><span></span></div>
+                <div class="ob-step-body">
+                    <div class="ob-step-head">
+                        <strong>3. Настройте виджет</strong>
+                        <a href="/dashboard/widget" class="btn btn-outline btn-sm">Настроить</a>
+                    </div>
+                    <p>Цвет и код для вставки — клиенты смогут писать вам с сайта.</p>
+                </div>
+            </div>
+
+            <div class="ob-step" data-key="crm">
+                <div class="ob-step-check"><span></span></div>
+                <div class="ob-step-body">
+                    <div class="ob-step-head">
+                        <strong>4. Добавьте клиентов</strong>
+                        <a href="/dashboard/crm" class="btn btn-outline btn-sm">Открыть CRM</a>
+                    </div>
+                    <p>Перенесите базу или подключите свою CRM — данные подтянутся сами.</p>
+                </div>
+            </div>
+
+            <div class="ob-step" data-key="launch">
+                <div class="ob-step-check"><span></span></div>
+                <div class="ob-step-body">
+                    <div class="ob-step-head">
+                        <strong>5. Запустите ассистента</strong>
+                        <a href="/dashboard/voice" class="btn btn-outline btn-sm">К голосу</a>
+                    </div>
+                    <p>Проверьте сценарий и включите приём обращений.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Правая колонка: пустое состояние -->
+        <aside class="ob-side">
+            <section class="card">
+                <h2 class="ob-title">Ваши первые обращения</h2>
+                <div class="ob-empty">
+                    <div class="ob-empty-icon">📞</div>
+                    <p>Здесь появятся звонки и сообщения. Завершите шаги слева, чтобы начать</p>
+                    <a href="/dashboard/voice" class="btn btn-outline btn-sm">Посмотреть пример заполненной аналитики</a>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2 class="ob-title">Совет</h2>
+                <p class="ob-tip">Начните с умного опроса на вкладке «Интеграции» — ИИ сам соберёт карточку компании вместо ручного заполнения.</p>
+                <a href="/dashboard/integration" class="btn btn-primary btn-sm">Пройти опрос</a>
+            </section>
+        </aside>
+
+    </div>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    var keys = ['number', 'company', 'widget', 'crm', 'launch'];
+    var done = {};
+    var total = keys.length;
+
+    var steps = document.querySelectorAll('.ob-step');
+    var countEl = document.getElementById('obCount');
+    var barEl = document.getElementById('obBar');
+
+    function refresh() {
+        var n = keys.filter(function(k) { return done[k]; }).length;
+        countEl.textContent = n + ' из ' + total;
+        barEl.style.width = (n / total * 100) + '%';
+    }
+
+    // Клик по шагу отмечает его выполненным (демо-режим)
+    steps.forEach(function(step) {
+        var check = step.querySelector('.ob-step-check');
+        check.addEventListener('click', function() {
+            step.classList.toggle('done');
+            done[step.dataset.key] = step.classList.contains('done');
+            refresh();
+        });
+    });
+
+    refresh();
+})();
+</script>
+
+<style>
+.ob-page { max-width: 1080px; }
+
+/* Приветствие */
+.ob-hello {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    background: #fff; border: 1px solid #e6e8eb; border-radius: 14px; padding: 24px 28px; margin-bottom: 18px;
+}
+.ob-hello h1 { font-size: 26px; margin: 0 0 8px; color: #1c1c1f; }
+.ob-hello p { margin: 0; color: #6b6f76; font-size: 15px; max-width: 560px; }
+.ob-progress-block { min-width: 200px; }
+.ob-progress-num { font-size: 14px; font-weight: 600; color: #005FF9; margin-bottom: 6px; }
+.ob-progress { height: 8px; background: #eef1f5; border-radius: 999px; overflow: hidden; }
+.ob-progress-fill { height: 100%; width: 0; background: #005FF9; transition: width .3s; }
+
+.ob-cols { display: grid; grid-template-columns: 1fr 320px; gap: 16px; align-items: start; }
+.ob-title { font-size: 18px; margin: 0 0 14px; color: #1c1c1f; }
+
+/* Чек-лист */
+.ob-list { display: flex; flex-direction: column; gap: 0; }
+.ob-step { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid #f0f1f3; }
+.ob-step:last-child { border-bottom: none; }
+.ob-step-check {
+    width: 22px; height: 22px; border-radius: 50%; border: 2px solid #c9ccd2; flex-shrink: 0;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 2px; transition: all .15s;
+}
+.ob-step.done .ob-step-check { background: #1f8a4c; border-color: #1f8a4c; }
+.ob-step.done .ob-step-check span::after { content: '✓'; color: #fff; font-size: 13px; font-weight: 700; }
+.ob-step-body { flex: 1; }
+.ob-step-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ob-step-head strong { font-size: 15px; color: #1c1c1f; }
+.ob-step.done .ob-step-head strong { color: #1f8a4c; }
+.ob-step-body p { font-size: 13px; color: #6b6f76; margin: 4px 0 0; }
+
+/* Правая колонка */
+.ob-side { display: flex; flex-direction: column; gap: 16px; }
+.ob-empty { text-align: center; padding: 18px 10px; border: 1px dashed #d0d5dd; border-radius: 12px; margin-bottom: 12px; }
+.ob-empty-icon { font-size: 30px; margin-bottom: 8px; }
+.ob-empty p { font-size: 14px; color: #1c1c1f; margin: 0; }
+.ob-empty-hint { font-size: 13px !important; color: #8a8f98 !important; margin-top: 6px !important; }
+.ob-sim { width: 100%; }
+.ob-tip { font-size: 14px; color: #6b6f76; line-height: 1.55; margin: 0 0 14px; }
+
+@media (max-width: 860px) { .ob-cols { grid-template-columns: 1fr; } }
+</style>
+
+    </main>
+
+
+    <!-- Контейнер уведомлений -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="../../static/js/alpine.min.js" defer></script>
+    <script src="../../static/js/chart.min.js"></script>
+    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/sidebar.js"></script>
+</body>
+</html>

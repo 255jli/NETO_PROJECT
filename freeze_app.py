@@ -6,7 +6,7 @@ Run this script to generate static files from your Flask application.
 
 import os
 import sys
-from neto_prototype.app import app
+from neto_prototype.app import app, freezer as app_freezer
 from flask_frozen import Freezer
 from pathlib import Path
 
@@ -58,15 +58,31 @@ def freeze_app():
     print("Starting to freeze the Flask application...")
     print("This will generate static files in the build/ folder")
     
+    import shutil
+
     # Initialize custom freezer
     freezer = CustomFreezer(app)
-    
+
+    # Переносим генераторы URL, зарегистрированные в app.py.
+    # Без этого CustomFreezer не знает о под-путях дашборда (страницы не собираются).
+    for gen in app_freezer.url_generators:
+        freezer.register_generator(gen)
+
     # Set configuration
     app.config['FREEZER_DESTINATION'] = os.path.join(os.getcwd(), 'build')
     app.config['FREEZER_BASE_URL'] = ''
+    # Относительные ссылки вместо абсолютных /static/... — критично для GitHub Pages,
+    # где сайт лежит в подкаталоге репозитория (иначе абсолютные пути ломаются).
+    app.config['FREEZER_RELATIVE_URLS'] = True
     app.config['FREEZER_REMOVE_EXTRA_FILES'] = True
     app.config['FREEZER_IGNORE_MIMETYPE_WARNINGS'] = True
-    
+
+    # Очищаем предыдущую сборку, чтобы избежать конфликтов
+    # "файл vs каталог" (например, build/dashboard) между запусками.
+    dest = app.config['FREEZER_DESTINATION']
+    if os.path.isdir(dest):
+        shutil.rmtree(dest)
+
     # Freeze the application
     freezer.freeze()
     

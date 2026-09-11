@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Голос и номер — голосовой ассистент NETO</title>
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../static/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../static/fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: italic;
+            font-display: swap;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .demo-badge {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 4px 8px;
+            border: 1px solid #c9dcff;
+            border-radius: 4px;
+            background: #f0f4ff;
+            color: #315ea8;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+    <link rel="stylesheet" href="../../static/css/style_1.css">
+    <link rel="stylesheet" href="../../static/css/icons.css">
+    <link rel="stylesheet" href="../../static/css/style_2.css">
+    <link rel="stylesheet" href="../../static/css/style_3.css">
+    <link rel="stylesheet" href="../../static/css/sidebar.css">
+    <script src="../../static/js/data.js"></script>
+</head>
+<body>
+
+    <!-- Сайдбар + аватарка -->
+<aside class="sidebar" id="sidebar">
+    <a href="/dashboard/onboarding" class="logo" title="Первые шаги">
+        <img src="../../static/img/logo_blue_neto.svg" alt="NETO">
+    </a>
+    <nav class="nav">
+        <a href="/dashboard/overview" class="nav-item ">
+            <i class="icon-dashboard"></i><span class="nav-text"><span>Обзор</span></span>
+        </a>
+        <a href="/dashboard/widget" class="nav-item ">
+            <i class="icon-chat-assistant"></i><span class="nav-text"><span>Виджет</span></span>
+        </a>
+        <a href="/dashboard/integration" class="nav-item ">
+            <i class="icon-link"></i><span class="nav-text"><span>Интеграции</span></span>
+        </a>
+        <a href="/dashboard/crm" class="nav-item ">
+            <i class="icon-users"></i><span class="nav-text"><span>CRM</span></span>
+        </a>
+        <a href="/dashboard/parsing" class="nav-item ">
+            <i class="icon-search"></i><span class="nav-text"><span>Конкуренты</span></span>
+        </a>
+        <a href="/dashboard/calendar" class="nav-item ">
+            <i class="icon-shield-check"></i><span class="nav-text"><span>Календарь</span></span>
+        </a>
+        <a href="/dashboard/telephony" class="nav-item active">
+            <i class="icon-phone-outgoing"></i><span class="nav-text"><span>Телефон</span></span>
+        </a>
+        <!-- Добавлены пункты настроек и счёта -->
+        <a href="/dashboard/settings" class="nav-item ">
+            <i class="icon-settings"></i><span class="nav-text"><span>Настройки</span></span>
+        </a>
+        <a href="/dashboard/billing" class="nav-item ">
+            <i class="icon-billing"></i><span class="nav-text"><span>Счёт</span></span>
+        </a>
+        </nav>
+</aside>
+
+    <!-- Основной контент -->
+    <main class="content-wrapper">
+        
+<div class="page-header">
+    <h1>Голосовой ассистент и номер</h1>
+    <p>Принимает звонки 24/7, понимает намерение клиента, записывает и передаёт заявки в CRM. Номер подключается без абонентской платы — оплата только за реальные минуты.</p>
+</div>
+
+<div class="vc-stack">
+    <span class="demo-badge">Демонстрационный сценарий: Магазин мебели</span>
+
+    <!-- Статус номера -->
+    <section class="card">
+        <div class="tl-status">
+            <div>
+                <h2 class="vc-title">Ваш номер</h2>
+                <div class="tl-phone">+7 (495) 000-00-00</div>
+                <p class="vc-hint">На этот номер будут поступать входящие звонки клиентов.</p>
+            </div>
+            <button type="button" class="btn btn-primary" id="toggleNumber">Деактивировать номер</button>
+        </div>
+        <div class="tl-status-pills">
+            <span class="tl-pill tl-pill-on" id="statusPill">● Активен</span>
+            <span class="tl-pill">Звонков сегодня: 42</span>
+            <span class="tl-pill">Средняя длительность: 1:45</span>
+        </div>
+    </section>
+
+    <!-- Оплата за использование -->
+    <section class="card">
+        <h2 class="vc-title">Оплата за использование</h2>
+        <p class="vc-hint">Абонентская плата и стартовые взносы отсутствуют — платите за фактическое потребление.</p>
+        <div class="tl-plan-grid">
+            <div class="tl-plan"><span class="tl-plan-icon">📞</span><div><strong>Голосовой канал</strong><span>от 0,50 ₽ / минута разговора</span></div></div>
+            <div class="tl-plan"><span class="tl-plan-icon">💬</span><div><strong>Текстовый канал</strong><span>от 0,25 ₽ / запрос (чат-виджет)</span></div></div>
+            <div class="tl-plan"><span class="tl-plan-icon">🛡️</span><div><strong>Хранение записей</strong><span>бесплатно, до 12 месяцев</span></div></div>
+        </div>
+        <div class="tl-actions">
+            <button type="button" class="btn btn-outline" id="changeTariffBtn">Сменить тариф</button>
+        </div>
+    </section>
+
+    <!-- Возможности -->
+    <section class="card">
+        <h2 class="vc-title">Возможности ассистента</h2>
+        <div class="vc-grid">
+            <div class="vc-item"><span class="vc-item-icon">📞</span><div><strong>Приём звонков 24/7</strong><span>Никогда не кладёт трубку и всегда отвечает — даже ночью и в выходные.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🧠</span><div><strong>Понимает намерение</strong><span>Отличает запись на услугу от вопроса о цене и действует по сценарию.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🗒️</span><div><strong>Запись клиента</strong><span>Фиксирует имя, телефон и удобное время визита, создаёт карточку в CRM.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🛒</span><div><strong>Фиксация заказа</strong><span>Оформляет заказ и передаёт его в CRM или на почту автоматически.</span></div></div>
+        </div>
+    </section>
+
+    <!-- Как ассистент думает -->
+    <section class="card">
+        <h2 class="vc-title">Как ассистент думает</h2>
+        <p class="vc-hint">Принципы работы ассистента, которые отличают NETO от простого автоответчика.</p>
+        <div class="vc-grid">
+            <div class="vc-item"><span class="vc-item-icon">🎙️</span><div><strong>Распознавание речи</strong><span>Комбинированный движок распознавания речи обрабатывает речь с акцентами и шумом.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">💡</span><div><strong>Понимание намерений</strong><span>Исполнительное ядро на базе LLM воспроизводит логику менеджера по продажам.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🔁</span><div><strong>Контекстная память</strong><span>Возвращается к ранее обсуждённым условиям и не переспрашивает дважды.</span></div></div>
+            <div class="vc-item"><span class="vc-item-icon">🛡️</span><div><strong>Хранение записей</strong><span>Данные хранятся на серверах в РФ и защищены шифрованием.</span></div></div>
+        </div>
+        <div class="vc-footnote">Обработка данных соответствует требованиям российского законодательства.</div>
+    </section>
+
+    <!-- Шаги подключения -->
+    <section class="card">
+        <h2 class="vc-title">Как это работает</h2>
+        <div class="tl-steps">
+            <div class="tl-step"><div class="tl-step-num">1</div><div><strong>Выберите номер</strong><span>Городской, мобильный или бесплатный 8-800.</span></div></div>
+            <div class="tl-step"><div class="tl-step-num">2</div><div><strong>Перенаправьте звонки</strong><span>Укажите оператора или используйте номер NETO напрямую.</span></div></div>
+            <div class="tl-step"><div class="tl-step-num">3</div><div><strong>Готово</strong><span>Ассистент принимает звонки, записи и заявки уходят в CRM.</span></div></div>
+        </div>
+    </section>
+
+    <!-- Аналитика обращений -->
+    <section class="card">
+        <div class="vc-head">
+            <div>
+                <h2 class="vc-title">Аналитика обращений</h2>
+                <p class="vc-hint">Каждый звонок ассистент размечает сам: намерение и результат.</p>
+            </div>
+        </div>
+        <table class="data-table" id="vcTable">
+            <thead>
+                <tr>
+                    <th>Время</th>
+                    <th>Клиент</th>
+                    <th>Намерение</th>
+                    <th>Результат</th>
+                    <th>Длит.</th>
+                </tr>
+            </thead>
+            <tbody id="vcBody"></tbody>
+        </table>
+        <div class="vc-footnote">Расшифровка и полная запись разговора доступны при нажатии на строку (демо).</div>
+    </section>
+
+</div>
+
+<script src="../../static/js/data.js"></script>
+<script>
+(function() {
+    'use strict';
+
+    var body = document.getElementById('vcBody');
+    var resultLabels = { 'записан': 'Запись оформлена', 'не записан': 'Запись не оформлена', 'отказ': 'Клиент отказался' };
+    var durations = ['1:18', '1:42', '2:05', '2:24', '2:51'];
+
+    function render() {
+        body.innerHTML = '';
+        window.events.forEach(function(event, index) {
+            var tr = document.createElement('tr');
+            [event.time, event.client, event.service, resultLabels[event.status] || event.status, durations[index % durations.length]].forEach(function(value) {
+                var td = document.createElement('td');
+                td.textContent = value;
+                tr.appendChild(td);
+            });
+            body.appendChild(tr);
+        });
+    }
+    render();
+
+    // Управление номером
+    var active = true;
+    var toggleBtn = document.getElementById('toggleNumber');
+    var statusPill = document.getElementById('statusPill');
+
+    toggleBtn.addEventListener('click', function() {
+        active = !active;
+        if (active) {
+            toggleBtn.textContent = 'Деактивировать номер';
+            statusPill.className = 'tl-pill tl-pill-on';
+            statusPill.textContent = '● Активен';
+        } else {
+            toggleBtn.textContent = 'Активировать номер';
+            statusPill.className = 'tl-pill tl-pill-off';
+            statusPill.textContent = '○ Не активен';
+        }
+        if (typeof showToast === 'function') showToast(active ? 'Номер активирован' : 'Номер деактивирован', active ? 'success' : 'error');
+    });
+
+    var tariffBtn = document.getElementById('changeTariffBtn');
+    if (tariffBtn) {
+        tariffBtn.addEventListener('click', function() {
+            if (typeof showToast === 'function') showToast('Вы перешли к выбору тарифа. На текущих условиях ~1500 ₽/мес.', 'success');
+        });
+    }
+})();
+</script>
+
+<style>
+.vc-stack { display: flex; flex-direction: column; gap: 16px; max-width: 1080px; }
+
+.vc-title { font-size: 18px; margin: 0 0 8px; color: #1c1c1f; }
+.vc-hint { font-size: 14px; color: #6b6f76; margin: 0 0 14px; }
+
+.vc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.vc-item { display: flex; gap: 12px; align-items: flex-start; min-height: 108px; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px; }
+.vc-item-icon { font-size: 24px; }
+.vc-item div { display: flex; flex-direction: column; gap: 3px; }
+.vc-item strong { color: #1c1c1f; font-size: 15px; }
+.vc-item span { color: #6b6f76; font-size: 13px; }
+
+.vc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+
+.vc-footnote { font-size: 12px; color: #8a8f98; margin-top: 12px; }
+
+/* Телефония */
+.tl-status { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+.tl-phone { font-size: 22px; font-weight: 700; color: #1c1c1f; }
+.tl-status-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.tl-pill { font-size: 13px; color: #6b6f76; background: #f2f4f7; border-radius: 999px; padding: 6px 14px; }
+.tl-pill-on { color: #1f8a4c; background: #e6f4eb; font-weight: 600; }
+.tl-pill-off { color: #b45309; background: #fff4e5; font-weight: 600; }
+
+.tl-plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.tl-plan { display: flex; gap: 12px; align-items: center; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px; }
+.tl-plan-icon { font-size: 24px; }
+.tl-plan div { display: flex; flex-direction: column; gap: 3px; }
+.tl-plan strong { color: #1c1c1f; font-size: 15px; }
+.tl-plan span { color: #6b6f76; font-size: 13px; }
+
+.tl-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.tl-step { display: flex; gap: 14px; align-items: center; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px; }
+.tl-step-num { width: 34px; height: 34px; border-radius: 50%; background: #005FF9; color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tl-step div { display: flex; flex-direction: column; gap: 2px; }
+.tl-step strong { color: #1c1c1f; font-size: 15px; }
+.tl-step span { color: #6b6f76; font-size: 13px; }
+
+.tl-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+</style>
+
+    </main>
+
+
+    <!-- Контейнер уведомлений -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="../../static/js/alpine.min.js" defer></script>
+    <script src="../../static/js/chart.min.js"></script>
+    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/sidebar.js"></script>
+</body>
+</html>

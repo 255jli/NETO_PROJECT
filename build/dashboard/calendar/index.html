@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Календарь — NETO</title>
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../static/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../static/fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: italic;
+            font-display: swap;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .demo-badge {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 4px 8px;
+            border: 1px solid #c9dcff;
+            border-radius: 4px;
+            background: #f0f4ff;
+            color: #315ea8;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+    <link rel="stylesheet" href="../../static/css/style_1.css">
+    <link rel="stylesheet" href="../../static/css/icons.css">
+    <link rel="stylesheet" href="../../static/css/style_2.css">
+    <link rel="stylesheet" href="../../static/css/style_3.css">
+    <link rel="stylesheet" href="../../static/css/sidebar.css">
+    <script src="../../static/js/data.js"></script>
+</head>
+<body>
+
+    <!-- Сайдбар + аватарка -->
+<aside class="sidebar" id="sidebar">
+    <a href="/dashboard/onboarding" class="logo" title="Первые шаги">
+        <img src="../../static/img/logo_blue_neto.svg" alt="NETO">
+    </a>
+    <nav class="nav">
+        <a href="/dashboard/overview" class="nav-item ">
+            <i class="icon-dashboard"></i><span class="nav-text"><span>Обзор</span></span>
+        </a>
+        <a href="/dashboard/widget" class="nav-item ">
+            <i class="icon-chat-assistant"></i><span class="nav-text"><span>Виджет</span></span>
+        </a>
+        <a href="/dashboard/integration" class="nav-item ">
+            <i class="icon-link"></i><span class="nav-text"><span>Интеграции</span></span>
+        </a>
+        <a href="/dashboard/crm" class="nav-item ">
+            <i class="icon-users"></i><span class="nav-text"><span>CRM</span></span>
+        </a>
+        <a href="/dashboard/parsing" class="nav-item ">
+            <i class="icon-search"></i><span class="nav-text"><span>Конкуренты</span></span>
+        </a>
+        <a href="/dashboard/calendar" class="nav-item active">
+            <i class="icon-shield-check"></i><span class="nav-text"><span>Календарь</span></span>
+        </a>
+        <a href="/dashboard/telephony" class="nav-item ">
+            <i class="icon-phone-outgoing"></i><span class="nav-text"><span>Телефон</span></span>
+        </a>
+        <!-- Добавлены пункты настроек и счёта -->
+        <a href="/dashboard/settings" class="nav-item ">
+            <i class="icon-settings"></i><span class="nav-text"><span>Настройки</span></span>
+        </a>
+        <a href="/dashboard/billing" class="nav-item ">
+            <i class="icon-billing"></i><span class="nav-text"><span>Счёт</span></span>
+        </a>
+        </nav>
+</aside>
+
+    <!-- Основной контент -->
+    <main class="content-wrapper">
+        
+<div class="calendar-page">
+
+    <!-- Панель инструментов как в Google Calendar -->
+    <div class="calendar-toolbar">
+        <div class="cal-nav">
+            <button type="button" class="btn btn-outline btn-sm" id="todayBtn">Сегодня</button>
+            <button type="button" class="btn btn-outline btn-icon" id="navPrev" title="Назад">‹</button>
+            <button type="button" class="btn btn-outline btn-icon" id="navNext" title="Вперёд">›</button>
+        </div>
+        <div class="cal-period" id="periodLabel">Неделя</div>
+        <div class="calendar-mode-switch cal-views">
+            <label class="mode-option"><input type="radio" name="calView" value="day"> День</label>
+            <label class="mode-option"><input type="radio" name="calView" value="week" checked> Неделя</label>
+            <label class="mode-option"><input type="radio" name="calView" value="month"> Месяц</label>
+        </div>
+    </div>
+
+    <div class="calendar-container">
+        <!-- Неделя -->
+        <div class="cal-week" id="weekView"></div>
+        <!-- День -->
+        <div class="cal-day" id="dayView" hidden></div>
+        <!-- Месяц -->
+        <div class="cal-month" id="monthView" hidden></div>
+    </div>
+</div>
+
+<!-- Личная CRM платформы NETO: все обращения за 9 месяцев -->
+<div class="crm-panel card">
+    <div class="crm-panel-head">
+        <div>
+            <h2 class="crm-panel-title">Клиенты</h2>
+            <p class="crm-panel-hint">Личная база NETO: звонки и чат-виджет за последние 9 месяцев. Всё, что собирает платформа, хранится здесь — без внешней CRM.</p>
+        </div>
+        <div class="crm-panel-filters">
+            <input type="search" id="clientSearch" class="form-control crm-search" placeholder="Поиск по имени или телефону…">
+            <select id="channelFilter" class="form-control crm-channel">
+                <option value="all">Все каналы</option>
+                <option value="голос">📞 Голос</option>
+                <option value="виджет">💬 Чат-виджет</option>
+            </select>
+        </div>
+    </div>
+    <table class="data-table crm-table">
+        <thead>
+            <tr>
+                <th>Клиент</th>
+                <th>Телефон</th>
+                <th>Обращений</th>
+                <th>Последний контакт</th>
+                <th>Канал</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="clientsBody"></tbody>
+    </table>
+    <div class="crm-panel-foot">Всего клиентов: <strong id="clientsCount">0</strong> · Клик по строке — история обращений и диалоги с ИИ.</div>
+</div>
+
+<!-- Модалка карточки клиента (история + диалоги с ИИ) -->
+<div class="modal-backdrop" id="clientModal">
+    <div class="modal-card modal-lg">
+        <div class="modal-header">
+            <h3 id="clientModalTitle">Клиент</h3>
+            <button class="close-btn" data-close-modal>✕</button>
+        </div>
+        <div class="modal-body" id="clientModalBody"></div>
+    </div>
+</div>
+
+<!-- Модалка деталей события -->
+<div class="modal-backdrop" id="eventModal">
+    <div class="modal-card modal-lg">
+        <div class="modal-header">
+            <h3 id="eventModalTitle">Детали обращения</h3>
+            <button class="close-btn" data-close-modal>✕</button>
+        </div>
+        <div class="modal-body" id="eventModalBody"></div>
+    </div>
+</div>
+
+<script src="../../static/js/data.js"></script>
+<script src="../../static/js/calendar.js"></script>
+
+<style>
+.cal-nav { display: flex; align-items: center; gap: 8px; }
+.cal-nav .btn-icon { font-size: 18px; line-height: 1; padding: 4px 12px; }
+.cal-period { font-size: 20px; font-weight: 700; color: #1c1c1f; white-space: nowrap; }
+.cal-views .mode-option { color: #6b6f76; font-size: 14px; }
+.cal-views .mode-option input { margin-right: 4px; accent-color: #005FF9; }
+
+/* Общий контейнер видов */
+.cal-week, .cal-day, .cal-month { flex: 1; min-height: 0; overflow: auto; }
+
+/* ---- Недельный вид (Google-подобный) ---- */
+.week-grid {
+    display: grid;
+    grid-template-columns: 48px repeat(7, 1fr);
+    min-width: 720px;
+}
+.week-head {
+    padding: 8px 6px;
+    text-align: center;
+    font-size: 13px;
+    color: #6b6f76;
+    border-bottom: 1px solid #EDEEF0;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.week-head strong { display: block; color: #1c1c1f; font-size: 16px; }
+.week-head.cal-today { color: #005FF9; }
+.week-head.cal-today strong {
+    background: #005FF9; color: #fff; border-radius: 50%;
+    width: 28px; height: 28px; line-height: 28px; margin: 0 auto;
+}
+.week-time {
+    font-size: 11px; color: #8a8f98; text-align: right; padding-right: 6px;
+    border-bottom: 1px solid #f0f1f3; position: relative;
+}
+.week-cell {
+    border-left: 1px solid #f0f1f3; border-bottom: 1px solid #f0f1f3;
+    min-height: 44px; position: relative; padding: 2px;
+}
+.week-cell:hover { background: #f8fafc; }
+.week-cell.is-today { background: rgba(0, 95, 249, 0.04); }
+.cal-event-block {
+    display: block; width: 100%; text-align: left;
+    border: none; border-left: 3px solid #005FF9; border-radius: 4px;
+    background: #e3f0ff; color: #1c1c1f;
+    padding: 2px 6px; margin-bottom: 2px; cursor: pointer;
+    font-size: 12px; line-height: 1.3; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.cal-event-block:hover { background: #cfe3ff; }
+.cal-event-block.st-notbooked { border-left-color: #9aa0a8; background: #eef1f5; }
+.cal-event-block.st-refused { border-left-color: #e5484d; background: #fdecec; }
+
+/* ---- Дневной вид ---- */
+.day-grid {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    min-width: 420px;
+}
+.day-cell { border-bottom: 1px solid #f0f1f3; min-height: 44px; padding: 2px; }
+
+/* ---- Месячный вид ---- */
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+.month-weekday { text-align: center; font-size: 12px; color: #6b6f76; padding: 6px 0; }
+.month-day {
+    border: 1px solid #EDEEF0; border-radius: 8px; min-height: 72px; padding: 4px 6px;
+    cursor: pointer; position: relative; transition: background .15s;
+}
+.month-day:hover { background: #f8fafc; }
+.month-day.empty { border: none; cursor: default; background: transparent; }
+.month-day.cal-today { border-color: #005FF9; box-shadow: inset 0 0 0 1px #005FF9; }
+.month-day .mday-num { font-size: 14px; font-weight: 600; color: #3c4043; }
+.month-day.cal-today .mday-num { color: #005FF9; }
+.mday-item { font-size: 11px; color: #005FF9; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-top: 2px; }
+
+/* ---- Личная CRM (панель клиентов) ---- */
+.crm-panel { margin-top: 18px; }
+.crm-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.crm-panel-title { font-size: 18px; margin: 0 0 4px; color: #1c1c1f; }
+.crm-panel-hint { font-size: 13px; color: #6b6f76; margin: 0; max-width: 560px; }
+.crm-panel-filters { display: flex; gap: 10px; flex-wrap: wrap; }
+.crm-search { min-width: 220px; }
+.crm-channel { width: 170px; }
+.crm-table td, .crm-table th { padding: 10px 12px; }
+.crm-table tbody tr { cursor: pointer; }
+.crm-table tbody tr:hover { background: #f8fafc; }
+.crm-channel-badge { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; }
+.crm-channel-badge.voice { background: #e8f0fe; color: #005FF9; }
+.crm-channel-badge.widget { background: #e6f4eb; color: #1f8a4c; }
+.crm-panel-foot { font-size: 12px; color: #8a8f98; margin-top: 12px; }
+
+/* Карточка клиента в модалке */
+.client-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.client-avatar { width: 52px; height: 52px; border-radius: 50%; background: #005FF9; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; flex-shrink: 0; }
+.client-card-meta strong { font-size: 18px; color: #1c1c1f; }
+.client-card-meta span { display: block; color: #6b6f76; font-size: 13px; }
+.client-event { border: 1px solid #e6e8eb; border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; }
+.client-event-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.client-event-top strong { font-size: 14px; color: #1c1c1f; }
+.client-event-time { font-size: 12px; color: #8a8f98; }
+.client-event-chat { background: #f7f9fc; border-radius: 8px; padding: 8px 10px; font-size: 12px; color: #3c4043; white-space: pre-wrap; margin: 0; }
+</style>
+
+    </main>
+
+
+    <!-- Контейнер уведомлений -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="../../static/js/alpine.min.js" defer></script>
+    <script src="../../static/js/chart.min.js"></script>
+    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/sidebar.js"></script>
+</body>
+</html>
