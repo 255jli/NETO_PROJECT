@@ -30,7 +30,7 @@
                 <div class="ob-step-body">
                     <div class="ob-step-head">
                         <strong>1. Подключите номер</strong>
-                        <a href="/dashboard/telephony" class="btn btn-outline btn-sm">Настроить</a>
+                        <a href="{{ url_for('dashboard', path='telephony') }}" class="btn btn-outline btn-sm">Настроить</a>
                     </div>
                     <p>Выберите виртуальный номер — ассистент начнёт принимать звонки.</p>
                 </div>
@@ -41,7 +41,7 @@
                 <div class="ob-step-body">
                     <div class="ob-step-head">
                         <strong>2. Расскажите о компании</strong>
-                        <a href="/dashboard/integration" class="btn btn-outline btn-sm">Заполнить</a>
+                        <a href="{{ url_for('dashboard', path='integration') }}" class="btn btn-outline btn-sm">Заполнить</a>
                     </div>
                     <p>Умный опрос или резюме — так ассистент узнает, чем вы занимаетесь.</p>
                 </div>
@@ -52,7 +52,7 @@
                 <div class="ob-step-body">
                     <div class="ob-step-head">
                         <strong>3. Настройте виджет</strong>
-                        <a href="/dashboard/widget" class="btn btn-outline btn-sm">Настроить</a>
+                        <a href="{{ url_for('dashboard', path='widget') }}" class="btn btn-outline btn-sm">Настроить</a>
                     </div>
                     <p>Цвет и код для вставки — клиенты смогут писать вам с сайта.</p>
                 </div>
@@ -63,7 +63,7 @@
                 <div class="ob-step-body">
                     <div class="ob-step-head">
                         <strong>4. Добавьте клиентов</strong>
-                        <a href="/dashboard/crm" class="btn btn-outline btn-sm">Открыть CRM</a>
+                        <a href="{{ url_for('dashboard', path='crm') }}" class="btn btn-outline btn-sm">Открыть CRM</a>
                     </div>
                     <p>Перенесите базу или подключите свою CRM — данные подтянутся сами.</p>
                 </div>
@@ -74,7 +74,7 @@
                 <div class="ob-step-body">
                     <div class="ob-step-head">
                         <strong>5. Запустите ассистента</strong>
-                        <a href="/dashboard/voice" class="btn btn-outline btn-sm">К голосу</a>
+                        <a href="{{ url_for('dashboard', path='voice') }}" class="btn btn-outline btn-sm">К голосу</a>
                     </div>
                     <p>Проверьте сценарий и включите приём обращений.</p>
                 </div>
@@ -88,14 +88,14 @@
                 <div class="ob-empty">
                     <div class="ob-empty-icon">📞</div>
                     <p>Здесь появятся звонки и сообщения. Завершите шаги слева, чтобы начать</p>
-                    <a href="/dashboard/voice" class="btn btn-outline btn-sm">Посмотреть пример заполненной аналитики</a>
+                    <a href="{{ url_for('dashboard', path='voice') }}" class="btn btn-outline btn-sm">Посмотреть пример заполненной аналитики</a>
                 </div>
             </section>
 
             <section class="card">
                 <h2 class="ob-title">Совет</h2>
                 <p class="ob-tip">Начните с умного опроса на вкладке «Интеграции» — ИИ сам соберёт карточку компании вместо ручного заполнения.</p>
-                <a href="/dashboard/integration" class="btn btn-primary btn-sm">Пройти опрос</a>
+                <a href="{{ url_for('dashboard', path='integration') }}" class="btn btn-primary btn-sm">Пройти опрос</a>
             </section>
         </aside>
 

@@ -165,7 +165,7 @@
     // Ключ хранения конфигурации
     const STORAGE_KEY = 'neto_widget_config';
     // Путь к реальному скрипту виджета (единый источник логики)
-    const WIDGET_SRC = '/static/js/widget.js';
+    const WIDGET_SRC = '{{ url_for('static', filename='js/widget.js') }}';
 
     // ---------- Элементы управления ----------
     const colorInput = document.getElementById('widgetColor');

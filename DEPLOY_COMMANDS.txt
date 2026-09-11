@@ -1,0 +1,40 @@
+============================================================
+КАК ОПУБЛИКОВАТЬ ИЗМЕНЕНИЯ (main -> gh-pages)
+Выполняй команды по одной, в PowerShell (.venv) PS D:\PTP\NETO_PROJECT
+============================================================
+
+ВАЖНО: Шаг 0 сбросит локальные лишние коммиты на main,
+которые появились из-за ошибочного `git add -A; git commit`.
+Рабочие исходники вернутся к состоянию origin/main.
+
+
+--- ШАГ 0. Вернуться на main и очистить мусорные коммиты ---
+git checkout main
+git reset --hard origin/main
+
+--- ШАГ 1. Собрать статический сайт в build/ ---
+.venv\Scripts\python.exe freeze_app.py
+
+--- ШАГ 2. Перейти на ветку gh-pages и синхронизировать с GitHub ---
+git checkout gh-pages
+git reset --hard origin/gh-pages
+
+--- ШАГ 3. Очистить корень ветки gh-pages (кроме .git) ---
+Get-ChildItem -Force | Where-Object { $_.Name -ne '.git' } | ForEach-Object { Remove-Item -Recurse -Force $_.FullName }
+
+--- ШАГ 4. Скопировать собранный сайт из build/ в корень gh-pages ---
+Copy-Item build\* -Destination . -Recurse -Force
+
+--- ШАГ 5. Закоммитить и запушить gh-pages (--force безопасен для статики) ---
+git add -A
+git commit -m "deploy: обновить сайт"
+git push origin gh-pages --force
+
+--- ШАГ 6. Вернуться на ветку main ---
+git checkout main
+
+============================================================
+ГОТОВО. Сайт обновлён на GitHub Pages.
+После этого можно спокойно менять исходники и повторять
+Шаги 1-6 каждый раз, когда нужно опубликовать новую версию.
+============================================================
