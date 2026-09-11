@@ -264,7 +264,9 @@
 
     function initDocumentation() {
         Promise.all(FILE_NAMES.map(fileName => {
-            return fetch('{{ url_for('static', filename='docs/') }}' + fileName + '.md')
+            // Относительный путь: страница documentation/index.html находится
+            // на один уровень ниже static/, поэтому используем ../static/docs/
+            return fetch('../static/docs/' + fileName + '.md')
                 .then(res => res.ok ? res.text() : Promise.reject('Not found'))
                 .then(text => {
                     const lines = text.split('\n');
@@ -392,7 +394,7 @@
         });
         if (pageEl) setActive(pageEl);
 
-        const filePath = '{{ url_for('static', filename='docs/') }}' + page.file + '.md';
+        const filePath = '../static/docs/' + page.file + '.md';
 
         fetch(filePath)
             .then(res => {
