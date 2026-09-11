@@ -74,5 +74,3 @@ if __name__ == '__main__':
     else:
         app.run(debug=True)
 
-
-# Townscaper web
