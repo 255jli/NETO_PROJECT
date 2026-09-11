@@ -85,126 +85,130 @@
         
 <div class="page-header page-header-slim">
     <h1>Настройка виджета</h1>
-    <p>Настройте AI-консультанта под бизнес клиента и проверьте сценарий общения в живом preview.</p>
+    <p>Настройте AI-ассистента под задачи вашего бизнеса и проверьте сценарий общения в предварительном просмотре.</p>
 </div>
 
 <div class="widget-settings-grid">
     <div class="settings-panel card">
         <h2>Настройка ассистента</h2>
-        <p class="panel-description">Ассистент встречает посетителя, отвечает по базе знаний компании и помогает перейти к заявке или консультации.</p>
+        <p class="panel-description">Ассистент приветствует посетителя, отвечает по базе знаний компании и сопровождает его до оформления заявки или консультации.</p>
 
-        <div class="setting-group">
-            <label for="widgetName">Имя ассистента</label>
-            <input class="text-input" type="text" id="widgetName" value="Neto">
+        <!-- Вкладки настроек -->
+        <div class="widget-tabs" role="tablist">
+            <button type="button" class="widget-tab active" data-tab="behavior" role="tab" aria-selected="true">Поведение</button>
+            <button type="button" class="widget-tab" data-tab="appearance" role="tab" aria-selected="false">Внешний вид</button>
         </div>
 
-        <div class="setting-group">
-            <label for="widgetCompany">Компания или магазин</label>
-            <input class="text-input" type="text" id="widgetCompany" value="магазин мебели">
-            <p class="hint">Используется в ответах и помогает показать персонализацию.</p>
-        </div>
+        <!-- === Вкладка: Поведение === -->
+        <div class="tab-panel active" id="tab-behavior" role="tabpanel">
+            <div class="setting-group">
+                <label for="widgetName">Имя ассистента</label>
+                <input class="text-input" type="text" id="widgetName" value="Neto">
+            </div>
 
-        <div class="setting-group">
-            <label for="widgetGreeting">Приветствие</label>
-            <textarea class="text-input textarea-input" id="widgetGreeting" rows="3">Здравствуйте! Я помогу подобрать шкаф, ответить на вопросы и записать вас на консультацию.</textarea>
-        </div>
+            <div class="setting-group">
+                <label for="widgetCompany">Компания или магазин</label>
+                <input class="text-input" type="text" id="widgetCompany" value="магазин мебели">
+                <p class="hint">Используется в ответах и помогает показать персонализацию.</p>
+            </div>
 
-        <div class="setting-group">
-            <label for="widgetScenario">Сценарий ассистента</label>
-            <textarea class="text-input textarea-input" id="widgetScenario" rows="5" placeholder="Опишите правила общения, вопросы квалификации и условия передачи менеджеру.">Представьтесь и уточните задачу клиента. Сначала ответьте по базе знаний, затем предложите подходящий следующий шаг. Если клиент готов купить или оставить контакты, передайте заявку менеджеру.</textarea>
-            <p class="hint">Этот текст задаёт поведение ассистента в диалоге.</p>
-        </div>
+            <div class="setting-group">
+                <label for="widgetGreeting">Приветствие</label>
+                <textarea class="text-input textarea-input" id="widgetGreeting" rows="3">Здравствуйте! Я помогу подобрать шкаф, ответить на вопросы и записать вас на консультацию.</textarea>
+            </div>
 
-        <div class="setting-divider"></div>
-        <h3>Внешний вид</h3>
+            <div class="setting-group">
+                <label for="widgetScenario">Сценарий ассистента</label>
+                <textarea class="text-input textarea-input" id="widgetScenario" rows="5" placeholder="Опишите правила общения, вопросы квалификации и условия передачи менеджеру.">Представьтесь и уточните задачу клиента. Сначала ответьте по базе знаний, затем предложите подходящий следующий шаг. Если клиент готов купить или оставить контакты, передайте заявку менеджеру.</textarea>
+                <p class="hint">Этот текст задаёт поведение ассистента в диалоге.</p>
+            </div>
 
-        <!-- Новое поле: Расположение -->
-        <div class="setting-group">
-            <label for="widgetPosition">Расположение на экране</label>
-            <select class="text-input" id="widgetPosition">
-                <option value="bottom-right">Снизу справа</option>
-                <option value="bottom-left">Снизу слева</option>
-                <option value="top-right">Сверху справа</option>
-                <option value="top-left">Сверху слева</option>
-            </select>
-        </div>
+            <div class="setting-group">
+                <label>Кто первым начинает диалог?</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="firstResponder" value="bot" checked> Ассистент
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="firstResponder" value="client"> Клиент
+                    </label>
+                </div>
+            </div>
 
-        <div class="setting-group">
-            <label for="widgetColor">Цвет кнопки</label>
-            <input type="color" id="widgetColor" value="#005FF9">
-        </div>
+            <div class="setting-group">
+                <label for="conversationMode">Сценарий начала диалога</label>
+                <select class="text-input" id="conversationMode">
+                    <option value="proactive">Ассистент начинает и предлагает помощь</option>
+                    <option value="passive">Ожидание вопроса от клиента</option>
+                    <option value="messenger">Приветствие и быстрые кнопки</option>
+                </select>
+            </div>
 
-        <div class="setting-group">
-            <label for="widgetSize">Размер кнопки (px)</label>
-            <input type="range" id="widgetSize" min="40" max="120" value="80">
-            <span id="widgetSizeValue">80px</span>
-        </div>
+            <div class="setting-group">
+                <label for="quickQuestions">Быстрые вопросы</label>
+                <input class="text-input" type="text" id="quickQuestions" value="Цены и условия; Записаться; Что есть в наличии?" placeholder="Разделяйте вопросы точкой с запятой">
+            </div>
 
-        <!-- Новое поле: Размер окна чата -->
-        <div class="setting-group">
-            <label>Размер окна чата</label>
-            <div class="radio-group window-radio" id="windowModeGroup">
-                <label class="radio-option">
-                    <input type="radio" name="windowMode" value="dynamic" checked> Изменяемый (по содержимому)
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="windowMode" value="static"> Статичный (фиксированный)
+            <div class="setting-group">
+                <label>
+                    <input type="checkbox" id="collectLead" checked> Запрашивать контакты, когда клиент готов к заявке
                 </label>
             </div>
-            <p class="hint">В изменяемом режиме окно растёт вместе с диалогом, в статичном — сохраняет постоянный размер.</p>
-        </div>
 
-        <div class="setting-group">
-            <label>Иконка</label>
-            <div class="icon-options" id="iconOptions">
-                <button type="button" class="icon-btn active" data-icon="chat" title="Чат"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
-                <button type="button" class="icon-btn" data-icon="message" title="Сообщение"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H8l-4 4V6c0-1.1.9-2 2-2z"/></svg></button>
-                <button type="button" class="icon-btn" data-icon="support" title="Поддержка"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
-                <button type="button" class="icon-btn" data-icon="help" title="Помощь"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
-                <button type="button" class="icon-btn" data-icon="headset" title="Наушники"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-3a8 8 0 0 1 16 0v3"/><path d="M18 19c0 1.1-.9 2-2 2h-2a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3z"/><path d="M6 19c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3z"/></svg></button>
-            </div>
-            <p class="hint">Выберите иконку для кнопки виджета.</p>
-        </div>
-
-        <!-- Новое поле: Кто первый отвечает -->
-        <div class="setting-group">
-            <label>Кто первый отвечает?</label>
-            <div class="radio-group">
-                <label class="radio-option">
-                    <input type="radio" name="firstResponder" value="bot" checked> Бот
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="firstResponder" value="client"> Клиент
+            <div class="setting-group">
+                <label>
+                    <input type="checkbox" id="showGreeting" checked> Показывать приветствие при открытии
                 </label>
             </div>
         </div>
 
-        <div class="setting-group">
-            <label for="conversationMode">Сценарий начала диалога</label>
-            <select class="text-input" id="conversationMode">
-                <option value="proactive">Ассистент начинает и предлагает помощь</option>
-                <option value="passive">Ждёт вопрос клиента</option>
-                <option value="messetele">Как в Мессенджер: приветствие и быстрые кнопки</option>
-                <option value="messenger">Как в Messenger: приветствие и быстрые кнопки</option>
-            </select>
-        </div>
+        <!-- === Вкладка: Внешний вид === -->
+        <div class="tab-panel" id="tab-appearance" role="tabpanel">
+            <div class="setting-group">
+                <label for="widgetPosition">Расположение на экране</label>
+                <select class="text-input" id="widgetPosition">
+                    <option value="bottom-right">Снизу справа</option>
+                    <option value="bottom-left">Снизу слева</option>
+                    <option value="top-right">Сверху справа</option>
+                    <option value="top-left">Сверху слева</option>
+                </select>
+            </div>
 
-        <div class="setting-group">
-            <label for="quickQuestions">Быстрые вопросы</label>
-            <input class="text-input" type="text" id="quickQuestions" value="Цены и условия; Записаться; Что есть в наличии?" placeholder="Разделяйте вопросы точкой с запятой">
-        </div>
+            <div class="setting-group">
+                <label for="widgetColor">Цвет кнопки</label>
+                <input type="color" id="widgetColor" value="#005FF9">
+            </div>
 
-        <div class="setting-group">
-            <label>
-                <input type="checkbox" id="collectLead" checked> Запрашивать контакты, когда клиент готов к заявке
-            </label>
-        </div>
+            <div class="setting-group">
+                <label for="widgetSize">Размер кнопки (px)</label>
+                <input type="range" id="widgetSize" min="40" max="120" value="80">
+                <span id="widgetSizeValue">80px</span>
+            </div>
 
-        <!-- Новое поле: Показывать приветствие -->
-        <div class="setting-group">
-            <label>
-                <input type="checkbox" id="showGreeting" checked> Показывать приветствие при открытии
-            </label>
+            <div class="setting-group">
+                <label>Размер окна чата</label>
+                <div class="radio-group window-radio" id="windowModeGroup">
+                    <label class="radio-option">
+                        <input type="radio" name="windowMode" value="dynamic" checked> Изменяемый (по содержимому)
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="windowMode" value="static"> Статичный (фиксированный)
+                    </label>
+                </div>
+                <p class="hint">В изменяемом режиме окно растёт вместе с диалогом, в статичном — сохраняет постоянный размер.</p>
+            </div>
+
+            <div class="setting-group">
+                <label>Иконка</label>
+                <div class="icon-options" id="iconOptions">
+                    <button type="button" class="icon-btn active" data-icon="chat" title="Чат"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                    <button type="button" class="icon-btn" data-icon="message" title="Сообщение"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H8l-4 4V6c0-1.1.9-2 2-2z"/></svg></button>
+                    <button type="button" class="icon-btn" data-icon="support" title="Поддержка"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
+                    <button type="button" class="icon-btn" data-icon="help" title="Помощь"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
+                    <button type="button" class="icon-btn" data-icon="headset" title="Наушники"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-3a8 8 0 0 1 16 0v3"/><path d="M18 19c0 1.1-.9 2-2 2h-2a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3z"/><path d="M6 19c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3z"/></svg></button>
+                </div>
+                <p class="hint">Выберите иконку для кнопки виджета.</p>
+            </div>
         </div>
     </div>
 
@@ -214,7 +218,6 @@
                 <h2>Что получает клиент</h2>
                 <p class="panel-description">Не теряет обращение, даже когда менеджер занят или магазин закрыт.</p>
             </div>
-            <span class="live-badge"><span></span> Live preview</span>
         </div>
         <div class="value-list">
             <div><strong>24/7</strong><span>отвечает на типовые вопросы</span></div>
@@ -399,6 +402,23 @@
     });
     copyBtn.addEventListener('click', copyEmbedCode);
 
+    // ---------- Переключение вкладок настроек ----------
+    const widgetTabs = document.querySelectorAll('.widget-tab');
+    widgetTabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            widgetTabs.forEach(function (t) {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            this.classList.add('active');
+            this.setAttribute('aria-selected', 'true');
+
+            document.querySelectorAll('.tab-panel').forEach(function (panel) {
+                panel.classList.toggle('active', panel.id === 'tab-' + this.dataset.tab);
+            }, this);
+        });
+    });
+
     // ---------- Инициализация ----------
     restoreConfig();
     updateEmbedCode();
@@ -473,6 +493,39 @@
 }
 
 .setting-group textarea { min-height: 88px; }
+
+/* === Вкладки настроек (как в браузере) === */
+.widget-tabs {
+    display: flex;
+    gap: 2px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 20px;
+}
+.widget-tab {
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+    margin-bottom: -1px;
+}
+.widget-tab:hover {
+    color: #005FF9;
+}
+.widget-tab.active {
+    color: #005FF9;
+    border-bottom-color: #005FF9;
+}
+.tab-panel {
+    display: none;
+}
+.tab-panel.active {
+    display: block;
+}
 </style>
 
     </main>

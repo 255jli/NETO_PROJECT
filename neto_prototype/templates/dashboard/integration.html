@@ -76,22 +76,22 @@
         <p class="int-hint">Выберите удобный способ или заполните всё сразу — ассистент соберёт информацию вместе.</p>
         <div class="int-methods" id="methodGrid">
             <button type="button" class="int-method" data-goto="survey">
-                <span class="int-method-icon">📋</span>
+                <span class="int-method-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></span>
                 <span class="int-method-name">Умный опрос</span>
                 <span class="int-method-desc">Ответьте на простые вопросы и сразу получите результат</span>
             </button>
             <button type="button" class="int-method" data-goto="resume">
-                <span class="int-method-icon">✍️</span>
+                <span class="int-method-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
                 <span class="int-method-name">Резюме компании</span>
                 <span class="int-method-desc">Опишите себя своими словами</span>
             </button>
             <button type="button" class="int-method" data-goto="files">
-                <span class="int-method-icon">🗂️</span>
+                <span class="int-method-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>
                 <span class="int-method-name">Файлы и документы</span>
                 <span class="int-method-desc">Прайс, каталог, регламент</span>
             </button>
             <button type="button" class="int-method" data-goto="person">
-                <span class="int-method-icon">👤</span>
+                <span class="int-method-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
                 <span class="int-method-name">Контактное лицо</span>
                 <span class="int-method-desc">Кому передавать сложные вопросы</span>
             </button>
@@ -358,7 +358,7 @@
         Array.prototype.forEach.call(files, function(f) {
             var li = document.createElement('li');
             li.className = 'int-file-item';
-            li.textContent = '📄 ' + f.name + ' (' + (f.size / 1024).toFixed(0) + ' КБ)';
+            li.textContent = f.name + ' (' + (f.size / 1024).toFixed(0) + ' КБ)';
             fileList.appendChild(li);
         });
     }
