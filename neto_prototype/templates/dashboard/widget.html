@@ -122,13 +122,7 @@
 
             <div class="setting-group">
                 <label>Иконка</label>
-                <div class="icon-options" id="iconOptions">
-                    <button type="button" class="icon-btn active" data-icon="chat" title="Чат"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
-                    <button type="button" class="icon-btn" data-icon="message" title="Сообщение"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H8l-4 4V6c0-1.1.9-2 2-2z"/></svg></button>
-                    <button type="button" class="icon-btn" data-icon="support" title="Поддержка"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
-                    <button type="button" class="icon-btn" data-icon="help" title="Помощь"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
-                    <button type="button" class="icon-btn" data-icon="headset" title="Наушники"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-3a8 8 0 0 1 16 0v3"/><path d="M18 19c0 1.1-.9 2-2 2h-2a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3z"/><path d="M6 19c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3z"/></svg></button>
-                </div>
+                <button type="button" class="simple-icon-button">выбрать иконку ></button>
                 <p class="hint">Выберите иконку для кнопки виджета.</p>
             </div>
         </div>
@@ -447,6 +441,26 @@
 }
 .tab-panel.active {
     display: block;
+}
+
+.simple-icon-button {
+    padding: 10px 24px; /* Как у btn-outline */
+    background-color: var(--yc-bg); /* Как у btn-outline */
+    color: var(--yc-text-primary); /* Как у btn-outline */
+    border: 1px solid var(--yc-border); /* Как у btn-outline */
+    border-radius: 8px; /* Как у btn-outline */
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500; /* Как у btn-outline */
+    transition: background-color 0.2s ease; /* Плавный переход */
+    text-align: center; /* Выравнивание текста по центру */
+    text-decoration: none; /* Убираем подчеркивание, если кнопка внутри anchor */
+    display: inline-block; /* Поведение как у кнопки */
+    width: auto; /* Автоматическая ширина */
+}
+
+.simple-icon-button:hover {
+    background-color: var(--yc-bg-hover); /* Как у btn-outline */
 }
 </style>
 {% endblock %}
