@@ -22,16 +22,20 @@ if (voiceBtn) {
         
         // Имитация API-вызова
         setTimeout(() => {
+            const result = {
+              Длительность: '2 мин',
+              Интент: 'Запись на доставку'
+            };
             voiceResult.innerHTML = `
                 <div style="padding: 20px; background: var(--yc-bg); border-radius: var(--radius-md); border: 1px solid var(--yc-border);">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
                         <div>
                             <div style="font-size: 0.875rem; color: var(--yc-text-secondary);">Длительность</div>
-                            <div style="font-weight: 600;">3 мин 24 сек</div>
+                            <div style="font-weight: 600;">${result.Длительность}</div>
                         </div>
                         <div>
                             <div style="font-size: 0.875rem; color: var(--yc-text-secondary);">Интент</div>
-                            <div style="font-weight: 600; color: var(--yc-accent);">Запись на пробный урок</div>
+                            <div style="font-weight: 600; color: var(--yc-accent);">${result.Интент}</div>
                         </div>
                         <div>
                             <div style="font-size: 0.875rem; color: var(--yc-text-secondary);">Настроение</div>
@@ -115,16 +119,21 @@ if (parseBtn) {
                 clearInterval(interval);
                 
                 // Имитация данных после "сбора данных"
-                const competitors = [
-                    { name: "Школа программирования", service: "Курс Python", price: "12000", rating: "4.8", change: "+2%" },
-                    { name: "English Academy", service: "Индивидуальные занятия", price: "1500", rating: "4.6", change: "-1%" },
-                    { name: "Math Tutor", service: "Подготовка к ЕГЭ", price: "8000", rating: "4.7", change: "+5%" },
-                    { name: "Art Studio", service: "Детские мастер-классы", price: "6000", rating: "4.9", change: "0%" }
-                ];
+                const competitors = ["Мебельная фабрика №1", "Шкафы-Купе Оптом", "Мир Комодов"];
+                const services = ["Шкаф-купе", "Комод"];
+                const competitorsData = competitors.map(comp => {
+                    return {
+                        name: comp,
+                        service: services[Math.floor(Math.random() * services.length)],
+                        price: Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000,
+                        rating: (Math.random() * (4.9 - 4.0 + 1) + 4.0).toFixed(1),
+                        change: (Math.random() > 0.5 ? '+' : '') + (Math.random() * 10).toFixed(0) + '%'
+                    };
+                });
                 
                 // Заполняем таблицу результатов
                 parseResultsBody.innerHTML = ''; // Очищаем skeleton-элементы
-                competitors.forEach(comp => {
+                competitorsData.forEach(comp => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${comp.name}</td>

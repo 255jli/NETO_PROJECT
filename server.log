@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "d:\PTP\NETO_PROJECT\neto_prototype\app.py", line 1, in <module>
-    from flask import Flask, render_template, jsonify
-ModuleNotFoundError: No module named 'flask'
