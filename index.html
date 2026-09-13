@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETO — автоматизация комуникаций, для любого бизнеса</title>
+    <meta name="description" content="ИИ-ассистент, который принимает звонки, чаты и записывает клиентов 24/7. Простая интеграция, большие возможности">
+    <link rel="stylesheet" href="static/css/style_1.css">
+    <link rel="stylesheet" href="static/css/icons.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* Отменяем глобальное html,body из style_1.css (height:100%; padding-left:40px),
+           чтобы лендинг занимал всю ширину и скроллбар был у самого правого края. */
+        html, body { height: auto; min-height: 100%; overflow-y: auto; overflow-x: hidden; padding-left: 0; padding-right: 0; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fff; color: #1C1C1F; line-height: 1.6; }
+
+        .topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 40px; border-bottom: 1px solid #EDEEF0; background: #fff;
+            position: sticky; top: 0; z-index: 10;
+        }
+        .topbar-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; color: #1C1C1F; }
+        .topbar-logo img { height: 36px; }
+        .topbar-links { display: flex; align-items: center; gap: 24px; }
+        .topbar-links a { color: #6b6f76; text-decoration: none; font-size: 14px; }
+        .topbar-links a:hover { color: #005FF9; }
+
+        .hero { padding: 44px 48px 72px; text-align: center; background: #fff; }
+        .hero-badge {
+            display: inline-block; background: #e8f0fe; color: #005FF9; font-weight: 600;
+            padding: 6px 14px; border-radius: 999px; font-size: 13px; margin-bottom: 22px;
+        }
+        .hero h1 { font-size: 42px; font-weight: 700; line-height: 1.3; max-width: 740px; margin: 0 auto 20px; }
+        /* words_black_neto.svg — 700x250px (соотношение 2.8:1), масштабируем по высоте шрифта.
+           Из-за особенностей контейнера SVG сдвигаем логотип вниз, чтобы центр надписи был на уровне тире. */
+        .hero h1 img.hero-logo {
+            display: inline-block;
+            height: 0.95em;
+            width: auto;               /* пропорции сохраняются автоматически */
+            vertical-align: baseline;
+            position: relative;
+            top: 8px;
+            left: 5px;
+            margin-right: 0.22em;
+        }
+        /* Заголовок всегда ровно в две строки: переносить строки нельзя, чтобы не появилась третья */
+        .hero h1 .line1,
+        .hero h1 .line2 { white-space: nowrap; }
+        .hero h1 span { color: #1C1C1F; } /* чёрный цвет надписи */
+        .hero h1 span .blue, .hero h1 span.blue { color: #005FF9; } /* синяя первая часть */
+        .hero p { font-size: 20px; color: #666670; max-width: 680px; margin: 0 auto 34px; }
+        .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .hero-actions .btn-primary { padding: 14px 28px; font-size: 16px; }
+        .hero-actions .btn-secondary { padding: 14px 28px; font-size: 16px; }
+
+        .section { max-width: 1120px; margin: 0 auto; padding: 64px 24px; }
+        .section-head { text-align: center; margin-bottom: 40px; }
+        .section-head h2 { font-size: 34px; font-weight: 700; }
+        .section-head p { font-size: 17px; color: #666670; margin-top: 10px; }
+
+        .problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .problem-card {
+            border: 1px solid #EDEEF0; border-radius: 16px; padding: 26px; background: #F8FAFC;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .problem-tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #b45309; }
+        .problem-card h3 { font-size: 19px; color: #1C1C1F; }
+        .problem-desc { font-size: 14px; color: #6b6f76; margin-top: 2px; }
+        .problem-solve {
+            margin-top: 14px; padding-top: 14px; border-top: 1px dashed #d8dce0;
+            display: flex; gap: 10px; align-items: flex-start;
+        }
+        .problem-solve .ok { color: #1f8a4c; font-weight: 800; }
+        .problem-solve p { font-size: 14px; color: #1f8a4c; }
+
+        .cta-band { text-align: center; background: #F8FAFC; border-top: 1px solid #EDEEF0; border-bottom: 1px solid #EDEEF0; padding: 64px 24px; }
+        .cta-band h2 { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
+        .cta-band p { color: #666670; font-size: 17px; margin-bottom: 26px; }
+
+        .footer { padding: 40px 24px; max-width: 1120px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+        .footer-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
+        .footer-brand img { height: 46px; }
+        .footer-col { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: #6b6f76; }
+        .footer-col strong { color: #1C1C1F; }
+        .footer-bottom { max-width: 1120px; margin: 0 auto; padding: 20px 24px 40px; border-top: 1px solid #EDEEF0; font-size: 13px; color: #8a8f98; }
+
+        @media (max-width: 900px) { .problem-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 38px; } .topbar { padding: 14px 20px; } }
+    </style>
+</head>
+<body>
+
+    <!-- Верхняя панель -->
+    <header class="topbar">
+        <a href="/" class="topbar-logo">
+            <img src="static/img/logo_black_neto.svg" alt="NETO">
+            
+        </a>
+        <nav class="topbar-links">
+            <a href="documentation/index.html">Подробнее о проекте</a>
+            <a href="dashboard/onboarding/index.html" class="btn btn-outline btn-sm">Войти в кабинет</a>
+        </nav>
+    </header>
+
+    <!-- Герой -->
+    <section class="hero">
+        <div class="hero-badge">Быстрое внедрение и оплата по результатам</div>
+                <h1><span class="line1"><img src="static/img/words_black_neto.svg" alt="NETO" class="hero-logo"><span class="blue">– автоматизация</span></span><br><span class="line2"><span class="blue">комуникаций,</span> для любого бизнеса</span></h1>
+        <p>ИИ-ассистент, который принимает звонки, работает через чат-виджет и круглосуточно записывает клиентов. Наша простая интеграция, дает большие возможности.</p>
+        <div class="hero-actions">
+            <a href="dashboard/onboarding/index.html" class="btn btn-primary">Прототип интерфейса</a>
+            <a href="#problems" class="btn btn-secondary">Подробнее</a>
+        </div>
+    </section>
+
+    <!-- Проблемы → решения -->
+    <section class="section" id="problems">
+        <div class="section-head">
+            <h2>Почему бизнес теряет клиентов</h2>
+            <p>И как NETO решает каждую из этих проблем автоматически.</p>
+        </div>
+        <div class="problem-grid">
+            <article class="problem-card">
+                <span class="problem-tag">Проблема</span>
+                <h3>Потерянные звонки</h3>
+                <p class="problem-desc">25–35% входящих звонков остаются необработанными — клиент уходит к конкуренту.</p>
+                <div class="problem-solve"><span class="ok">✓</span><p>Ассистент принимает звонки 24/7, ни один не теряется.</p></div>
+            </article>
+            <article class="problem-card">
+                <span class="problem-tag">Проблема</span>
+                <h3>Перегрузка сотрудников</h3>
+                <p class="problem-desc">Операторы заняты типовыми вопросами и не успевают продавать. Содержание линии — от 60 000 ₽/мес.</p>
+                <div class="problem-solve"><span class="ok">✓</span><p>ИИ отвечает на типовые вопросы, записывает и оформляет заказы сам.</p></div>
+            </article>
+            <article class="problem-card">
+                <span class="problem-tag">Проблема</span>
+                <h3>Сложные интеграции</h3>
+                <p class="problem-desc">Существующие решения требуют разработчиков и недель внедрения.</p>
+                <div class="problem-solve"><span class="ok">✓</span><p>Готовые коннекторы к amoCRM, Битрикс24, 1С. Настройка интеграции через API и вебхуки с маппингом полей.</p></div>
+            </article>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-band">
+        <h2>Ознакомьтесь с возможностями</h2>
+        <p>Откройте прототип интерфейса и пройдите путь нового пользователя за пару минут.</p>
+        <a href="dashboard/onboarding/index.html" class="btn btn-primary">Прототип интерфейса</a>
+    </section>
+
+    <!-- Контакты -->
+    <footer class="footer" id="contacts">
+        <div class="footer-brand">
+            <img src="static/img/logo_black_neto.svg" alt="NETO">
+            
+        </div>
+        <div class="footer-col">
+            <strong>Контакты</strong>
+            <span>Email: kerlencompany@ya.ru</span>
+            <span>Email: neto@kerlencompany.ru</span>
+        </div>
+        <div class="footer-col">
+            <strong>Продукт</strong>
+            <a href="dashboard/overview/index.html" style="color:#6b6f76;text-decoration:none;">Личный кабинет</a>
+            <a href="documentation/index.html" style="color:#6b6f76;text-decoration:none;">Документация проекта</a>
+        </div>
+    </footer>
+    <div class="footer-bottom">© 2026 NETO — интеллектуальная платформа автоматизации входящих коммуникаций.</div>
+
+</body>
+</html>

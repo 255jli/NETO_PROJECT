@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интеграции и знания — NETO</title>
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../static/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../static/fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: italic;
+            font-display: swap;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .demo-badge {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 4px 8px;
+            border: 1px solid #c9dcff;
+            border-radius: 4px;
+            background: #f0f4ff;
+            color: #315ea8;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+    <link rel="stylesheet" href="../../static/css/style_1.css">
+    <link rel="stylesheet" href="../../static/css/icons.css">
+    <link rel="stylesheet" href="../../static/css/style_2.css">
+    <link rel="stylesheet" href="../../static/css/style_3.css">
+    <link rel="stylesheet" href="../../static/css/sidebar.css">
+    <script src="../../static/js/data.js"></script>
+</head>
+<body>
+
+    <!-- Сайдбар + аватарка -->
+<aside class="sidebar" id="sidebar">
+    <a href="../onboarding/index.html" class="logo" title="Первые шаги">
+        <img src="../../static/img/logo_blue_neto.svg" alt="NETO">
+    </a>
+    <nav class="nav">
+        <a href="../overview/index.html" class="nav-item ">
+            <i class="icon-dashboard"></i><span class="nav-text"><span>Обзор</span></span>
+        </a>
+        <a href="../widget/index.html" class="nav-item ">
+            <i class="icon-chat-assistant"></i><span class="nav-text"><span>Виджет</span></span>
+        </a>
+        <a href="index.html" class="nav-item active">
+            <i class="icon-link"></i><span class="nav-text"><span>Интеграции</span></span>
+        </a>
+        <a href="../crm/index.html" class="nav-item ">
+            <i class="icon-users"></i><span class="nav-text"><span>CRM</span></span>
+        </a>
+        <a href="../parsing/index.html" class="nav-item ">
+            <i class="icon-search"></i><span class="nav-text"><span>Конкуренты</span></span>
+        </a>
+        <a href="../calendar/index.html" class="nav-item ">
+            <i class="icon-shield-check"></i><span class="nav-text"><span>Календарь</span></span>
+        </a>
+        <a href="../telephony/index.html" class="nav-item ">
+            <i class="icon-phone-outgoing"></i><span class="nav-text"><span>Телефон</span></span>
+        </a>
+        <!-- Добавлены пункты настроек и счёта -->
+        <a href="../settings/index.html" class="nav-item ">
+            <i class="icon-settings"></i><span class="nav-text"><span>Настройки</span></span>
+        </a>
+        <a href="../billing/index.html" class="nav-item ">
+            <i class="icon-billing"></i><span class="nav-text"><span>Счёт</span></span>
+        </a>
+        </nav>
+</aside>
+
+    <!-- Основной контент -->
+    <main class="content-wrapper">
+        
+<div class="page-header">
+    <h1>Интеграции и знания</h1>
+    <p>Расскажите ассистенту, чем занимается компания, — он будет отвечать клиентам от вашего имени. Настройка выполняется через понятную форму.</p>
+</div>
+
+<div class="int-stack">
+
+    <!-- ===== 1. Источник данных: CRM или внутри NETO ===== -->
+    <section class="card int-section">
+        <h2 class="int-title">NETO сам работает как ваша CRM</h2>
+        <p class="int-hint">База клиентов уже есть внутри платформы — ассистент ведёт её автоматически из звонков и чатов. Подключите собственную БД или CRM — данные будут <strong>дублироваться</strong> в обе системы и использоваться и ассистентом, и платформой.</p>
+
+        <!-- Подключение своей CRM / БД -->
+        <div class="int-src-panel" id="srcCrm">
+            <p class="int-hint">Подключите свою систему — ассистент подтянет карточки и историю, изменения синхронизируются в обе стороны.</p>
+            <div class="int-crm-grid">
+                <div class="int-crm-tile" data-crm="amoCRM">
+                    <div class="int-crm-name">amoCRM</div>
+                    <button type="button" class="btn btn-sm btn-outline int-crm-btn">Подключить</button>
+                </div>
+                <div class="int-crm-tile" data-crm="Битрикс24">
+                    <div class="int-crm-name">Битрикс24</div>
+                    <button type="button" class="btn btn-sm btn-outline int-crm-btn">Подключить</button>
+                </div>
+                <div class="int-crm-tile" data-crm="1С">
+                    <div class="int-crm-name">1С</div>
+                    <button type="button" class="btn btn-sm btn-outline int-crm-btn">Подключить</button>
+                </div>
+                <div class="int-crm-tile" data-crm="Своя БД">
+                    <div class="int-crm-name">Своя БД</div>
+                    <button type="button" class="btn btn-sm btn-outline int-crm-btn">Подключить</button>
+                </div>
+            </div>
+            <p class="int-note">NETO продолжает работать как полноценная CRM: карточки создаются из звонков и чатов и синхронизируются с подключённой системой. База доступна на вкладке «CRM».</p>
+        </div>
+
+        <!-- Какие данные можно брать -->
+        <div class="int-access">
+            <strong class="int-access-title">Какие данные разрешить брать</strong>
+            <p class="int-hint">Выберите поля, которые ассистент и платформа могут читать и использовать.</p>
+            <div class="int-access-grid" id="accessGrid">
+                <label class="int-access-item"><input type="checkbox" checked> Имя и контакты</label>
+                <label class="int-access-item"><input type="checkbox" checked> История обращений</label>
+                <label class="int-access-item"><input type="checkbox" checked> Покупки и заказы</label>
+                <label class="int-access-item"><input type="checkbox" checked> Условия и договорённости</label>
+                <label class="int-access-item"><input type="checkbox"> Паспортные данные</label>
+                <label class="int-access-item"><input type="checkbox"> Финансовые данные</label>
+            </div>
+        </div>
+
+        <!-- Для программиста -->
+        <div class="int-dev">
+            <strong class="int-dev-title">Для разработчиков</strong>
+            <p class="int-hint">Подключите любую систему через API — поддерживаются все ключи доступа.</p>
+            <div class="int-dev-row">
+                <input type="text" class="text-input" id="devApiKey" placeholder="Ваш API-ключ">
+                <button type="button" class="btn btn-primary" id="devSaveKey">Сохранить ключ</button>
+            </div>
+            <div class="int-dev-actions">
+                <button type="button" class="btn btn-outline" id="devDocs">Открыть документацию API</button>
+                <button type="button" class="btn btn-outline" id="devTest">Проверить подключение</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 2. Чем поделиться с ассистентом ===== -->
+    <section class="card int-section">
+        <h2 class="int-title">Что рассказать ассистенту</h2>
+        <p class="int-hint">Выберите удобный способ или заполните всё сразу — ассистент соберёт информацию вместе.</p>
+        <div class="int-methods" id="methodGrid">
+            <button type="button" class="int-method" data-goto="survey">
+                <span class="int-method-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></span>
+                <span class="int-method-name">Умный опрос</span>
+                <span class="int-method-desc">Ответьте на простые вопросы и сразу получите результат</span>
+            </button>
+            <button type="button" class="int-method" data-goto="resume">
+                <span class="int-method-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+                <span class="int-method-name">Резюме компании</span>
+                <span class="int-method-desc">Опишите себя своими словами</span>
+            </button>
+            <button type="button" class="int-method" data-goto="files">
+                <span class="int-method-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>
+                <span class="int-method-name">Файлы и документы</span>
+                <span class="int-method-desc">Прайс, каталог, регламент</span>
+            </button>
+            <button type="button" class="int-method" data-goto="person">
+                <span class="int-method-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                <span class="int-method-name">Контактное лицо</span>
+                <span class="int-method-desc">Кому передавать сложные вопросы</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- ===== 3. Умный опрос ===== -->
+    <section class="card int-section" id="intSurvey">
+        <h2 class="int-title">Умный опрос</h2>
+        <p class="int-hint">Ответы сразу попадают в карточку знаний внизу страницы.</p>
+        <div class="int-progress"><div class="int-progress-fill" id="surveyProgress"></div></div>
+        <div id="surveyStep"></div>
+        <div class="int-wizard-nav">
+            <button type="button" class="btn btn-outline" id="surveyPrev">Назад</button>
+            <span class="int-wizard-count" id="surveyCount"></span>
+            <button type="button" class="btn btn-primary" id="surveyNext">Далее</button>
+        </div>
+    </section>
+
+    <!-- ===== 4. Резюме компании ===== -->
+    <section class="card int-section" id="intResume">
+        <h2 class="int-title">Резюме компании</h2>
+        <p class="int-hint">Не обязательно заполнять всё. Пара предложений уже помогут ассистенту.</p>
+        <div class="int-form-grid">
+            <label>Название компании
+                <input type="text" id="rName" class="form-control" placeholder="Например: Букет-Сервис">
+            </label>
+            <label>Сфера
+                <select id="rSphere" class="form-control">
+                    <option value="">— выберите —</option>
+                    <option>Магазин цветов</option>
+                    <option>Автосервис</option>
+                    <option>Онлайн-школа</option>
+                    <option>Стоматология</option>
+                    <option>Склад и логистика</option>
+                    <option>Другое</option>
+                </select>
+            </label>
+            <label class="int-wide">Расскажите о компании
+                <textarea id="rDesc" rows="4" class="form-control" placeholder="Чем занимаетесь, как к вам попадают клиенты..."></textarea>
+            </label>
+            <label>График работы
+                <input type="text" id="rSchedule" class="form-control" placeholder="Пн–Сб 9:00–20:00">
+            </label>
+            <label>Контактный телефон
+                <input type="text" id="rPhone" class="form-control" placeholder="+7 ___ ___-__-__">
+            </label>
+        </div>
+        <button type="button" class="btn btn-primary" id="resumeSave">Сохранить резюме</button>
+    </section>
+
+    <!-- ===== 5. Файлы и документы ===== -->
+    <section class="card int-section" id="intFiles">
+        <h2 class="int-title">Файлы и документы</h2>
+        <p class="int-hint">Загрузите прайс-лист, каталог или регламент — ассистент изучит их.</p>
+        <div class="int-drop" id="dropZone">
+            <div class="int-drop-icon">⬆</div>
+            <p>Перетащите файл сюда или <span class="int-drop-link">выберите</span></p>
+            <input type="file" id="fileInput" multiple hidden>
+        </div>
+        <ul class="int-file-list" id="fileList"></ul>
+    </section>
+
+    <!-- ===== 6. Контактное лицо ===== -->
+    <section class="card int-section" id="intPerson">
+        <h2 class="int-title">Контактное лицо</h2>
+        <p class="int-hint">Если ассистент не сможет ответить — он переведёт разговор на этого сотрудника.</p>
+        <div class="int-person-list" id="personList"></div>
+        <div class="int-person-form" id="personForm" hidden>
+            <div class="int-form-grid">
+                <label>Имя
+                    <input type="text" id="pName" class="form-control" placeholder="Анна Ковалёва">
+                </label>
+                <label>Роль
+                    <input type="text" id="pRole" class="form-control" placeholder="Администратор">
+                </label>
+                <label class="int-wide">Телефон
+                    <input type="text" id="pPhone" class="form-control" placeholder="+7 (900) 000-00-00">
+                </label>
+            </div>
+            <div class="int-wizard-nav">
+                <button type="button" class="btn btn-primary" id="personAdd">Добавить</button>
+                <button type="button" class="btn btn-outline" id="personCancel">Отмена</button>
+            </div>
+        </div>
+        <button type="button" class="btn btn-outline" id="personShowForm">+ Добавить сотрудника</button>
+    </section>
+
+    <!-- ===== 7. Сводка знаний (обновляется в реальном времени) ===== -->
+    <section class="card int-section" id="intSummary">
+        <h2 class="int-title">Что ассистент уже знает о компании</h2>
+        <div class="int-know" id="knowledgeSummary"></div>
+        <div class="int-summary-actions">
+            <button type="button" class="btn btn-primary" id="trainBtn">Обучить ассистента</button>
+            <button type="button" class="btn btn-outline" id="resetBtn">Сбросить</button>
+        </div>
+    </section>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // ---------- Состояние страницы ----------
+    var state = {
+        source: 'crm',
+        connectedCrm: [],
+        name: '',
+        sphere: '',
+        desc: '',
+        schedule: '',
+        phone: '',
+        asks: '',
+        contactName: '',
+        contactRole: ''
+    };
+
+    var summaryEl = document.getElementById('knowledgeSummary');
+
+    function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+    function renderSummary() {
+        var rows = [];
+        rows.push(['Название', state.name || '—']);
+        rows.push(['Сфера', state.sphere || (state.asks || '—')]);
+        rows.push(['График', state.schedule || '—']);
+        rows.push(['Контакты', state.phone || '—']);
+        rows.push(['Частые вопросы', state.asks || '—']);
+        rows.push(['Контактное лицо', state.contactName ? (state.contactName + (state.contactRole ? ' · ' + state.contactRole : '')) : '—']);
+        rows.push(['Источник', (state.source === 'crm' ? 'CRM' : 'Внутренняя база') + (state.connectedCrm.length ? ' · ' + state.connectedCrm.join(', ') : '')]);
+
+        summaryEl.innerHTML = rows.map(function(r) {
+            return '<div class="int-know-row"><span class="int-know-label">' + r[0] + '</span><span class="int-know-value">' + esc(r[1]) + '</span></div>';
+        }).join('');
+    }
+
+    // ---------- 1. Источник данных ----------
+    // Источник определяется автоматически (NETO как CRM + дублирование в подключённую систему).
+
+    // Подключение CRM / БД (переключатель)
+    document.querySelectorAll('.int-crm-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var tile = btn.closest('.int-crm-tile');
+            var name = tile.dataset.crm;
+            var idx = state.connectedCrm.indexOf(name);
+            if (idx === -1) { state.connectedCrm.push(name); tile.classList.add('connected'); btn.textContent = 'Подключено'; }
+            else { state.connectedCrm.splice(idx, 1); tile.classList.remove('connected'); btn.textContent = 'Подключить'; }
+            renderSummary();
+        });
+    });
+
+    // Разрешения на данные (лже-чекбоксы)
+    document.querySelectorAll('#accessGrid input[type="checkbox"]').forEach(function(cb) {
+        cb.addEventListener('change', function() {
+            if (typeof showToast === 'function') {
+                showToast(cb.checked ? 'Доступ к данным включён' : 'Доступ к данным отключён', 'success');
+            }
+        });
+    });
+
+    // Для разработчиков (лже-кнопки)
+    var devKey = document.getElementById('devApiKey');
+    var devSave = document.getElementById('devSaveKey');
+    var devDocs = document.getElementById('devDocs');
+    var devTest = document.getElementById('devTest');
+
+    if (devSave) {
+        devSave.addEventListener('click', function() {
+            var key = devKey ? devKey.value.trim() : '';
+            if (typeof showToast === 'function') {
+                showToast(key ? 'API-ключ сохранён (демо)' : 'Введите API-ключ', key ? 'success' : 'info');
+            }
+        });
+    }
+    if (devDocs) {
+        devDocs.addEventListener('click', function() {
+            if (typeof showToast === 'function') showToast('Документация API открыта (демо)', 'info');
+        });
+    }
+    if (devTest) {
+        devTest.addEventListener('click', function() {
+            if (typeof showToast === 'function') showToast('Подключение проверяется… всё в порядке', 'success');
+        });
+    }
+
+    // ---------- 2. Навигация по методам ----------
+    document.getElementById('methodGrid').addEventListener('click', function(e) {
+        var m = e.target.closest('.int-method');
+        if (!m) return;
+        document.querySelectorAll('.int-method').forEach(function(x) { x.classList.remove('active'); });
+        m.classList.add('active');
+        var id = m.dataset.goto;
+        var target = document.getElementById('int' + id.charAt(0).toUpperCase() + id.slice(1));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // ---------- 3. Умный опрос ----------
+    var questions = [
+        { key: 'sphere', q: 'Чем занимается ваша компания?', opts: ['Продаём товары', 'Предоставляем услуги', 'Онлайн-образование', 'Склад и логистика', 'Другое'] },
+        { key: 'schedule', q: 'В какое время вы работаете?', opts: ['Пн–Пт', 'Каждый день', 'Круглосуточно', 'По записи'] },
+        { key: 'asks', q: 'Что чаще всего спрашивают клиенты?', opts: ['Цены', 'График работы', 'Как записаться', 'Доставку', 'Условия и гарантии'] }
+    ];
+    var qIdx = 0;
+
+    var stepEl = document.getElementById('surveyStep');
+    var progressEl = document.getElementById('surveyProgress');
+    var countEl = document.getElementById('surveyCount');
+    var prevBtn = document.getElementById('surveyPrev');
+    var nextBtn = document.getElementById('surveyNext');
+
+    function renderWizard() {
+        var total = questions.length;
+        progressEl.style.width = ((qIdx) / total * 100) + '%';
+        countEl.textContent = (qIdx + 1) + ' из ' + total;
+        var q = questions[qIdx];
+        var html = '<div class="int-question">' + q.q + '</div><div class="int-options">';
+        q.opts.forEach(function(opt) {
+            var active = state[q.key] === opt ? ' active' : '';
+            html += '<button type="button" class="int-opt' + active + '" data-v="' + opt.replace(/"/g, '"') + '">' + opt + '</button>';
+        });
+        html += '</div>';
+        stepEl.innerHTML = html;
+        prevBtn.disabled = qIdx === 0;
+        nextBtn.textContent = qIdx === total - 1 ? 'Готово' : 'Далее';
+        nextBtn.disabled = !state[q.key];
+
+        stepEl.querySelectorAll('.int-opt').forEach(function(b) {
+            b.addEventListener('click', function() {
+                stepEl.querySelectorAll('.int-opt').forEach(function(x) { x.classList.remove('active'); });
+                b.classList.add('active');
+                state[q.key] = b.getAttribute('data-v');
+                nextBtn.disabled = false;
+                renderSummary();
+            });
+        });
+    }
+
+    prevBtn.addEventListener('click', function() { if (qIdx > 0) { qIdx--; renderWizard(); } });
+    nextBtn.addEventListener('click', function() {
+        if (!state[questions[qIdx].key]) return;
+        if (qIdx < questions.length - 1) { qIdx++; renderWizard(); }
+        else { progressEl.style.width = '100%'; nextBtn.disabled = true; }
+    });
+    renderWizard();
+
+    // ---------- 4. Резюме ----------
+    document.getElementById('resumeSave').addEventListener('click', function() {
+        state.name = document.getElementById('rName').value.trim();
+        state.sphere = document.getElementById('rSphere').value;
+        state.desc = document.getElementById('rDesc').value.trim();
+        state.schedule = document.getElementById('rSchedule').value.trim();
+        state.phone = document.getElementById('rPhone').value.trim();
+        renderSummary();
+        if (typeof showToast === 'function') showToast('Резюме сохранено. Ассистент учтёт эти данные.', 'success');
+    });
+
+    // ---------- 5. Файлы ----------
+    var fileList = document.getElementById('fileList');
+    var dropZone = document.getElementById('dropZone');
+    var fileInput = document.getElementById('fileInput');
+
+    function addFileNames(files) {
+        Array.prototype.forEach.call(files, function(f) {
+            var li = document.createElement('li');
+            li.className = 'int-file-item';
+            li.textContent = f.name + ' (' + (f.size / 1024).toFixed(0) + ' КБ)';
+            fileList.appendChild(li);
+        });
+    }
+    dropZone.addEventListener('click', function() { fileInput.click(); });
+    dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('over'); });
+    dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('over'); });
+    dropZone.addEventListener('drop', function(e) { e.preventDefault(); dropZone.classList.remove('over'); addFileNames(e.dataTransfer.files); });
+    fileInput.addEventListener('change', function() { addFileNames(fileInput.files); fileInput.value = ''; });
+
+    // ---------- 6. Контактное лицо ----------
+    var personList = document.getElementById('personList');
+    var personForm = document.getElementById('personForm');
+    var persons = [];
+
+    function renderPersons() {
+        personList.innerHTML = '';
+        if (persons.length === 0) {
+            personList.innerHTML = '<p class="int-note">Пока никого нет. Добавьте сотрудника, которому ассистент передаст сложные вопросы.</p>';
+        } else {
+            persons.forEach(function(p, i) {
+                var div = document.createElement('div');
+                div.className = 'int-person-row';
+                div.innerHTML =
+                    '<span class="int-avatar">' + esc((p.name || '?').trim().split(/\s+/).map(function(w){return w[0];}).slice(0,2).join('').toUpperCase()) + '</span>' +
+                    '<div class="int-person-info"><strong>' + esc(p.name) + '</strong><span>' + esc(p.role || 'Сотрудник') + (p.phone ? ' · ' + esc(p.phone) : '') + '</span></div>' +
+                    '<button type="button" class="btn btn-sm btn-outline" data-del="' + i + '">Удалить</button>';
+                div.querySelector('[data-del]').addEventListener('click', function() {
+                    persons.splice(i, 1);
+                    if (state.contactName === p.name) { state.contactName = ''; state.contactRole = ''; }
+                    renderPersons(); renderSummary();
+                });
+                personList.appendChild(div);
+            });
+        }
+    }
+    document.getElementById('personShowForm').addEventListener('click', function() { personForm.hidden = false; });
+    document.getElementById('personCancel').addEventListener('click', function() { personForm.hidden = true; });
+    document.getElementById('personAdd').addEventListener('click', function() {
+        var p = {
+            name: document.getElementById('pName').value.trim(),
+            role: document.getElementById('pRole').value.trim(),
+            phone: document.getElementById('pPhone').value.trim()
+        };
+        if (!p.name) return;
+        persons.push(p);
+        state.contactName = p.name;
+        state.contactRole = p.role;
+        personForm.hidden = true;
+        document.getElementById('pName').value = '';
+        document.getElementById('pRole').value = '';
+        document.getElementById('pPhone').value = '';
+        renderPersons(); renderSummary();
+    });
+    renderPersons();
+
+    // ---------- 7. Сводка / обучение ----------
+    document.getElementById('trainBtn').addEventListener('click', function() {
+        if (typeof showToast === 'function') showToast('Обучение запущено. Ассистент изучает новые данные...', 'success');
+    });
+    document.getElementById('resetBtn').addEventListener('click', function() {
+        state.name = state.sphere = state.desc = state.schedule = state.phone = state.asks = state.contactName = state.contactRole = '';
+        state.connectedCrm = [];
+        ['rName','rDesc','rSchedule','rPhone'].forEach(function(id){ document.getElementById(id).value = ''; });
+        document.getElementById('rSphere').value = '';
+        document.querySelectorAll('.int-crm-tile').forEach(function(t){ t.classList.remove('connected'); t.querySelector('.int-crm-btn').textContent = 'Подключить'; });
+        document.querySelectorAll('.int-opt').forEach(function(o){ o.classList.remove('active'); });
+        renderSummary();
+    });
+
+    renderSummary();
+})();
+</script>
+
+<style>
+.int-stack { display: flex; flex-direction: column; gap: 16px; max-width: 1080px; }
+
+.int-title { font-size: 18px; margin: 0 0 8px; color: #1c1c1f; }
+.int-hint { font-size: 14px; color: #6b6f76; margin: 0 0 14px; }
+.int-note { font-size: 13px; color: #8a8f98; margin-top: 12px; }
+
+/* Сегментный выбор */
+.int-seg { display: inline-flex; background: #f2f4f7; border-radius: 10px; padding: 4px; margin-bottom: 16px; gap: 4px; }
+.int-seg button { border: none; background: transparent; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; color: #6b6f76; cursor: pointer; }
+.int-seg button.active { background: #fff; color: #005FF9; box-shadow: 0 1px 3px rgba(0,0,0,0.12); font-weight: 600; }
+
+/* Тайлы CRM */
+.int-crm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.int-crm-tile { display: flex; align-items: center; justify-content: space-between; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px; }
+.int-crm-tile.connected { border-color: #cde6d3; background: #f4faf6; }
+.int-crm-name { font-weight: 700; color: #1c1c1f; }
+.int-src-cta { margin-top: 4px; }
+
+/* Разрешения на данные */
+.int-access { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e6e8eb; }
+.int-access-title { font-size: 15px; color: #1c1c1f; display: block; margin-bottom: 2px; }
+.int-access .int-hint { margin-bottom: 10px; }
+.int-access-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.int-access-item {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid #e6e8eb; border-radius: 10px;
+    padding: 10px 12px; font-size: 13px; color: #3c4043; cursor: pointer;
+}
+.int-access-item input { accent-color: #005FF9; }
+
+/* Для разработчиков */
+.int-dev { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e6e8eb; }
+.int-dev-title { font-size: 15px; color: #1c1c1f; display: block; margin-bottom: 2px; }
+.int-dev .int-hint { margin-bottom: 12px; }
+.int-dev-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.int-dev-row .text-input { flex: 1; min-width: 220px; }
+.int-dev-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Методы */
+.int-methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.int-method { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 6px; background: #fff; border: 1px solid #e6e8eb; border-radius: 12px; padding: 16px; cursor: pointer; transition: all .15s; }
+.int-method:hover { border-color: #bfe0ff; }
+.int-method.active { border-color: #005FF9; background: #f4f8ff; }
+.int-method-icon { font-size: 24px; }
+.int-method-name { font-weight: 700; color: #1c1c1f; }
+.int-method-desc { font-size: 13px; color: #6b6f76; }
+
+/* Опрос */
+.int-progress { height: 6px; background: #eef1f5; border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+.int-progress-fill { height: 100%; width: 0; background: #005FF9; transition: width .3s; }
+.int-question { font-size: 17px; font-weight: 600; color: #1c1c1f; margin-bottom: 14px; }
+.int-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.int-opt { border: 1px solid #e6e8eb; background: #fff; color: #3c4043; padding: 11px 14px; border-radius: 10px; font-size: 14px; cursor: pointer; text-align: left; }
+.int-opt:hover { border-color: #005FF9; }
+.int-opt.active { border-color: #005FF9; background: #e8f0fe; color: #005FF9; font-weight: 600; }
+.int-wizard-nav { display: flex; align-items: center; justify-content: space-between; }
+.int-wizard-count { color: #8a8f98; font-size: 13px; }
+
+/* Формы */
+.int-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+.int-form-grid label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3c4043; }
+.int-wide { grid-column: 1 / -1; }
+
+/* Файлы */
+.int-drop { border: 2px dashed #d0d5dd; border-radius: 12px; padding: 28px; text-align: center; color: #6b6f76; cursor: pointer; }
+.int-drop.over { border-color: #005FF9; background: #f4f8ff; }
+.int-drop-icon { font-size: 26px; margin-bottom: 6px; }
+.int-drop-link { color: #005FF9; font-weight: 600; }
+.int-file-list { margin: 12px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.int-file-item { font-size: 14px; color: #3c4043; background: #f7f9fc; border: 1px solid #e6e8eb; border-radius: 8px; padding: 8px 12px; }
+
+/* Контактные лица */
+.int-person-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+.int-person-row { display: flex; align-items: center; gap: 12px; border: 1px solid #e6e8eb; border-radius: 12px; padding: 12px 14px; }
+.int-avatar { width: 40px; height: 40px; border-radius: 50%; background: #005FF9; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+.int-person-info { flex: 1; display: flex; flex-direction: column; }
+.int-person-info strong { font-size: 15px; color: #1c1c1f; }
+.int-person-info span { font-size: 13px; color: #6b6f76; }
+.int-person-form { border-top: 1px dashed #e0e3e8; padding-top: 16px; margin-bottom: 12px; }
+
+/* Сводка */
+.int-know { border: 1px solid #e6e8eb; border-radius: 12px; padding: 6px 16px; margin-bottom: 16px; }
+.int-know-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f1f3; }
+.int-know-row:last-child { border-bottom: none; }
+.int-know-label { color: #8a8f98; font-size: 14px; }
+.int-know-value { color: #1c1c1f; font-weight: 600; font-size: 14px; text-align: right; }
+.int-summary-actions { display: flex; gap: 10px; }
+
+@media (max-width: 720px) {
+    .int-form-grid { grid-template-columns: 1fr; }
+    .int-seg { display: flex; }
+    .int-seg button { flex: 1; }
+}
+</style>
+
+    </main>
+
+
+    <!-- Контейнер уведомлений -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="../../static/js/alpine.min.js" defer></script>
+    <script src="../../static/js/chart.min.js"></script>
+    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/sidebar.js"></script>
+</body>
+</html>

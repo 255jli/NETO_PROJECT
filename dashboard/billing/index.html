@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Счёт — NETO</title>
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../static/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../static/fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: italic;
+            font-display: swap;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .demo-badge {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 4px 8px;
+            border: 1px solid #c9dcff;
+            border-radius: 4px;
+            background: #f0f4ff;
+            color: #315ea8;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+    <link rel="stylesheet" href="../../static/css/style_1.css">
+    <link rel="stylesheet" href="../../static/css/icons.css">
+    <link rel="stylesheet" href="../../static/css/style_2.css">
+    <link rel="stylesheet" href="../../static/css/style_3.css">
+    <link rel="stylesheet" href="../../static/css/sidebar.css">
+    <script src="../../static/js/data.js"></script>
+</head>
+<body>
+
+    <!-- Сайдбар + аватарка -->
+<aside class="sidebar" id="sidebar">
+    <a href="../onboarding/index.html" class="logo" title="Первые шаги">
+        <img src="../../static/img/logo_blue_neto.svg" alt="NETO">
+    </a>
+    <nav class="nav">
+        <a href="../overview/index.html" class="nav-item ">
+            <i class="icon-dashboard"></i><span class="nav-text"><span>Обзор</span></span>
+        </a>
+        <a href="../widget/index.html" class="nav-item ">
+            <i class="icon-chat-assistant"></i><span class="nav-text"><span>Виджет</span></span>
+        </a>
+        <a href="../integration/index.html" class="nav-item ">
+            <i class="icon-link"></i><span class="nav-text"><span>Интеграции</span></span>
+        </a>
+        <a href="../crm/index.html" class="nav-item ">
+            <i class="icon-users"></i><span class="nav-text"><span>CRM</span></span>
+        </a>
+        <a href="../parsing/index.html" class="nav-item ">
+            <i class="icon-search"></i><span class="nav-text"><span>Конкуренты</span></span>
+        </a>
+        <a href="../calendar/index.html" class="nav-item ">
+            <i class="icon-shield-check"></i><span class="nav-text"><span>Календарь</span></span>
+        </a>
+        <a href="../telephony/index.html" class="nav-item ">
+            <i class="icon-phone-outgoing"></i><span class="nav-text"><span>Телефон</span></span>
+        </a>
+        <!-- Добавлены пункты настроек и счёта -->
+        <a href="../settings/index.html" class="nav-item ">
+            <i class="icon-settings"></i><span class="nav-text"><span>Настройки</span></span>
+        </a>
+        <a href="index.html" class="nav-item active">
+            <i class="icon-billing"></i><span class="nav-text"><span>Счёт</span></span>
+        </a>
+        </nav>
+</aside>
+
+    <!-- Основной контент -->
+    <main class="content-wrapper">
+        
+<div class="page-header">
+    <h1>Счёт</h1>
+    <p>Баланс, расходы за текущий период и история платежей — без скрытых комиссий.</p>
+</div>
+
+<span class="demo-badge">Демонстрационный сценарий: Магазин мебели</span>
+
+<div class="bl-stack">
+
+    <!-- Баланс и пополнение -->
+    <section class="card">
+        <div class="bl-balance">
+            <div class="bl-balance-info">
+                <div class="bl-balance-label">Текущий баланс</div>
+                <div class="bl-balance-num">1 248,50 ₽</div>
+                <div class="bl-balance-hint">Хватит примерно на <strong>12 дней</strong> работы при текущей нагрузке.</div>
+            </div>
+            <div class="bl-balance-actions">
+                <button type="button" class="btn btn-primary" id="blTopUp">Пополнить</button>
+                <button type="button" class="btn btn-outline" id="blAutopay">Включить автоплатёж</button>
+            </div>
+        </div>
+        <div class="bl-balance-pills">
+            <span class="bl-pill">Списание сегодня: <strong>46,20 ₽</strong></span>
+            <span class="bl-pill">Лимит уведомления: <strong>500 ₽</strong></span>
+            <span class="bl-pill">Налог: НДС включён</span>
+        </div>
+    </section>
+
+    <!-- Расходы за период -->
+    <section class="card">
+        <div class="bl-head">
+            <div>
+                <h2 class="bl-title">Расходы за текущий месяц</h2>
+                <p class="bl-hint">Детализация списаний без абонентской платы — только фактическое потребление.</p>
+            </div>
+            <div class="bl-total">Итого: <strong>840,30 ₽</strong></div>
+        </div>
+        <table class="data-table" id="blTable">
+            <thead>
+                <tr>
+                    <th>Статья расхода</th>
+                    <th>Объём</th>
+                    <th>Тариф</th>
+                    <th>Сумма</th>
+                </tr>
+            </thead>
+            <tbody id="blBody"></tbody>
+        </table>
+        <div class="bl-footnote">Отчётный период закрывается автоматически в конце месяца. Счета доступны для скачивания ниже.</div>
+    </section>
+
+    <!-- История платежей -->
+    <section class="card">
+        <div class="bl-head">
+            <div>
+                <h2 class="bl-title">История платежей</h2>
+                <p class="bl-hint">Пополнения и списания за последние месяцы.</p>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" id="blDownload">Скачать выписку</button>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Операция</th>
+                    <th>Способ</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>01.08.2026</td><td>Пополнение баланса</td><td>Банковская карта ·· 4242</td><td>+2 000,00 ₽</td><td><span class="bl-status bl-status-ok">Оплачено</span></td></tr>
+                <tr><td>25.07.2026</td><td>Списание за июль</td><td>С баланса</td><td>−1 120,40 ₽</td><td><span class="bl-status bl-status-ok">Проведено</span></td></tr>
+                <tr><td>01.07.2026</td><td>Пополнение баланса</td><td>Банковская карта ·· 4242</td><td>+2 000,00 ₽</td><td><span class="bl-status bl-status-ok">Оплачено</span></td></tr>
+                <tr><td>20.06.2026</td><td>Возврат (тех. сбой)</td><td>На баланс</td><td>+35,00 ₽</td><td><span class="bl-status bl-status-mut">Возврат</span></td></tr>
+                <tr><td>01.06.2026</td><td>Пополнение баланса</td><td>Банковская карта ·· 4242</td><td>+1 500,00 ₽</td><td><span class="bl-status bl-status-ok">Оплачено</span></td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Способ оплаты -->
+    <section class="card">
+        <h2 class="bl-title">Способ оплаты</h2>
+        <div class="bl-pay-grid">
+            <div class="bl-pay">
+                <div class="bl-pay-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+                <div class="bl-pay-body">
+                    <strong>Банковская карта</strong>
+                    <span>Мир ···· 4242 · действует до 09/28</span>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" id="blEditCard">Изменить</button>
+            </div>
+            <div class="bl-pay">
+                <div class="bl-pay-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4a2 2 0 0 1 2-2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></div>
+                <div class="bl-pay-body">
+                    <strong>Электронная почта для чеков</strong>
+                    <span>finance@example.ru</span>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" id="blEditMail">Изменить</button>
+            </div>
+        </div>
+        <div class="bl-note">
+            Пополнения и списания выполняются в рублях. Платёжные документы формируются автоматически.
+        </div>
+    </section>
+
+</div>
+
+<script>
+(function () {
+    'use strict';
+
+    // Расходы за период
+    var rows = [
+        { item: 'Голосовой ассистент (минуты)', qty: '612 мин', rate: '0,50 ₽/мин', sum: '306,00 ₽' },
+        { item: 'Чат-виджет (текстовые запросы)', qty: '1 730 запр.', rate: '0,25 ₽/запр.', sum: '432,50 ₽' },
+        { item: 'Парсинг рынка (конкуренты)', qty: '3 источника', rate: 'фикс.', sum: '101,80 ₽' },
+        { item: 'Хранение записей', qty: 'до 12 мес.', rate: '0 ₽', sum: '0,00 ₽' }
+    ];
+    var body = document.getElementById('blBody');
+    rows.forEach(function (r) {
+        var tr = document.createElement('tr');
+        [r.item, r.qty, r.rate, r.sum].forEach(function (v) {
+            var td = document.createElement('td');
+            td.textContent = v;
+            tr.appendChild(td);
+        });
+        body.appendChild(tr);
+    });
+
+    var toast = function (msg, type) {
+        if (typeof showToast === 'function') { showToast(msg, type || 'success'); }
+    };
+
+    var topUp = document.getElementById('blTopUp');
+    topUp.addEventListener('click', function () {
+        toast('Окно пополнения откроется в платёжном сервисе (демо)', 'info');
+    });
+
+    var autopay = document.getElementById('blAutopay');
+    autopay.addEventListener('click', function () {
+        if (autopay.textContent.indexOf('Включить') !== -1) {
+            autopay.textContent = 'Выключить автоплатёж';
+            toast('Автоплатёж включён: при балансе ниже 500 ₽', 'success');
+        } else {
+            autopay.textContent = 'Включить автоплатёж';
+            toast('Автоплатёж отключён', 'success');
+        }
+    });
+
+    var dl = document.getElementById('blDownload');
+    dl.addEventListener('click', function () {
+        toast('Выписка за период сформирована (демо)', 'success');
+    });
+
+    var editCard = document.getElementById('blEditCard');
+    editCard.addEventListener('click', function () {
+        toast('Редактирование карты доступно в демо-режиме', 'info');
+    });
+
+    var editMail = document.getElementById('blEditMail');
+    editMail.addEventListener('click', function () {
+        toast('Редактирование email для чеков', 'info');
+    });
+})();
+</script>
+
+<style>
+.bl-stack { display: flex; flex-direction: column; gap: 16px; max-width: 1080px; }
+
+.bl-title { font-size: 18px; margin: 0 0 8px; color: #1c1c1f; }
+.bl-hint { font-size: 14px; color: #6b6f76; margin: 0; }
+
+.bl-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.bl-total { font-size: 15px; color: #1c1c1f; }
+.bl-total strong { color: #005FF9; font-size: 18px; }
+
+.bl-balance { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+.bl-balance-label { font-size: 13px; color: #6b6f76; }
+.bl-balance-num { font-size: 30px; font-weight: 800; color: #1c1c1f; margin: 4px 0; }
+.bl-balance-hint { font-size: 13px; color: #6b6f76; }
+.bl-balance-hint strong { color: #1c1c1f; }
+.bl-balance-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.bl-balance-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.bl-pill { font-size: 13px; color: #6b6f76; background: #f2f4f7; border-radius: 999px; padding: 6px 14px; }
+.bl-pill strong { color: #1c1c1f; }
+
+.bl-footnote { font-size: 12px; color: #8a8f98; margin-top: 12px; }
+
+.bl-status { font-size: 12px; font-weight: 600; border-radius: 999px; padding: 3px 10px; }
+.bl-status-ok { background: #e6f4eb; color: #1f8a4c; }
+.bl-status-mut { background: #f2f4f7; color: #6b6f76; }
+
+.bl-pay-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.bl-pay { display: flex; align-items: center; gap: 12px; border: 1px solid #e6e8eb; border-radius: 12px; padding: 12px 14px; }
+.bl-pay-icon { font-size: 22px; }
+.bl-pay-body { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.bl-pay-body strong { color: #1c1c1f; font-size: 14px; }
+.bl-pay-body span { color: #6b6f76; font-size: 13px; }
+
+.bl-note { font-size: 13px; color: #6b6f76; background: #fafbfc; border: 1px dashed #e0e3e8; border-radius: 10px; padding: 12px 14px; line-height: 1.5; }
+</style>
+
+    </main>
+
+
+    <!-- Контейнер уведомлений -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="../../static/js/alpine.min.js" defer></script>
+    <script src="../../static/js/chart.min.js"></script>
+    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/sidebar.js"></script>
+</body>
+</html>
