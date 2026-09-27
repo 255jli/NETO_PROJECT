@@ -70,10 +70,10 @@ def freeze_app():
 
     # Set configuration
     app.config['FREEZER_DESTINATION'] = os.path.join(os.getcwd(), 'build')
-    app.config['FREEZER_BASE_URL'] = ''
+    app.config['FREEZER_BASE_URL'] = '/NETO_PROJECT/'
     # Относительные ссылки вместо абсолютных /static/... — критично для GitHub Pages,
     # где сайт лежит в подкаталоге репозитория (иначе абсолютные пути ломаются).
-    app.config['FREEZER_RELATIVE_URLS'] = True
+    app.config['FREEZER_RELATIVE_URLS'] = False
     app.config['FREEZER_REMOVE_EXTRA_FILES'] = True
     app.config['FREEZER_IGNORE_MIMETYPE_WARNINGS'] = True
 
