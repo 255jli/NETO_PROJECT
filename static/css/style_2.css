@@ -1,0 +1,1913 @@
+/* static/css/style_2.css — дополнения для дашборда */
+
+/* Глобальный переключатель периода */
+.global-period-selector {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--yc-border-secondary, #edeef0);
+    margin-bottom: 16px;
+    background: white;
+    border-radius: 8px 8px 0 0;
+    padding-left: 16px;
+}
+
+.period-label {
+    font-weight: 500;
+    color: var(--yc-text-secondary);
+    font-size: 14px;
+}
+
+.period-options {
+    display: flex;
+    gap: 8px;
+}
+
+.period-options label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.1s;
+}
+
+.period-options label:hover {
+    background: #f0f4ff;
+}
+
+.period-options input[type="radio"] {
+    margin: 0;
+    accent-color: var(--yc-accent, #005FF9);
+}
+
+/* Контейнер групп */
+.dashboard-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+/* Группа */
+.group-container {
+    background: #f9fafc;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid var(--yc-border-secondary, #edeef0);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.group-container.drag-over {
+    border-color: var(--yc-accent, #005FF9);
+    box-shadow: 0 0 0 2px rgba(0,95,249,0.2);
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.group-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--yc-text-primary);
+    margin: 0;
+}
+
+.group-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.group-actions button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: var(--yc-text-secondary);
+}
+
+.group-actions button:hover {
+    background: #edeef0;
+}
+
+.group-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Ряд — колонка из заголовка и внутреннего flex-контейнера виджетов.
+   Модель «как в Яндекс.Метрике»: внутри ряда виджеты делят ширину пропорционально
+   своему весу (flex-grow) и растягиваются на равную высоту. */
+.row-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid transparent;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+/* Заголовок ряда (группировка связанных метрик) */
+.row-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--yc-text-secondary, #6b6f76);
+    padding: 2px 4px 0;
+    user-select: none;
+}
+
+/* Внутренний flex-контейнер: виджеты делят ширину по весу и заполняют её целиком. */
+.row-grid {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+    height: 320px;
+}
+
+.row-grid.dnd-target-row {
+    background: rgba(0, 95, 249, 0.03);
+    border-radius: 8px;
+}
+
+/* Разделитель между рядами — невидимая «зона наведения». Синяя линия и «+»
+   визуально проявляются только при наведении курсора в эту зону.
+   Клик по зоне создаёт новый ряд (см. createRowDivider). */
+.row-divider {
+    height: 18px;
+    margin: 0;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s;
+}
+/* Синяя линия видна только при наведении */
+.row-divider::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 3px; /* Соответствует высоте drop-indicator */
+    transform: translateY(-50%) scaleX(0);
+    background: #005FF9; /* Синий цвет */
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.15s, transform 0.15s;
+    pointer-events: none; /* Не мешает перетаскиванию */
+}
+.row-divider-plus {
+    position: relative;
+    z-index: 1;
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: #1c1c1f;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.15s, transform 0.15s;
+}
+.row-divider:hover { background: rgba(0, 95, 249, 0.08); }
+.row-divider:hover::before {
+    opacity: 1; /* Полная непрозрачность при наведении */
+    transform: translateY(-50%) scaleX(1);
+}
+.row-divider:hover .row-divider-plus {
+    opacity: 1;
+    transform: scale(1);
+    background: #005FF9;
+}
+
+.row-container.drag-over {
+    border-color: var(--yc-accent, #005FF9);
+    background: #f7f9fc;
+}
+
+.row-container.empty-row {
+    border: 1px dashed #dadce0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    color: var(--yc-text-secondary);
+    font-size: 14px;
+}
+
+/* Виджет */
+.widget {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: box-shadow 0.2s, opacity 0.2s;
+    border: 1px solid #f0f0f0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.widget:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+    min-height: 36px;
+}
+
+.widget-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1c1c1f;
+    margin: 0;
+    cursor: default;
+    flex: 1;
+    outline: none;
+    background: transparent;
+    border: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.widget-title.editing {
+    background: white;
+    border: 1px solid var(--yc-accent);
+    box-shadow: 0 0 0 2px rgba(0,95,249,0.2);
+}
+
+.widget-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.widget-actions button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--yc-text-secondary);
+}
+
+.widget-actions button:hover {
+    background: #e8e8e8;
+}
+
+.widget-content {
+    padding: 12px;
+    flex: 1;
+    min-height: 80px;
+    position: relative;
+    overflow: auto;
+}
+
+.add-widget-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    background-color: #fafafa;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    min-height: 100px;
+    font-size: 24px;
+    color: #999;
+}
+
+.add-widget-placeholder:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+.temp-add-widget-placeholder {
+    /* Наследуем стиль от основного плейсхолдера */
+    /* composes не работает в простом CSS, копируем стили */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    background-color: #fafafa;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 100px;
+    width: 100%; /* Занимает всю ширину своей ячейки */
+    margin: 8px 0;
+    /* Добавим визуальный эффект, чтобы показать, что он временный */
+    opacity: 0.8;
+    animation: pulse 1.5s infinite;
+}
+
+.temp-add-widget-placeholder:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* ===== Богатые контентные виджеты дашборда ===== */
+/* Крупнее базовые плашки и выше сетка рядов — содержимому просторнее. */
+.row-grid {
+    min-height: 150px;
+}
+.widget-content {
+    padding: 14px 16px 16px;
+    min-height: 100px;
+}
+
+/* Фиксированные высоты графиков: chart.js при maintainAspectRatio:false
+   берёт размер родителя, а без явной высоты canvas схлопывается. */
+.widget-content > canvas {
+    display: block;
+    width: 100% !important;
+    height: 200px !important;
+}
+.widget-content .donut-wrap {
+    height: 220px;
+}
+.widget-content .donut-wrap canvas {
+    height: 220px !important;
+}
+
+/* Мини-сводка-подсказка над графиком/списком (умные инсайты). */
+.widget-insight {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 12px;
+    color: var(--yc-text-secondary, #6b6f76);
+    background: #f7f9fc;
+    border: 1px solid #eef1f5;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+}
+.widget-insight strong {
+    color: #1c1c1f;
+    font-weight: 600;
+}
+.funnel-summary { margin-bottom: 12px; }
+
+/* Дельта к прошлому периоду (цветная метка +X% / -X%). */
+.delta {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 20px;
+    line-height: 1.6;
+}
+.delta-positive { background: #e6f4ea; color: #1e7e34; }
+.delta-negative { background: #fdecea; color: #c5221f; }
+.delta-neutral { background: #f0f1f3; color: #6b6f76; }
+
+/* KPI-карточки «Итоги». */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    align-items: stretch;
+    width: 100%;
+}
+.summary-item {
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
+    background: #fafbfc;
+}
+.summary-label,
+.summary-delta {
+    overflow-wrap: anywhere;
+}
+.summary-label {
+    color: var(--yc-text-secondary, #6b6f76);
+    font-size: 11px;
+    font-weight: 600;
+}
+.summary-delta {
+    margin-top: 6px;
+}
+.summary-card {
+    background: #fafbfc;
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
+    padding: 12px 14px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.summary-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.summary-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+}
+.summary-card h4 {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--yc-text-secondary, #6b6f76);
+}
+.summary-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1c1c1f;
+    margin-top: 6px;
+    letter-spacing: -0.01em;
+}
+
+/* Счётчик-плашка «Расходы». */
+.counter-widget {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    gap: 6px;
+    padding: 4px 0;
+}
+.counter-main { display: flex; flex-direction: column; gap: 8px; }
+.counter-value {
+    font-size: 30px;
+    font-weight: 800;
+    color: #1c1c1f;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+.counter-delta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--yc-text-secondary, #6b6f76);
+}
+.counter-period {
+    font-size: 12px;
+    color: var(--yc-text-secondary, #6b6f76);
+}
+
+/* Кольцевая диаграмма с центральной конверсией. */
+.donut-wrap {
+    position: relative;
+    height: 200px;
+}
+.donut-center {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+    z-index: 2;
+}
+.donut-center strong {
+    display: block;
+    font-size: 24px;
+    font-weight: 800;
+    color: #1c1c1f;
+}
+.donut-center span {
+    font-size: 11px;
+    color: var(--yc-text-secondary, #6b6f76);
+}
+
+/* Воронка конверсии. */
+.funnel-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.funnel-step {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.funnel-label {
+    font-size: 12px;
+    color: var(--yc-text-secondary, #6b6f76);
+    display: flex;
+    justify-content: space-between;
+}
+.funnel-pct { font-weight: 600; color: #1c1c1f; }
+.funnel-bar {
+    height: 26px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    min-width: 24px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    transition: width 0.4s ease;
+}
+
+/* Пустое состояние внутри виджета (нет данных за период). */
+.widget-empty-hint {
+    color: var(--yc-text-secondary, #999);
+    text-align: center;
+    padding: 24px 12px;
+    font-size: 13px;
+}
+
+/* Баннер при пустых данных на дашборде (демо-режим). */
+.empty-dashboard-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(90deg, rgba(0,95,249,0.06), rgba(0,95,249,0.02));
+    border: 1px solid rgba(0,95,249,0.18);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+}
+.banner-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--yc-accent, #005FF9);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.banner-icon svg { width: 22px; height: 22px; }
+.banner-text { display: flex; flex-direction: column; gap: 2px; }
+.banner-text strong { font-size: 14px; color: #1c1c1f; }
+.banner-text span { font-size: 13px; color: var(--yc-text-secondary, #6b6f76); line-height: 1.45; }
+
+/* Список последних клиентов. */
+.recent-clients-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.client-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 10px;
+    align-items: center;
+    background: #fafbfc;
+    border: 1px solid #eef1f5;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+.client-item:hover {
+    border-color: var(--yc-accent, #005FF9);
+    background: #f0f6ff;
+}
+.client-info strong { display: block; font-size: 13px; color: #1c1c1f; }
+.client-info span { font-size: 11px; color: var(--yc-text-secondary, #6b6f76); }
+.client-status.status { justify-self: end; }
+.client-service {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    color: var(--yc-text-secondary, #6b6f76);
+}
+
+/* Таблица последних звонков. */
+.calls-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.calls-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--yc-text-secondary, #6b6f76);
+    padding: 6px 8px;
+    border-bottom: 1px solid #eef1f5;
+}
+.calls-table td {
+    padding: 8px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #1c1c1f;
+}
+
+/* Мягкое пустое состояние таблицы и списков (нулевые данные). */
+.table-empty-cell {
+    text-align: center;
+    color: var(--yc-text-secondary, #6b6f76);
+    padding: 22px 8px !important;
+    font-size: 13px;
+}
+.client-item-empty,
+.top-client-empty {
+    cursor: default;
+    color: var(--yc-text-secondary, #6b6f76);
+}
+.client-item-empty:hover,
+.top-client-empty:hover {
+    border-color: #eef1f5;
+    background: #fafbfc;
+}
+.widget-empty-state.soft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 24px 12px;
+    text-align: center;
+    color: var(--yc-text-secondary, #6b6f76);
+    font-size: 13px;
+}
+.widget-empty-state.soft p { margin: 0; line-height: 1.5; }
+
+/* Топ клиентов по обращениям. */
+.top-clients-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.top-client-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: #fafbfc;
+    border: 1px solid #eef1f5;
+}
+.top-client-item .rank {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: var(--yc-accent, #005FF9);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.top-client-item:nth-child(2) .rank { background: #2E7D32; }
+.top-client-item:nth-child(3) .rank { background: #FF8F00; }
+.top-client-item .client-name { flex: 1; font-weight: 500; color: #1c1c1f; }
+.top-client-item .client-count { font-size: 12px; color: var(--yc-text-secondary, #6b6f76); }
+
+/* Мини-календарь. */
+.mini-calendar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    user-select: none;
+}
+.calendar-month {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c1c1f;
+    text-transform: capitalize;
+}
+.calendar-weekdays,
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+.calendar-weekdays span {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--yc-text-secondary, #6b6f76);
+    padding: 2px 0;
+}
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #1c1c1f;
+    border-radius: 6px;
+    cursor: default;
+}
+.calendar-day.empty { visibility: hidden; }
+.calendar-day.has-event {
+    background: rgba(0, 95, 249, 0.12);
+    color: var(--yc-accent, #005FF9);
+    font-weight: 700;
+}
+
+/* Адаптив: KPI-карточки схлопываются на узких экранах. */
+@media (max-width: 700px) {
+    .summary-grid { grid-template-columns: 1fr; }
+}
+
+/* Режим редактирования */
+.edit-mode .widget {
+    cursor: grab;
+    border-color: #005FF9;
+    border-width: 1px;
+}
+
+.edit-mode .widget.dragging {
+    opacity: 0.6;
+    transform: scale(0.98);
+    z-index: 1000;
+}
+
+.edit-mode .row-container {
+    border: 1px dashed transparent;
+}
+
+.edit-mode .row-container.drag-over {
+    border-color: #005FF9;
+    background: #f0f4ff;
+}
+
+/* Индикаторы вставки */
+.drop-indicator {
+    position: absolute;
+    z-index: 1001;
+    pointer-events: none;
+    background: #005FF9;
+}
+
+.drop-indicator-vertical {
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #005FF9;
+    border-radius: 2px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.drop-indicator-horizontal {
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #005FF9;
+    border-radius: 2px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+/* Кнопка добавления ряда */
+.add-row-btn {
+    display: none;
+    background: white;
+    color: var(--yc-accent);
+    border: 1px dashed var(--yc-accent);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 8px;
+    transition: background 0.2s;
+}
+
+.add-row-btn:hover {
+    background: #f0f4ff;
+}
+
+.edit-mode .add-row-btn {
+    display: block;
+}
+
+/* Библиотека виджетов */
+.widget-library-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.widget-type {
+    padding: 10px 12px;
+    background: #f8fafc;
+    border: 1px solid #edeef0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    text-align: center;
+    font-size: 14px;
+}
+
+.widget-type:hover {
+    background: #e8f0fe;
+    border-color: var(--yc-accent);
+}
+
+/* Модалки */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Белая плашка с краями — основа любой модалки. */
+.modal-content {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    padding: 24px;
+    max-width: 94vw;
+    border: 1px solid #e6e8eb;
+    position: relative;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+.modal-content .close-modal {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--yc-text-secondary, #6b6f76);
+    background: none;
+    border: none;
+}
+.modal-content .close-modal:hover { color: #1c1c1f; }
+
+/* ===== Стили для модалки добавления виджета ===== */
+.widget-types-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.widget-type-item {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.widget-type-item:hover {
+    background-color: #f0f0f0;
+}
+
+.widget-type-item h4 {
+    margin: 0 0 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Расстояние между иконкой и текстом */
+}
+
+.widget-type-item p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* ===== Стили для заголовка дашборда ===== */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.minimal-edit-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background-color: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: background-color 0.2s;
+}
+
+.minimal-edit-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.period-selector {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* ===== Анимация появления виджетов ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.widget-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* ===== Индикатор загрузки ===== */
+.loading-spinner::after {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #005FF9;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== Drag & Drop ===== */
+.widget.dragging {
+    opacity: 0.5;
+    border: 2px dashed #005FF9;
+}
+
+.widget.edit-mode {
+    cursor: move;
+    border: 2px solid #005FF9;
+}
+
+.widget-settings-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    padding: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.widget:hover .widget-settings-btn,
+.widget.edit-mode .widget-settings-btn {
+    opacity: 1;
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+/* ===== Графики фиксированной высоты ===== */
+.chart-wrapper {
+    position: relative;
+    height: 250px; /* фиксированная высота для всех графиков */
+}
+
+.chart-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* ===== Календарь (страница calendar.html) ===== */
+.calendar-page {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px); /* вся высота экрана минус отступы */
+    overflow: hidden; /* без внутреннего скролла */
+}
+
+.calendar-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+}
+
+.calendar-mode-switch {
+    display: flex;
+    gap: 16px;
+}
+
+.mode-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.calendar-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* важно для flex */
+}
+
+.dual-calendar {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    min-height: 0;
+    gap: 16px;
+}
+
+.calendar-half {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* чтобы не вылезало */
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    flex-shrink: 0;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: minmax(40px, 1fr); /* ячейки растягиваются */
+    gap: 4px;
+    flex: 1;
+    min-height: 0;
+}
+
+/* Новый стиль для календаря по часам */
+.calendar-grid-hours {
+    display: grid;
+    grid-template-columns: 1fr 3fr; /* Колонка для метки времени и колонка для содержимого */
+    grid-auto-rows: minmax(30px, 1fr); /* строки для каждого часа */
+    gap: 2px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto; /* Добавляем скролл для длинного списка часов */
+}
+
+.calendar-hour-slot {
+    border: 1px solid #EDEEF0;
+    border-radius: 6px;
+    padding: 4px;
+    background: #f8f9fa; /* Сlightly different background for time slots */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.calendar-hour-content {
+    border: 1px solid #EDEEF0;
+    border-radius: 6px;
+    padding: 4px;
+    position: relative;
+    background: #fff;
+    min-height: 40px; /* Минимальная высота для ячейки часа */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.hour-event {
+    background: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 4px;
+    padding: 2px 4px;
+    margin: 1px 0;
+    font-size: 11px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hour-event:hover {
+    background: #bbdefb;
+}
+
+.has-hour-events {
+    background-color: #f0f4ff;
+}
+
+.calendar-day {
+    border: 1px solid #EDEEF0;
+    border-radius: 6px;
+    padding: 4px;
+    cursor: pointer;
+    position: relative;
+    background: #fff;
+    transition: background 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 14px;
+}
+
+.calendar-day:hover {
+    background: #F8FAFC;
+}
+
+.calendar-day.empty {
+    border: none;
+    cursor: default;
+    background: transparent;
+}
+
+.calendar-day.has-events {
+    background: #F0F4FF;
+}
+
+/* Стили для текущего и выбранного дня в месячном календаре */
+.calendar-day.current-month-day {
+    background-color: #e3f2fd; /* Светло-синий фон */
+    border-color: #1976d2; /* Темно-синяя граница */
+    font-weight: bold;
+}
+
+.calendar-day.selected-day {
+    background-color: #fff3cd; /* Светло-жёлтый фон */
+    border-color: #ffc107; /* Жёлтая граница */
+    font-weight: bold;
+}
+
+.event-dots {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 3px;
+}
+
+.event-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #005FF9;
+}
+
+.placeholder-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Стиль для индикатора текущего времени */
+.current-time-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px; /* Высота линии */
+    background-color: red; /* Цвет линии */
+    z-index: 5; /* Поверх других элементов */
+    pointer-events: none; /* Чтобы не мешал кликам */
+}
+
+/* ===== Адаптив для двойного режима на мобильных ===== */
+@media (max-width: 900px) {
+    .dual-calendar {
+        flex-direction: column;
+    }
+    .calendar-page {
+        height: auto; /* разрешаем скролл на маленьких экранах */
+        overflow-y: auto;
+    }
+}
+
+/* ===== Улучшенный drag-and-drop с превью (dashboard-dnd.js) ===== */
+
+/* Запрещаем выделение текста во время перетаскивания */
+body.dnd-dragging,
+body.dnd-dragging * {
+    cursor: grabbing !important;
+    user-select: none !important;
+}
+
+/* Исходный виджет скрыт, пока перетаскивается */
+.widget.dnd-source {
+    opacity: 0.35;
+    transition: opacity 0.15s;
+}
+
+/* Плавающая копия виджета, следующая за курсором */
+.dnd-ghost {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    pointer-events: none;
+    will-change: transform;
+    opacity: 0.92;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    border: 1px solid var(--yc-accent, #005FF9);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* Контекстная подсветка связанных виджетов (одна категория) */
+.widget.dnd-related {
+    outline: 2px solid rgba(0, 95, 249, 0.55);
+    outline-offset: 2px;
+    background: rgba(0, 95, 249, 0.04);
+}
+
+.edit-mode .widget.dnd-related {
+    border-color: rgba(0, 95, 249, 0.55);
+}
+
+/* Подсказка режима редактирования */
+.dnd-hint {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0f4ff;
+    border: 1px solid #d4e2ff;
+    border-radius: 8px;
+    padding: 8px 14px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: var(--yc-text-secondary, #334155);
+}
+
+.dnd-hint[hidden] {
+    display: none;
+}
+
+.dnd-hint-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: #2E7D32;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+}
+
+/* В режиме редактирования виджеты выглядят «перетаскиваемыми» */
+.edit-mode .widget:not(.dnd-source) {
+    cursor: grab;
+}
+
+/* ===== Разделитель между виджетами внутри ряда =====
+   Невидимая вертикальная «зона наведения». Синяя линия и «+» проявляются
+   только при наведении курсора. Клик вставляет новый виджет в этот промежуток. */
+.widget-divider {
+    align-self: stretch;
+    flex: 0 0 18px;
+    min-width: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+.widget-divider::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 3px; /* Соответствует ширине drop-indicator */
+    transform: translateX(-50%) scaleY(0);
+    background: #005FF9; /* Синий цвет */
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.15s, transform 0.15s;
+    pointer-events: none; /* Не мешает перетаскиванию */
+}
+.widget-divider:hover { background: rgba(0, 95, 249, 0.08); }
+.widget-divider:hover::before {
+    opacity: 1; /* Полная непрозрачность при наведении */
+    transform: translateX(-50%) scaleY(1);
+}
+.widget-divider:hover .row-divider-plus {
+    opacity: 1;
+    transform: scale(1);
+    background: #005FF9;
+}
+
+/* ===== Стили перетаскивания (local Sortable) =====
+   Во время перетаскивания НЕ показываем копию виджета и НЕ задаём собственный
+   курсор — используется стандартный системный курсор. */
+body.sortable-dragging,
+body.sortable-dragging * {
+    cursor: default !important;
+    user-select: none !important;
+}
+
+/* Исходный виджет слегка подсвечивается, пока перетаскивается */
+.widget.sortable-chosen {
+    opacity: 0.45;
+    outline: 2px dashed rgba(0, 95, 249, 0.55);
+    outline-offset: 2px;
+}
+
+/* Индикатор будущей позиции при перемещении виджета.
+   Используем РОВНО ТУ ЖЕ вертикальную полосу, что и при создании нового
+   виджета (.widget-divider): тот же класс, та же синяя линия и кружок с «+».
+   Добавляем только fixed-позиционирование поверх дашборда и принудительную
+   видимость линии/кружка во время перетаскивания. */
+.sortable-indicator {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    flex: none;
+    transform: none;
+}
+/* Полоса всегда видна во время перетаскивания (без наведения). */
+.sortable-indicator::before {
+    opacity: 1;
+    transform: translateX(-50%) scaleY(1);
+}
+/* Кружок «+» всегда виден во время перетаскивания. */
+.sortable-indicator .row-divider-plus {
+    opacity: 1;
+    transform: scale(1);
+    background: var(--yc-accent, #005FF9);
+    box-shadow: 0 2px 8px rgba(0, 95, 249, 0.4);
+}
+
+/* ===== Модалка выбора виджета: поиск + категории =====
+   Плашка: до половины ширины и 3/4 высоты экрана, центрирована модалкой. */
+.widget-picker-modal,
+.widget-settings-modal {
+    width: min(50vw, 680px);
+    max-height: 75vh;
+    display: flex;
+    flex-direction: column;
+}
+.widget-settings-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(420px, 92vw);
+    max-height: none;
+    border-radius: 0;
+    padding: 28px 24px 24px;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+}
+#widget-modal.settings-drawer-open .widget-settings-modal {
+    transform: translateX(0);
+}
+#widget-modal {
+    background: transparent;
+    pointer-events: auto;
+}
+.widget-settings-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-right: 28px;
+}
+.widget-settings-panel-header h2 { margin: 0 0 2px; }
+.widget-settings-status {
+    flex: 0 0 auto;
+    color: #2e7d32;
+    background: #eaf6ed;
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+.widget-settings-modal .widget-settings-form {
+    max-height: calc(100vh - 120px);
+}
+.widget-picker-modal h2,
+.widget-settings-modal h2 {
+    margin: 0 0 2px;
+}
+.widget-picker-subtitle {
+    margin: 0 0 14px;
+    font-size: 13px;
+    color: var(--yc-text-secondary, #6b6f76);
+}
+
+/* SVG-иконки в карточках и табах */
+.widget-type-icon svg,
+.widget-picker-tab svg,
+.widget-settings-title svg,
+.widget-empty-icon svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    color: var(--yc-accent, #005FF9);
+}
+.widget-picker-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.widget-picker-tab svg { width: 15px; height: 15px; }
+
+.widget-picker-search {
+    margin-bottom: 12px;
+}
+.widget-picker-search-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    border: 1px solid #d0d3d9;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.widget-picker-search-input:focus {
+    border-color: var(--yc-accent, #005FF9);
+    box-shadow: 0 0 0 3px rgba(0, 95, 249, 0.15);
+}
+
+.widget-picker-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.widget-picker-tab {
+    padding: 6px 12px;
+    border: 1px solid #e6e8eb;
+    border-radius: 999px;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b6f76;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.widget-picker-tab:hover {
+    border-color: var(--yc-accent, #005FF9);
+    color: var(--yc-accent, #005FF9);
+}
+.widget-picker-tab.active {
+    background: var(--yc-accent, #005FF9);
+    border-color: var(--yc-accent, #005FF9);
+    color: #fff;
+}
+
+.widget-types-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    max-height: 46vh;
+    overflow-y: auto;
+    padding: 2px 2px 10px;
+}
+
+.widget-type-item {
+    background: #fff;
+    border: 1px solid #e6e8eb;
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.widget-type-item:hover {
+    border-color: var(--yc-accent, #005FF9);
+    box-shadow: 0 4px 12px rgba(0, 95, 249, 0.12);
+    transform: translateY(-1px);
+}
+
+.widget-type-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+.widget-type-icon {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0, 95, 249, 0.14), rgba(0, 95, 249, 0.06));
+    border: 1px solid rgba(0, 95, 249, 0.18);
+}
+.widget-type-item h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c1c1f;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.widget-type-item p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #8a8f98;
+    flex: 1;
+}
+
+.widget-type-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 2px;
+}
+.widget-type-badge {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #6b6f76;
+    background: #f2f3f5;
+    border-radius: 999px;
+    padding: 3px 8px;
+}
+.widget-type-add-btn {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 7px;
+    background: var(--yc-accent, #005FF9);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.widget-type-add-btn:hover {
+    background: #0045c2;
+}
+
+.widget-picker-empty {
+    grid-column: 1 / -1;
+    padding: 24px;
+    text-align: center;
+    color: #8a8f98;
+    font-size: 14px;
+}
+
+/* ===== Пустое состояние виджета (не настроен) ===== */
+.widget-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+    min-height: 120px;
+    color: var(--yc-text-secondary, #6b6f76);
+    text-align: center;
+}
+.widget-empty-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f2f5fb;
+    border: 1px dashed var(--yc-accent, #005FF9);
+}
+.widget-empty-icon svg { width: 22px; height: 22px; }
+.widget-empty-state p {
+    margin: 0;
+    font-size: 13px;
+}
+.widget-configure-btn {
+    padding: 7px 16px;
+    border: none;
+    border-radius: 8px;
+    background: var(--yc-accent, #005FF9);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.widget-configure-btn:hover {
+    background: #0045c2;
+}
+
+/* ===== Модалка настроек виджета ===== */
+.widget-settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+.widget-settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.widget-settings-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.widget-settings-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 16px;
+    border-top: 1px solid #edeef0;
+    margin-top: 4px;
+}
+.widget-range-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.widget-settings-range {
+    flex: 1;
+    min-width: 0;
+    accent-color: var(--yc-accent, #005FF9);
+    cursor: pointer;
+}
+.range-value {
+    flex-shrink: 0;
+    min-width: 34px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--yc-accent, #005FF9);
+    background: #f2f5fb;
+    border-radius: 7px;
+    padding: 3px 8px;
+}
+
+/* Кнопка «Восстановить» рядом с кнопкой режима редактирования */
+.dashboard-header .btn + .btn {
+    margin-left: 8px;
+}
+
+/* ===== Адаптивность дашборда =====
+   Виджеты в ряду делят ширину поровну, поэтому на узких экранах ряд просто
+   перестраивается в одну колонку, а разделители скрываются. */
+@media (max-width: 700px) {
+    .row-grid { flex-wrap: wrap; }
+    .row-grid > .widget,
+    .row-grid > .dnd-preview {
+        flex: 1 1 100% !important;
+    }
+    .row-grid > .widget-divider {
+        display: none;
+    }
+}
+
+/* ===== Формы настроек виджета ===== */
+.widget-settings-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 14px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--yc-text-secondary, #334155);
+    margin-bottom: 6px;
+}
+
+.widget-settings-select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d0d3d9;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 14px;
+    color: #1c1c1f;
+}
+
+.form-hint {
+    display: block;
+    font-size: 12px;
+    color: #8a8f98;
+    margin-top: 5px;
+}
+
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d0d3d9;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-group input[type="range"] {
+    width: calc(100% - 48px);
+    vertical-align: middle;
+    accent-color: #005FF9;
+}
+
+.range-value {
+    display: inline-block;
+    width: 40px;
+    text-align: center;
+    font-weight: 600;
+    color: #005FF9;
+}
+
+/* CRM Auto-Flow Styles */
+.auto-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid #EDEEF0;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1C1C1F;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--yc-text-secondary);
+    margin-bottom: 4px;
+}
+
+.stat-detail {
+    font-size: 12px;
+    color: #666670;
+}
+
+.client-flow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding: 16px 0;
+    border-bottom: 1px solid #EDEEF0;
+}
+
+.flow-step {
+    text-align: center;
+    flex: 1;
+}
+
+.flow-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.flow-text strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1C1C1F;
+    margin-bottom: 4px;
+}
+
+.flow-text span {
+    font-size: 12px;
+    color: #666670;
+}
+
+.pricing-note {
+    background: #F0F4FF;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    font-size: 14px;
+    color: #1C1C1F;
+    font-weight: 500;
+}
+
+/* ===== Адаптив для чата ===== */
+@media (max-width: 700px) {
+    .mode-segment { width: 100%; }
+    .mode-segment button { flex: 1; }
+    .table-toolbar { flex-direction: column; align-items: stretch; }
+    .chat-msg { max-width: 92%; }
+    .check-item { flex-wrap: wrap; }
+}
+
+/* SVG-иконки */
+.svg-icon {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.block-icon .svg-icon { width: 18px; height: 18px; }
+.cb-icon .svg-icon { width: 18px; height: 18px; }
+.tip-icon .svg-icon { width: 17px; height: 17px; }
+.stage-icon .svg-icon { width: 18px; height: 18px; }
+.check-indicator .svg-icon { width: 14px; height: 14px; }
+
+.btn .plus-ico {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.chat-ico {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+@media (max-width: 980px) {
+    .intel-grid { grid-template-columns: 1fr; }
+}
