@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Телефон — NETO</title>
+<meta name="theme-color" content="#315ea8">
+<style>
+@font-face{font-family:'Inter';src:url('/NETO_PROJECT/static/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:swap}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+</style>
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_1.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/icons.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_2.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_3.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/sidebar.css">
+<style>
+.tl{max-width:720px}
+.tl h1{font-size:24px;margin:0 0 8px;font-weight:700;color:#1c1c1f}
+.tl .lead{font-size:15px;color:#6b6f76;margin:0 0 24px;line-height:1.5}
+.block{background:#fff;border:1px solid #EDEEF0;border-radius:12px;padding:20px 22px;margin-bottom:14px}
+.block h2{font-size:16px;font-weight:600;margin:0 0 8px;color:#1c1c1f}
+.block p{font-size:14px;color:#6b6f76;margin:0 0 12px;line-height:1.45}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.step{background:#FAFBFC;border:1px solid #EDEEF0;border-radius:10px;padding:14px 12px;text-align:center}
+.step .n{width:24px;height:24px;border-radius:50%;background:#F0F4FF;color:#005FF9;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-bottom:6px}
+.step strong{display:block;font-size:13px;color:#1c1c1f;margin-bottom:2px}
+.step span{font-size:12px;color:#8a8f98}
+.nums{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.num{border:1px solid #EDEEF0;border-radius:10px;padding:14px 16px}
+.num .phone{font-size:16px;font-weight:600;color:#1c1c1f}
+.num .meta{font-size:12px;color:#8a8f98;margin-top:4px}
+.note{font-size:13px;color:#6b6f76;line-height:1.5;padding:14px 16px;background:#FAFBFC;border:1px solid #EDEEF0;border-radius:10px;margin-top:8px}
+.note strong{color:#1c1c1f}
+@media(max-width:640px){.steps,.nums{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<a href="/NETO_PROJECT/dashboard/onboarding/" class="logo" title="NETO">
+<img src="/NETO_PROJECT/static/img/logo_blue_neto.svg" alt="NETO">
+</a>
+<nav class="nav">
+<a href="/NETO_PROJECT/dashboard/overview/" class="nav-item" data-nav="overview">
+<i class="icon-dashboard"></i><span class="nav-text"><span>Обзор</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/onboarding/" class="nav-item" data-nav="onboarding">
+<i class="icon-dashboard"></i><span class="nav-text"><span>Первые шаги</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/telephony/" class="nav-item active" data-nav="telephony">
+<i class="icon-phone-outgoing"></i><span class="nav-text"><span>Телефон</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/widget/" class="nav-item" data-nav="widget">
+<i class="icon-chat-assistant"></i><span class="nav-text"><span>Виджет</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/voice/" class="nav-item" data-nav="voice">
+<i class="icon-voice-assistant"></i><span class="nav-text"><span>Голос</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/crm/" class="nav-item" data-nav="crm">
+<i class="icon-users"></i><span class="nav-text"><span>CRM</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/calendar/" class="nav-item" data-nav="calendar">
+<i class="icon-shield-check"></i><span class="nav-text"><span>Календарь</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/parsing/" class="nav-item" data-nav="parsing">
+<i class="icon-search"></i><span class="nav-text"><span>Конкуренты</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/integration/" class="nav-item" data-nav="integration">
+<i class="icon-link"></i><span class="nav-text"><span>Интеграции</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/settings/" class="nav-item" data-nav="settings">
+<i class="icon-settings"></i><span class="nav-text"><span>Настройки</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/billing/" class="nav-item" data-nav="billing">
+<i class="icon-billing"></i><span class="nav-text"><span>Счёт</span></span>
+</a>
+</nav>
+</aside>
+<main class="content-wrapper">
+<div class="tl">
+<h1>Телефон</h1>
+<p class="lead">Номер и канал связи — у оператора. Мы подключаем ИИ сверху. После активации робот принимает звонки и отправляет заявки.</p>
+
+<section class="block">
+<h2>Как подключается номер</h2>
+<p>Три шага. Без своей АТС и без замены оператора.</p>
+<div class="steps">
+<div class="step"><div class="n">1</div><strong>Выбор номера</strong><span>Городской или мобильный у оператора</span></div>
+<div class="step"><div class="n">2</div><strong>ИИ сверху</strong><span>Подключаем ассистента к каналу</span></div>
+<div class="step"><div class="n">3</div><strong>Заявки</strong><span>Уходят в мессенджер, таблицу или CRM</span></div>
+</div>
+</section>
+
+<section class="block">
+<h2>Примеры номеров</h2>
+<p>Макет. В рабочей версии — выбор и оплата через оператора.</p>
+<div class="nums">
+<div class="num"><div class="phone">+7 (495) …</div><div class="meta">Москва · от 990 ₽/мес</div></div>
+<div class="num"><div class="phone">+7 (812) …</div><div class="meta">Санкт-Петербург · от 990 ₽/мес</div></div>
+<div class="num"><div class="phone">+7 (343) …</div><div class="meta">Екатеринбург · от 790 ₽/мес</div></div>
+<div class="num"><div class="phone">+7 (383) …</div><div class="meta">Новосибирск · от 790 ₽/мес</div></div>
+</div>
+</section>
+
+<div class="note">
+<strong>Мы не строим свою АТС и не заменяем операторов.</strong> Вы берёте номер у оператора через интерфейс — ИИ подключается автоматически. Оплата связи — оператору; работа ассистента — по использованию.
+</div>
+</div>
+</main>
+<script src="/NETO_PROJECT/static/js/sidebar.js"></script>
+</body>
+</html>

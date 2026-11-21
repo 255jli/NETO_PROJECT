@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NETO — автоматизация входящих коммуникаций</title>
+<meta name="description" content="ИИ-ассистент принимает звонки и чаты. Работает поверх операторов связи. Заявки уходят в мессенджер, таблицу или CRM.">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_1.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/icons.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:auto;min-height:100%;overflow-y:auto;overflow-x:hidden}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#1C1C1F;line-height:1.55}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;border-bottom:1px solid #EDEEF0;background:#fff;position:sticky;top:0;z-index:10}
+.topbar-logo img{height:32px}
+.topbar-links{display:flex;align-items:center;gap:20px}
+.topbar-links a{color:#6b6f76;text-decoration:none;font-size:14px}
+.topbar-links a:hover{color:#005FF9}
+.hero{padding:56px 40px 64px;text-align:center}
+.hero h1{font-size:38px;font-weight:700;line-height:1.3;max-width:720px;margin:0 auto 16px}
+.hero h1 img.hero-logo{display:inline-block;height:0.88em;width:auto;vertical-align:-0.12em;margin-right:0.18em}
+.hero h1 .blue{color:#005FF9}
+.hero p{font-size:18px;color:#666670;max-width:520px;margin:0 auto 28px}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-actions .btn-primary,.hero-actions .btn-secondary{padding:12px 24px;font-size:15px}
+.section{max-width:1040px;margin:0 auto;padding:56px 24px}
+.section-head{text-align:center;margin-bottom:32px}
+.section-head h2{font-size:28px;font-weight:700}
+.section-head p{font-size:16px;color:#666670;margin-top:8px}
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.problem-card{border:1px solid #EDEEF0;border-radius:12px;padding:22px;background:#FAFBFC}
+.problem-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#9A6B2F;margin-bottom:6px}
+.problem-card h3{font-size:17px;color:#1C1C1F;margin-bottom:6px}
+.problem-desc{font-size:14px;color:#6b6f76}
+.problem-solve{margin-top:12px;padding-top:12px;border-top:1px solid #EDEEF0;font-size:14px;color:#1F8A4C}
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.how-card{border:1px solid #EDEEF0;border-radius:12px;padding:20px 16px;background:#fff;text-align:center}
+.how-num{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#F0F4FF;color:#005FF9;font-weight:700;font-size:14px;margin-bottom:10px}
+.how-card h3{font-size:15px;margin-bottom:6px}
+.how-card p{font-size:13px;color:#6b6f76;line-height:1.4}
+.how-note{margin-top:24px;text-align:center;font-size:14px;color:#6b6f76;max-width:640px;margin-left:auto;margin-right:auto}
+.how-note strong{color:#1C1C1F}
+.int-section{background:#FAFBFC;border-top:1px solid #EDEEF0;border-bottom:1px solid #EDEEF0}
+.int-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:900px;margin:0 auto}
+.int-card{background:#fff;border:1px solid #EDEEF0;border-radius:12px;padding:18px 14px;text-align:center}
+.int-icon{width:44px;height:44px;border-radius:10px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;color:#fff}
+.int-icon svg{width:22px;height:22px}
+.int-name{font-size:15px;font-weight:600}
+.int-cat{font-size:12px;color:#8a8f98;margin-top:2px}
+.int-note{text-align:center;margin-top:24px;font-size:14px;color:#6b6f76;max-width:560px;margin-left:auto;margin-right:auto}
+.cta-band{text-align:center;padding:56px 24px}
+.cta-band h2{font-size:26px;font-weight:700;margin-bottom:10px}
+.cta-band p{color:#666670;font-size:16px;margin-bottom:22px}
+.footer{padding:36px 24px;max-width:1040px;margin:0 auto;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.footer-brand img{height:40px}
+.footer-col{display:flex;flex-direction:column;gap:4px;font-size:13px;color:#6b6f76}
+.footer-col strong{color:#1C1C1F;margin-bottom:2px}
+.footer-bottom{max-width:1040px;margin:0 auto;padding:16px 24px 32px;border-top:1px solid #EDEEF0;font-size:12px;color:#8a8f98}
+@media(max-width:900px){.problem-grid,.how-grid,.int-grid{grid-template-columns:1fr 1fr}.hero h1{font-size:32px}.topbar{padding:14px 20px}}
+@media(max-width:560px){.problem-grid,.how-grid,.int-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="topbar">
+<a href="/" class="topbar-logo"><img src="/NETO_PROJECT/static/img/logo_black_neto.svg" alt="NETO"></a>
+<nav class="topbar-links">
+<a href="/NETO_PROJECT/documentation/">Документация</a>
+<a href="/NETO_PROJECT/dashboard/onboarding/" class="btn btn-outline btn-sm">Кабинет</a>
+</nav>
+</header>
+<section class="hero">
+<h1><img src="/NETO_PROJECT/static/img/words_black_neto.svg" alt="NETO" class="hero-logo"><span class="blue">принимает звонки</span><br>и записывает клиентов</h1>
+<p>ИИ-ассистент работает поверх операторов связи. Заявки уходят в мессенджер, таблицу или CRM.</p>
+<div class="hero-actions">
+<a href="/NETO_PROJECT/dashboard/onboarding/" class="btn btn-primary">Открыть прототип</a>
+<a href="#how" class="btn btn-secondary">Как устроен</a>
+</div>
+</section>
+<section class="section" id="problems">
+<div class="section-head">
+<h2>Три причины потери клиентов</h2>
+<p>И как NETO закрывает каждую.</p>
+</div>
+<div class="problem-grid">
+<article class="problem-card">
+<div class="problem-tag">Проблема</div>
+<h3>Пропущенные звонки</h3>
+<p class="problem-desc">25–35% входящих не обрабатываются — клиент уходит.</p>
+<div class="problem-solve">Ассистент отвечает 24/7.</div>
+</article>
+<article class="problem-card">
+<div class="problem-tag">Проблема</div>
+<h3>Типовые вопросы</h3>
+<p class="problem-desc">Сотрудники тратят время на одно и то же вместо продаж.</p>
+<div class="problem-solve">ИИ закрывает типовые запросы и оформляет заявку.</div>
+</article>
+<article class="problem-card">
+<div class="problem-tag">Проблема</div>
+<h3>Долгое внедрение</h3>
+<p class="problem-desc">Интеграции с CRM и телефонией часто тянутся неделями.</p>
+<div class="problem-solve">Подключение по шагам: авторизация → поля → проверка.</div>
+</article>
+</div>
+</section>
+<section class="section" id="how">
+<div class="section-head">
+<h2>Как это работает</h2>
+<p>Владелец подключает номер с ИИ сам — без IT-отдела.</p>
+</div>
+<div class="how-grid">
+<article class="how-card"><div class="how-num">1</div><h3>Регистрация</h3><p>Аккаунт за несколько минут</p></article>
+<article class="how-card"><div class="how-num">2</div><h3>Данные о компании</h3><p>Прайс, сайт или краткое описание</p></article>
+<article class="how-card"><div class="how-num">3</div><h3>Номер с ИИ</h3><p>Номер у оператора, ИИ — сверху</p></article>
+<article class="how-card"><div class="how-num">4</div><h3>Куда слать заявки</h3><p>Мессенджер, таблица или CRM</p></article>
+</div>
+<p class="how-note"><strong>Мы не строим свою АТС и не конкурируем с операторами.</strong> Берём их номера и канал, сверху — простой сервис для бизнеса.</p>
+</section>
+<section class="section int-section" id="integrations">
+<div class="section-head">
+<h2>Куда уходят заявки</h2>
+<p>После настройки заявки попадают в выбранный канал. Российские сервисы в приоритете.</p>
+</div>
+<div class="int-grid">
+<div class="int-card"><div class="int-icon" style="background:#E85D04"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="int-name">Пачка</div><div class="int-cat">Мессенджер</div></div>
+<div class="int-card"><div class="int-icon" style="background:#2563EB"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="int-name">Loop</div><div class="int-cat">Мессенджер</div></div>
+<div class="int-card"><div class="int-icon" style="background:#EAB308"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="int-name">Яндекс Таблицы</div><div class="int-cat">Таблицы</div></div>
+<div class="int-card"><div class="int-icon" style="background:#16A34A"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="int-name">amoCRM</div><div class="int-cat">CRM</div></div>
+<div class="int-card"><div class="int-icon" style="background:#0EA5E9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="int-name">Битрикс24</div><div class="int-cat">CRM</div></div>
+<div class="int-card"><div class="int-icon" style="background:#EA580C"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><div class="int-name">1С</div><div class="int-cat">Учёт</div></div>
+</div>
+<p class="int-note">Подключение: авторизация → сопоставление полей → проверка → активация. Всё в интерфейсе кабинета.</p>
+</section>
+<section class="cta-band">
+<h2>Прототип интерфейса</h2>
+<p>Пройдите путь нового пользователя: три шага до работающего ассистента.</p>
+<a href="/NETO_PROJECT/dashboard/onboarding/" class="btn btn-primary">Открыть кабинет</a>
+</section>
+<footer class="footer">
+<div class="footer-brand"><img src="/NETO_PROJECT/static/img/logo_black_neto.svg" alt="NETO"></div>
+<div class="footer-col"><strong>Контакты</strong><span>kerlencompany@ya.ru</span><span>neto@kerlencompany.ru</span></div>
+<div class="footer-col"><strong>Продукт</strong><a href="/NETO_PROJECT/dashboard/onboarding/" style="color:#6b6f76;text-decoration:none">Кабинет</a><a href="/NETO_PROJECT/documentation/" style="color:#6b6f76;text-decoration:none">Документация</a></div>
+</footer>
+<div class="footer-bottom">© 2026 NETO</div>
+</body>
+</html>
