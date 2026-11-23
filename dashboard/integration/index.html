@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Интеграции — NETO</title>
+<meta name="theme-color" content="#315ea8">
+<style>
+@font-face{font-family:'Inter';src:url('/NETO_PROJECT/static/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:swap}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+</style>
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_1.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/icons.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_2.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_3.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/sidebar.css">
+<style>
+.page-wrap{max-width:880px}
+.hero-block{margin-bottom:28px}
+.hero-block h1{font-size:24px;margin:0 0 8px;color:#1c1c1f;font-weight:700}
+.hero-block p{color:#6b6f76;font-size:15px;margin:0;line-height:1.5;max-width:640px}
+.block{background:#fff;border:1px solid #EDEEF0;border-radius:12px;padding:24px 26px;margin-bottom:16px}
+.block h2{font-size:17px;font-weight:600;margin:0 0 6px;color:#1c1c1f}
+.block .hint{font-size:14px;color:#6b6f76;margin:0 0 18px;line-height:1.45}
+.process{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:8px}
+.step{background:#FAFBFC;border:1px solid #EDEEF0;border-radius:10px;padding:14px 10px;text-align:center}
+.step .n{width:24px;height:24px;border-radius:50%;background:#F0F4FF;color:#005FF9;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-bottom:6px}
+.step .t{font-size:13px;font-weight:600;color:#1c1c1f}
+.step .d{font-size:12px;color:#8a8f98;margin-top:2px;line-height:1.3}
+.note{font-size:13px;color:#6b6f76;margin-top:14px;line-height:1.45;padding:12px 14px;background:#F8FAFC;border-radius:8px;border:1px solid #EDEEF0}
+.group{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#8a8f98;margin:18px 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.card{border:1px solid #EDEEF0;border-radius:10px;padding:14px 12px;text-align:center;background:#fff}
+.card .ico{width:40px;height:40px;border-radius:10px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;color:#fff}
+.card .ico svg{width:20px;height:20px}
+.card .name{font-size:13px;font-weight:600;color:#1c1c1f}
+.card .cat{font-size:11px;color:#8a8f98;margin-top:2px}
+.fields{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px}
+.fields span{font-size:13px;color:#3c4043}
+.know-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.know{border:1px solid #EDEEF0;border-radius:10px;padding:14px 16px;background:#FAFBFC}
+.know h3{font-size:14px;font-weight:600;margin:0 0 4px;color:#1c1c1f}
+.know p{font-size:12px;color:#6b6f76;margin:0 0 8px;line-height:1.4}
+.know textarea,.know input{width:100%;padding:8px 10px;border:1px solid #EDEEF0;border-radius:8px;font-size:13px;font-family:inherit;background:#fff;resize:vertical}
+.know textarea{min-height:64px}
+.know.full{grid-column:1/-1}
+@media(max-width:900px){.process{grid-template-columns:1fr 1fr}.know-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.process{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<a href="/NETO_PROJECT/dashboard/onboarding/" class="logo" title="NETO">
+<img src="/NETO_PROJECT/static/img/logo_blue_neto.svg" alt="NETO">
+</a>
+<nav class="nav">
+<a href="/NETO_PROJECT/dashboard/overview/" class="nav-item" data-nav="overview">
+<i class="icon-dashboard"></i><span class="nav-text"><span>Обзор</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/onboarding/" class="nav-item" data-nav="onboarding">
+<i class="icon-dashboard"></i><span class="nav-text"><span>Первые шаги</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/telephony/" class="nav-item" data-nav="telephony">
+<i class="icon-phone-outgoing"></i><span class="nav-text"><span>Телефон</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/widget/" class="nav-item" data-nav="widget">
+<i class="icon-chat-assistant"></i><span class="nav-text"><span>Виджет</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/voice/" class="nav-item" data-nav="voice">
+<i class="icon-voice-assistant"></i><span class="nav-text"><span>Голос</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/crm/" class="nav-item" data-nav="crm">
+<i class="icon-users"></i><span class="nav-text"><span>CRM</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/calendar/" class="nav-item" data-nav="calendar">
+<i class="icon-shield-check"></i><span class="nav-text"><span>Календарь</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/parsing/" class="nav-item" data-nav="parsing">
+<i class="icon-search"></i><span class="nav-text"><span>Конкуренты</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/integration/" class="nav-item active" data-nav="integration">
+<i class="icon-link"></i><span class="nav-text"><span>Интеграции</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/settings/" class="nav-item" data-nav="settings">
+<i class="icon-settings"></i><span class="nav-text"><span>Настройки</span></span>
+</a>
+<a href="/NETO_PROJECT/dashboard/billing/" class="nav-item" data-nav="billing">
+<i class="icon-billing"></i><span class="nav-text"><span>Счёт</span></span>
+</a>
+</nav>
+</aside>
+<main class="content-wrapper">
+<div class="page-wrap">
+<div class="hero-block">
+<h1>Интеграции и знания</h1>
+<p>Подключение внешних систем — по шагам. Параллельно вы описываете компанию: ценности, тон, правила — чтобы ассистент отвечал как ваш сотрудник.</p>
+</div>
+<section class="block">
+<h2>Как устроена интеграция</h2>
+<p class="hint">Не один клик. Пять понятных этапов, чтобы заявка попала в нужные поля.</p>
+<div class="process">
+<div class="step"><div class="n">1</div><div class="t">Сервис</div><div class="d">Мессенджер, таблица или CRM</div></div>
+<div class="step"><div class="n">2</div><div class="t">Авторизация</div><div class="d">Ключ API или вход</div></div>
+<div class="step"><div class="n">3</div><div class="t">Поля</div><div class="d">Имя, телефон, запрос</div></div>
+<div class="step"><div class="n">4</div><div class="t">Проверка</div><div class="d">Тестовая заявка</div></div>
+<div class="step"><div class="n">5</div><div class="t">Активация</div><div class="d">Заявки уходят сами</div></div>
+</div>
+<div class="note">После активации заявка создаётся в момент окончания разговора. При сбое — уведомление в кабинет.</div>
+<div class="group">Мессенджеры</div>
+<div class="grid">
+<div class="card"><div class="ico" style="background:#E85D04"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="name">Пачка</div><div class="cat">pachca.com</div></div>
+<div class="card"><div class="ico" style="background:#2563EB"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="name">Loop</div><div class="cat">loop.ru</div></div>
+</div>
+<div class="group">Таблицы</div>
+<div class="grid">
+<div class="card"><div class="ico" style="background:#EAB308"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="name">Яндекс Таблицы</div><div class="cat">tables.yandex.ru</div></div>
+<div class="card"><div class="ico" style="background:#16A34A"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="name">Google Таблицы</div><div class="cat">sheets.google.com</div></div>
+</div>
+<div class="group">CRM и учёт</div>
+<div class="grid">
+<div class="card"><div class="ico" style="background:#16A34A"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="name">amoCRM</div><div class="cat">amocrm.ru</div></div>
+<div class="card"><div class="ico" style="background:#0EA5E9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="name">Битрикс24</div><div class="cat">bitrix24.ru</div></div>
+<div class="card"><div class="ico" style="background:#EA580C"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><div class="name">1С</div><div class="cat">1c.ru</div></div>
+<div class="card"><div class="ico" style="background:#6366F1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="name">МойСклад</div><div class="cat">moysklad.ru</div></div>
+</div>
+<div class="group" style="margin-top:20px">Какие поля обычно передаются</div>
+<div class="fields">
+<span>· Имя клиента</span>
+<span>· Телефон</span>
+<span>· Услуга / запрос</span>
+<span>· Краткое резюме разговора</span>
+<span>· Время звонка</span>
+</div>
+</section>
+<section class="block">
+<h2>Цифровой двойник компании</h2>
+<p class="hint">Чем полнее описание, тем точнее ответы. Не только прайс — ценности, тон, границы.</p>
+<div class="know-grid">
+<div class="know">
+<h3>Ценности и принципы</h3>
+<p>Что важно в работе с клиентом.</p>
+<textarea placeholder="Честность в сроках и ценах. Не обещаем то, что не можем выполнить." readonly></textarea>
+</div>
+<div class="know">
+<h3>Тон общения</h3>
+<p>На «вы» или на «ты», коротко или развёрнуто.</p>
+<textarea placeholder="Спокойный, уважительный, на «вы». Без давления." readonly></textarea>
+</div>
+<div class="know">
+<h3>Правила и ограничения</h3>
+<p>Что нельзя обещать и о чём предупреждать.</p>
+<textarea placeholder="Скидки — только по согласованию. Возврат — по правилам на сайте." readonly></textarea>
+</div>
+<div class="know">
+<h3>Частые вопросы</h3>
+<p>Типовые возражения и ответы.</p>
+<textarea placeholder="«Сколько стоит?» — смотрим прайс, уточняем объём." readonly></textarea>
+</div>
+<div class="know full">
+<h3>История и позиционирование</h3>
+<p>Кто вы, чем отличаетесь, для кого работаете.</p>
+<textarea placeholder="Компания с 2018 года. Работаем с малым бизнесом. Сильная сторона — понятный процесс." readonly></textarea>
+</div>
+<div class="know">
+<h3>Логика цен</h3>
+<p>Как формируется цена, акции.</p>
+<textarea placeholder="Цена от объёма. Акции — только официальные." readonly></textarea>
+</div>
+<div class="know">
+<h3>Сложные случаи</h3>
+<p>Кому передать разговор.</p>
+<input type="text" placeholder="Имя, роль или условие передачи" readonly>
+</div>
+</div>
+<div class="note" style="margin-top:16px">В рабочей версии поля редактируются и сразу попадают в модель ассистента. Здесь — макет структуры знаний.</div>
+</section>
+</div>
+</main>
+<script src="/NETO_PROJECT/static/js/sidebar.js"></script>
+</body>
+</html>

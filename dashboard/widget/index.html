@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Настройка виджета — NETO</title>
+<meta name="theme-color" content="#315ea8">
+<style>
+@font-face{font-family:'Inter';src:url('/NETO_PROJECT/static/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:swap}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0}
+.page-header h1{font-size:24px;margin:0 0 6px;font-weight:700}
+.page-header p{font-size:14px;color:#6b6f76;margin:0 0 20px}
+.widget-settings-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:16px;margin-bottom:16px}
+@media(max-width:900px){.widget-settings-grid{grid-template-columns:1fr}}
+.settings-panel.card,.card{background:#fff;border:1px solid #EDEEF0;border-radius:12px;padding:20px}
+.settings-panel h2{font-size:16px;margin:0 0 8px}
+.panel-description{font-size:13px;color:#6b6f76;margin:0 0 16px}
+.setting-group{margin-bottom:16px}
+.setting-group label{display:block;font-weight:600;font-size:13px;margin-bottom:6px}
+.text-input,textarea.text-input,select.text-input{width:100%;padding:9px 12px;border:1px solid #EDEEF0;border-radius:8px;font:inherit;box-sizing:border-box}
+textarea.text-input{min-height:80px}
+.hint{font-size:12px;color:#8a8f98;margin-top:4px}
+.widget-tabs{display:flex;gap:2px;border-bottom:1px solid #e2e8f0;margin-bottom:16px}
+.widget-tab{padding:10px 16px;font-size:14px;font-weight:600;color:#64748b;background:0;border:0;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit}
+.widget-tab.active{color:#005FF9;border-bottom-color:#005FF9}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.radio-group{display:flex;flex-direction:column;gap:6px}
+.radio-option{display:flex;align-items:center;gap:6px;font-weight:400}
+.value-list div{padding:10px 0;border-bottom:1px solid #F0F1F3}
+.value-list strong{display:block;font-size:14px}
+.value-list span{font-size:12px;color:#8a8f98}
+.preview-note{margin-top:14px;padding:12px;background:#F0F4FF;border-radius:8px;font-size:13px}
+.preview-note strong{display:block;margin-bottom:4px}
+.embed-code-section{margin-top:16px}
+.code-block{background:#1C1C1F;color:#E8E8E8;padding:12px 14px;border-radius:8px;font-family:ui-monospace,monospace;font-size:12px;overflow-x:auto}
+.btn{padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;border:1px solid #E0E3E8;background:#fff;font-family:inherit}
+.btn-secondary{background:#005FF9;color:#fff;border-color:#005FF9}
+</style>
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_1.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/icons.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_2.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_3.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/sidebar.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+    <a href="/NETO_PROJECT/dashboard/onboarding/" class="logo" title="Первые шаги">
+        <img src="/NETO_PROJECT/static/img/logo_blue_neto.svg" alt="NETO">
+    </a>
+    <nav class="nav">
+        <a href="/NETO_PROJECT/dashboard/overview/" class="nav-item ">
+            <i class="icon-dashboard"></i><span class="nav-text"><span>Обзор</span></span>
+        </a>
+        <a href="/NETO_PROJECT/dashboard/widget/" class="nav-item active">
+            <i class="icon-chat-assistant"></i><span class="nav-text"><span>Виджет</span></span>
+        </a>
+        <a href="/NETO_PROJECT/dashboard/integration/" class="nav-item ">
+            <i class="icon-link"></i><span class="nav-text"><span>Интеграции</span></span>
+        </a>
+        <a href="/NETO_PROJECT/dashboard/crm/" class="nav-item ">
+            <i class="icon-users"></i><span class="nav-text"><span>CRM</span></span>
+        </a>
+        <a href="/NETO_PROJECT/dashboard/parsing/" class="nav-item ">
+            <i class="icon-search"></i><span class="nav-text"><span>Конкуренты</span></span>
+        </a>
+        <a href="/NETO_PROJECT/dashboard/calendar/" class="nav-item ">
+            <i class="icon-shield-check"></i><span class="nav-text"><span>Календарь</span></span>
+        </a>
+        <a href="/NETO_PROJECT/dashboard/telephony/" class="nav-item ">
+            <i class="icon-phone-outgoing"></i><span class="nav-text"><span>Телефон</span></span>
+        </a>
+        <a href="/NETO_PROJECT/dashboard/settings/" class="nav-item ">
+            <i class="icon-settings"></i><span class="nav-text"><span>Настройки</span></span>
+        </a>
+        <a href="/NETO_PROJECT/dashboard/billing/" class="nav-item ">
+            <i class="icon-billing"></i><span class="nav-text"><span>Счёт</span></span>
+        </a>
+    </nav>
+</aside>
+<main class="content-wrapper">
+<div class="page-header page-header-slim">
+<h1>Настройка виджета</h1>
+<p>Настройте AI-ассистента и проверьте сценарий в предварительном просмотре — кнопка чата внизу справа.</p>
+</div>
+<div class="widget-settings-grid">
+<div class="settings-panel card">
+<h2>Настройка ассистента</h2>
+<p class="panel-description">Ассистент приветствует посетителя, отвечает по базе знаний и сопровождает до заявки.</p>
+<div class="widget-tabs" role="tablist">
+<button type="button" class="widget-tab active" data-tab="behavior">Поведение</button>
+<button type="button" class="widget-tab" data-tab="appearance">Внешний вид</button>
+</div>
+<div class="tab-panel active" id="tab-behavior">
+<div class="setting-group"><label for="widgetName">Имя ассистента</label><input class="text-input" type="text" id="widgetName" value="Neto"></div>
+<div class="setting-group"><label for="widgetCompany">Компания или магазин</label><input class="text-input" type="text" id="widgetCompany" value="магазин мебели"></div>
+<div class="setting-group"><label for="widgetGreeting">Приветствие</label><textarea class="text-input" id="widgetGreeting" rows="3">Здравствуйте! Я помогу подобрать шкаф, ответить на вопросы и записать вас на консультацию.</textarea></div>
+<div class="setting-group"><label for="widgetScenario">Сценарий ассистента</label><textarea class="text-input" id="widgetScenario" rows="4">Представьтесь и уточните задачу клиента. Сначала ответьте по базе знаний, затем предложите следующий шаг. Если клиент готов — передайте заявку менеджеру.</textarea></div>
+<div class="setting-group"><label>Кто первым начинает диалог?</label>
+<div class="radio-group">
+<label class="radio-option"><input type="radio" name="firstResponder" value="bot" checked> Ассистент</label>
+<label class="radio-option"><input type="radio" name="firstResponder" value="client"> Клиент</label>
+</div></div>
+<div class="setting-group"><label for="conversationMode">Сценарий начала</label>
+<select class="text-input" id="conversationMode">
+<option value="proactive">Ассистент начинает</option>
+<option value="passive">Ожидание вопроса</option>
+<option value="messenger">Приветствие и быстрые кнопки</option>
+</select></div>
+<div class="setting-group"><label for="quickQuestions">Быстрые вопросы</label>
+<input class="text-input" type="text" id="quickQuestions" value="Цены и условия; Записаться; Что есть в наличии?"></div>
+<div class="setting-group"><label><input type="checkbox" id="collectLead" checked> Запрашивать контакты</label></div>
+<div class="setting-group"><label><input type="checkbox" id="showGreeting" checked> Показывать приветствие</label></div>
+</div>
+<div class="tab-panel" id="tab-appearance">
+<div class="setting-group"><label for="widgetPosition">Расположение</label>
+<select class="text-input" id="widgetPosition">
+<option value="bottom-right" selected>Снизу справа</option>
+<option value="bottom-left">Снизу слева</option>
+<option value="top-left">Сверху слева</option>
+<option value="top-right">Сверху справа</option>
+</select></div>
+<div class="setting-group"><label for="widgetColor">Цвет кнопки</label><input type="color" id="widgetColor" value="#005FF9"></div>
+<div class="setting-group"><label for="widgetSize">Размер кнопки (px)</label>
+<input type="range" id="widgetSize" min="40" max="120" value="72"> <span id="widgetSizeValue">72px</span></div>
+</div>
+</div>
+<div class="settings-panel card">
+<h2>Что получает клиент</h2>
+<p class="panel-description">Не теряет обращение, даже когда менеджер занят.</p>
+<div class="value-list">
+<div><strong>24/7</strong><span>отвечает на типовые вопросы</span></div>
+<div><strong>1 диалог</strong><span>от вопроса о товаре до записи</span></div>
+<div><strong>Одна строка кода</strong><span>готово сразу после вставки</span></div>
+</div>
+<div class="preview-note"><strong>Попробуйте виджет внизу справа</strong><span>Нажмите на кнопку чата или напишите: «Сколько стоит шкаф?»</span></div>
+</div>
+</div>
+<div class="card embed-code-section">
+<h3>Код для вставки на сайт</h3>
+<p class="panel-description">Скопируйте и вставьте на сайт:</p>
+<div class="code-block"><code id="embedCode"><script src="/NETO_PROJECT/static/js/widget.js"></script></code></div>
+<button type="button" class="btn btn-secondary" id="copyEmbedBtn" style="margin-top:10px">Копировать код</button>
+</div>
+</main>
+<div class="toast-container" id="toast-container"></div>
+<script src="/NETO_PROJECT/static/js/sidebar.js"></script>
+<script src="/NETO_PROJECT/static/js/main.js"></script>
+<script>
+(function(){
+  var STORAGE_KEY='neto_widget_config';
+  var WIDGET_SRC='/NETO_PROJECT/static/js/widget.js';
+  function getConfig(){
+    var fr=document.querySelector('input[name="firstResponder"]:checked');
+    return {
+      color:(document.getElementById('widgetColor').value||'#005FF9').replace('#',''),
+      size:document.getElementById('widgetSize').value||'72',
+      icon:'chat',
+      name:document.getElementById('widgetName').value.trim()||'Neto',
+      company:document.getElementById('widgetCompany').value.trim()||'магазин мебели',
+      greeting:document.getElementById('widgetGreeting').value.trim(),
+      scenario:document.getElementById('widgetScenario').value.trim(),
+      position:document.getElementById('widgetPosition').value||'bottom-right',
+      firstResponder:fr?fr.value:'bot',
+      showGreeting:document.getElementById('showGreeting').checked,
+      conversationMode:document.getElementById('conversationMode').value,
+      quickQuestions:document.getElementById('quickQuestions').value.trim(),
+      collectLead:document.getElementById('collectLead').checked
+    };
+  }
+  function renderPageWidget(){
+    var old=document.getElementById('neto-widget-container'); if(old) old.remove();
+    var st=document.getElementById('neto-widget-style'); if(st) st.remove();
+    var c=getConfig();
+    window.NETO_WIDGET_CONFIG=c;
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify(c));}catch(e){}
+    var s=document.createElement('script');
+    s.src=WIDGET_SRC+'?color='+c.color+'&size='+c.size+'&icon='+c.icon
+      +'&name='+encodeURIComponent(c.name)+'&company='+encodeURIComponent(c.company)
+      +'&greeting='+encodeURIComponent(c.greeting)+'&position='+c.position
+      +'&firstResponder='+c.firstResponder+'&showGreeting='+c.showGreeting
+      +'&scenario='+encodeURIComponent(c.scenario)+'&conversationMode='+c.conversationMode
+      +'&quickQuestions='+encodeURIComponent(c.quickQuestions)+'&collectLead='+c.collectLead
+      +'&v='+Date.now();
+    document.body.appendChild(s);
+  }
+  function updateEmbed(){
+    var c=getConfig();
+    document.getElementById('embedCode').textContent='<script src="'+WIDGET_SRC+'?color='+c.color+'&position='+c.position+'"><\/script>';
+  }
+  try{
+    var saved=JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if(saved){
+      if(saved.name) document.getElementById('widgetName').value=saved.name;
+      if(saved.company) document.getElementById('widgetCompany').value=saved.company;
+      if(saved.greeting) document.getElementById('widgetGreeting').value=saved.greeting;
+      if(saved.scenario) document.getElementById('widgetScenario').value=saved.scenario;
+      // позиция по умолчанию — справа (не тянем старый bottom-left из localStorage)
+      if(saved.position && saved.position !== 'bottom-left') document.getElementById('widgetPosition').value=saved.position;
+      else document.getElementById('widgetPosition').value='bottom-right';
+      if(saved.color) document.getElementById('widgetColor').value='#'+saved.color;
+      if(saved.size){document.getElementById('widgetSize').value=saved.size;document.getElementById('widgetSizeValue').textContent=saved.size+'px';}
+    }
+  }catch(e){}
+  document.getElementById('widgetSize').addEventListener('input',function(){
+    document.getElementById('widgetSizeValue').textContent=this.value+'px';
+  });
+  document.querySelectorAll('.widget-tab').forEach(function(tab){
+    tab.addEventListener('click',function(){
+      document.querySelectorAll('.widget-tab').forEach(function(t){t.classList.remove('active');});
+      this.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(function(p){
+        p.classList.toggle('active', p.id==='tab-'+tab.dataset.tab);
+      });
+    });
+  });
+  ['widgetName','widgetCompany','widgetGreeting','widgetScenario','widgetPosition','widgetColor','widgetSize','conversationMode','quickQuestions','collectLead','showGreeting'].forEach(function(id){
+    var el=document.getElementById(id); if(!el) return;
+    el.addEventListener('change',function(){updateEmbed();renderPageWidget();});
+  });
+  document.querySelectorAll('input[name="firstResponder"]').forEach(function(r){
+    r.addEventListener('change',function(){updateEmbed();renderPageWidget();});
+  });
+  document.getElementById('copyEmbedBtn').addEventListener('click',function(){
+    var code=document.getElementById('embedCode').textContent;
+    if(navigator.clipboard) navigator.clipboard.writeText(code);
+  });
+  updateEmbed();
+  renderPageWidget();
+})();
+</script>
+</body>
+</html>

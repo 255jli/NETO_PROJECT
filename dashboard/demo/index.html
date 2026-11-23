@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Демо пайплайна — NETO</title>
+<meta name="theme-color" content="#315ea8">
+<style>
+@font-face{font-family:'Inter';src:url('/NETO_PROJECT/static/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:swap}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8fafc;color:#1c1c1f;line-height:1.5}
+.page-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.page-sub{font-size:14px;color:#6b6f76;margin-bottom:20px}
+.demo-grid{display:grid;grid-template-columns:1fr 1.15fr 0.95fr;gap:14px;align-items:start}
+@media(max-width:1100px){.demo-grid{grid-template-columns:1fr}}
+.panel{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px 18px}
+.panel h2{font-size:14px;font-weight:600;margin-bottom:12px;color:#1c1c1f}
+.niche-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.niche-btn{padding:6px 12px;border:1px solid #E2E8F0;border-radius:8px;background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:#6b6f76}
+.niche-btn.active{border-color:#2563EB;color:#2563EB;background:#EFF6FF}
+.phrase-btn{display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:8px;border:1px solid #E2E8F0;border-radius:8px;background:#FAFBFC;font-size:13px;cursor:pointer;font-family:inherit;color:#1c1c1f;line-height:1.4}
+.phrase-btn:hover{border-color:#2563EB;background:#F0F6FF}
+.custom-row{display:flex;gap:8px;margin-top:10px}
+.custom-row input{flex:1;padding:9px 12px;border:1px solid #E2E8F0;border-radius:8px;font:inherit;font-size:13px}
+.btn-run{padding:9px 14px;background:#2563EB;color:#fff;border:none;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn-run:disabled{opacity:.55;cursor:default}
+.eq{display:flex;align-items:flex-end;gap:3px;height:36px;margin:12px 0 8px}
+.eq span{width:4px;background:#2563EB;border-radius:2px;height:8px;opacity:.35}
+.eq.playing span{animation:eq 0.45s ease-in-out infinite alternate}
+.eq.playing span:nth-child(2){animation-delay:.05s}.eq.playing span:nth-child(3){animation-delay:.1s}
+.eq.playing span:nth-child(4){animation-delay:.15s}.eq.playing span:nth-child(5){animation-delay:.08s}
+.eq.playing span:nth-child(6){animation-delay:.12s}.eq.playing span:nth-child(7){animation-delay:.03s}
+.eq.playing span:nth-child(8){animation-delay:.18s}
+@keyframes eq{from{height:6px;opacity:.3}to{height:28px;opacity:1}}
+.chat{display:flex;flex-direction:column;gap:8px;min-height:80px}
+.bubble{max-width:95%;padding:8px 12px;border-radius:10px;font-size:13px;border:1px solid #E2E8F0;background:#fff}
+.bubble.client{align-self:flex-start;background:#F8FAFC}
+.bubble.bot{align-self:flex-end;background:#EFF6FF;border-color:#BFDBFE}
+.steps{list-style:none;display:flex;flex-direction:column;gap:10px}
+.step{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid #E2E8F0;border-radius:10px;background:#FAFBFC;opacity:.45;transition:opacity .2s,border-color .2s,background .2s}
+.step.active{opacity:1;border-color:#BFDBFE;background:#EFF6FF}
+.step.done{opacity:1;border-color:#BBF7D0;background:#F0FDF4}
+.step-ico{width:22px;height:22px;border-radius:50%;border:2px solid #CBD5E1;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:1px}
+.step.active .step-ico{border-color:#2563EB;border-top-color:transparent;animation:spin .7s linear infinite}
+.step.done .step-ico{border-color:#16A34A;background:#16A34A;color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+.step-body{flex:1;min-width:0}
+.step-title{font-size:13px;font-weight:600}
+.step-meta{font-size:11px;color:#6b6f76;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;margin-top:2px}
+.step-detail{font-size:12px;color:#475569;margin-top:4px}
+.crm-card{border:1px solid #E2E8F0;border-radius:10px;padding:14px;background:#FAFBFC;opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s;pointer-events:none}
+.crm-card.show{opacity:1;transform:none;pointer-events:auto}
+.crm-row{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:6px 0;border-bottom:1px solid #F1F5F9}
+.crm-row:last-child{border-bottom:0}
+.crm-row span{color:#6b6f76}
+.crm-row strong{color:#1c1c1f;text-align:right}
+.status-ok{color:#16A34A!important}
+details.json-block{margin-top:12px;border:1px solid #E2E8F0;border-radius:10px;padding:10px 12px;background:#fff}
+details.json-block summary{cursor:pointer;font-size:12px;font-weight:600;color:#475569}
+details.json-block pre{margin-top:8px;font-size:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#0F172A;color:#E2E8F0;padding:12px;border-radius:8px;overflow:auto;white-space:pre-wrap}
+.metrics{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:700px){.metrics{grid-template-columns:1fr}}
+.metric{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:14px 16px}
+.metric .label{font-size:12px;color:#6b6f76;margin-bottom:4px}
+.metric .val{font-size:20px;font-weight:700;color:#1c1c1f}
+.metric .hint{font-size:11px;color:#8a8f98;margin-top:4px}
+</style>
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/style_1.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/icons.css">
+<link rel="stylesheet" href="/NETO_PROJECT/static/css/sidebar.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <a href="/NETO_PROJECT/dashboard/overview/" class="logo" title="NETO">
+    <img src="/NETO_PROJECT/static/img/logo_blue_neto.svg" alt="NETO">
+  </a>
+  <nav class="nav">
+    <a href="/NETO_PROJECT/dashboard/overview/" class="nav-item"><i class="icon-dashboard"></i><span class="nav-text"><span>Обзор</span></span></a>
+    <a href="/NETO_PROJECT/dashboard/widget/" class="nav-item"><i class="icon-chat-assistant"></i><span class="nav-text"><span>Виджет</span></span></a>
+    <a href="/NETO_PROJECT/dashboard/demo/" class="nav-item active"><i class="icon-voice-assistant"></i><span class="nav-text"><span>Демо ИИ</span></span></a>
+    <a href="/NETO_PROJECT/dashboard/integration/" class="nav-item"><i class="icon-link"></i><span class="nav-text"><span>Интеграции</span></span></a>
+    <a href="/NETO_PROJECT/dashboard/crm/" class="nav-item"><i class="icon-users"></i><span class="nav-text"><span>CRM</span></span></a>
+    <a href="/NETO_PROJECT/dashboard/parsing/" class="nav-item"><i class="icon-search"></i><span class="nav-text"><span>Конкуренты</span></span></a>
+    <a href="/NETO_PROJECT/dashboard/calendar/" class="nav-item"><i class="icon-shield-check"></i><span class="nav-text"><span>Календарь</span></span></a>
+    <a href="/NETO_PROJECT/dashboard/telephony/" class="nav-item"><i class="icon-phone-outgoing"></i><span class="nav-text"><span>Телефон</span></span></a>
+    <a href="/NETO_PROJECT/dashboard/settings/" class="nav-item"><i class="icon-settings"></i><span class="nav-text"><span>Настройки</span></span></a>
+    <a href="/NETO_PROJECT/dashboard/billing/" class="nav-item"><i class="icon-billing"></i><span class="nav-text"><span>Счёт</span></span></a>
+  </nav>
+</aside>
+<main class="content-wrapper">
+  <h1 class="page-title">Демо пайплайна</h1>
+  <p class="page-sub">Симуляция обработки входящего звонка: от аудио до заявки в CRM. Для защиты и презентации прототипа.</p>
+  <div class="demo-grid">
+    <section class="panel">
+      <h2>Входящий звонок</h2>
+      <div class="niche-tabs" id="nicheTabs">
+        <button type="button" class="niche-btn active" data-niche="sto">Автосервис</button>
+        <button type="button" class="niche-btn" data-niche="dent">Стоматология</button>
+        <button type="button" class="niche-btn" data-niche="school">Онлайн-школа</button>
+      </div>
+      <div id="phrases"></div>
+      <div class="custom-row">
+        <input type="text" id="customPhrase" placeholder="Свой вопрос клиента…">
+        <button type="button" class="btn-run" id="runBtn">Запустить</button>
+      </div>
+      <div class="eq" id="eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="chat" id="chat"></div>
+    </section>
+    <section class="panel">
+      <h2>Этапы обработки</h2>
+      <ul class="steps" id="steps">
+        <li class="step" data-i="0"><div class="step-ico"></div><div class="step-body"><div class="step-title">Анализ аудиопотока</div><div class="step-meta">0.00 → 0.25 с</div><div class="step-detail">Определение конца фразы, очистка шума канала 8 кГц</div></div></li>
+        <li class="step" data-i="1"><div class="step-ico"></div><div class="step-body"><div class="step-title">Распознавание речи</div><div class="step-meta">0.25 → 0.65 с · confidence 0.98</div><div class="step-detail" id="asrDetail">SaluteSpeech / Whisper → текст</div></div></li>
+        <li class="step" data-i="2"><div class="step-ico"></div><div class="step-body"><div class="step-title">Поиск по прайсу</div><div class="step-meta">0.65 → 0.95 с</div><div class="step-detail" id="nluDetail">Извлечение услуги, времени, проверка стоимости</div></div></li>
+        <li class="step" data-i="3"><div class="step-ico"></div><div class="step-body"><div class="step-title">Формирование ответа</div><div class="step-meta">0.95 → 1.30 с</div><div class="step-detail">GigaChat по правилам менеджера · 152-ФЗ</div></div></li>
+        <li class="step" data-i="4"><div class="step-ico"></div><div class="step-body"><div class="step-title">Синтез голоса</div><div class="step-meta">1.30 → 1.55 с · Total 1.55 с</div><div class="step-detail">Озвучивание ответа клиенту</div></div></li>
+      </ul>
+    </section>
+    <section class="panel">
+      <h2>Результат в CRM</h2>
+      <div class="crm-card" id="crmCard">
+        <div class="crm-row"><span>Услуга</span><strong id="crmService">—</strong></div>
+        <div class="crm-row"><span>Дата / время</span><strong id="crmWhen">—</strong></div>
+        <div class="crm-row"><span>Статус</span><strong class="status-ok" id="crmStatus">—</strong></div>
+        <div class="crm-row"><span>Канал</span><strong id="crmChannel">Вебхук → CRM</strong></div>
+      </div>
+      <details class="json-block"><summary>JSON для вебхука</summary><pre id="jsonOut">{}</pre></details>
+    </section>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="label">WER SaluteSpeech (шум)</div><div class="val">6.8%</div><div class="hint">Прототипные замеры, n≈25</div></div>
+    <div class="metric"><div class="label">WER Whisper (шум)</div><div class="val">11.2%</div><div class="hint">Тот же набор записей</div></div>
+    <div class="metric"><div class="label">Точность записи</div><div class="val">94.2%</div><div class="hint">Корректные сущности в заявке</div></div>
+  </div>
+</main>
+<script src="/NETO_PROJECT/static/js/sidebar.js"></script>
+<script>
+(function(){
+  var DATA = {
+    sto: {
+      phrases: ['Сколько стоит поменять масло на Киа Рио завтра в 15:00?','У меня стучит подвеска справа, когда можно подъехать?','Алло, это автосервис? А вы в воскресенье работаете?'],
+      reply: function(q){
+        if(/масло/i.test(q)) return {bot:'Замена масла на Kia Rio — от 3 500 ₽, слот завтра 15:00 свободен. Записать вас?', service:'Замена масла · Kia Rio', when:'Завтра, 15:00'};
+        if(/подвеск/i.test(q)) return {bot:'Диагностика подвески — от 1 200 ₽. Есть окна сегодня после 17:00 и завтра с 10:00. Какой вариант удобнее?', service:'Диагностика подвески', when:'Сегодня после 17:00'};
+        return {bot:'Работаем ежедневно 9:00–20:00, в воскресенье — до 16:00. Чем помочь?', service:'Консультация по графику', when:'—'};
+      }
+    },
+    dent: {
+      phrases: ['Болит зуб, можно сегодня к терапевту?','Сколько стоит профессиональная чистка?','Нужна запись на брекеты, есть места на этой неделе?'],
+      reply: function(q){
+        if(/болит|терапевт/i.test(q)) return {bot:'Есть окно у терапевта сегодня в 18:30. Записать вас?', service:'Приём терапевта', when:'Сегодня, 18:30'};
+        if(/чистк/i.test(q)) return {bot:'Профчистка — от 4 500 ₽. Ближайшее время — завтра 11:00.', service:'Профессиональная чистка', when:'Завтра, 11:00'};
+        return {bot:'На этой неделе есть консультация ортодонта в четверг 16:00. Подтвердить?', service:'Консультация ортодонта', when:'Четверг, 16:00'};
+      }
+    },
+    school: {
+      phrases: ['Сколько стоит курс Python для начинающих?','Можно ли перенести занятие на вечер?','Есть ли пробный урок бесплатно?'],
+      reply: function(q){
+        if(/python|курс/i.test(q)) return {bot:'Курс Python — 12 900 ₽ за 8 недель. Старт в понедельник. Оставить заявку?', service:'Курс Python', when:'Старт: понедельник'};
+        if(/перенес/i.test(q)) return {bot:'Да, можно перенести на вечерний слот 19:00–20:30. Подтвердите удобный день.', service:'Перенос занятия', when:'Вечер 19:00–20:30'};
+        return {bot:'Пробный урок — бесплатно, 40 минут. Записать на завтра 17:00?', service:'Пробный урок', when:'Завтра, 17:00'};
+      }
+    }
+  };
+  var niche = 'sto', running = false;
+  var phrasesEl = document.getElementById('phrases');
+  var chat = document.getElementById('chat');
+  var eq = document.getElementById('eq');
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var crmCard = document.getElementById('crmCard');
+  var runBtn = document.getElementById('runBtn');
+  function renderPhrases(){
+    phrasesEl.innerHTML = '';
+    DATA[niche].phrases.forEach(function(p){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'phrase-btn'; b.textContent = p;
+      b.addEventListener('click', function(){ start(p); });
+      phrasesEl.appendChild(b);
+    });
+  }
+  document.querySelectorAll('.niche-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.niche-btn').forEach(function(x){ x.classList.remove('active'); });
+      btn.classList.add('active'); niche = btn.dataset.niche; renderPhrases();
+    });
+  });
+  runBtn.addEventListener('click', function(){
+    var v = document.getElementById('customPhrase').value.trim();
+    if(v) start(v);
+  });
+  function resetUI(){
+    steps.forEach(function(s){ s.classList.remove('active','done'); s.querySelector('.step-ico').textContent=''; });
+    crmCard.classList.remove('show'); chat.innerHTML = ''; eq.classList.remove('playing');
+  }
+  function addBubble(who, text){
+    var d = document.createElement('div'); d.className = 'bubble ' + who; d.textContent = text; chat.appendChild(d);
+  }
+  function start(phrase){
+    if(running) return; running = true; runBtn.disabled = true; resetUI();
+    addBubble('client', phrase); eq.classList.add('playing');
+    document.getElementById('asrDetail').textContent = 'Распознано: «' + phrase.slice(0, 64) + (phrase.length>64?'…':'') + '»';
+    var result = DATA[niche].reply(phrase);
+    document.getElementById('nluDetail').textContent = result.service + (result.when && result.when!=='—' ? ' · ' + result.when : '');
+    var delays = [250, 400, 300, 350, 250], i = 0;
+    function next(){
+      if(i > 0){ steps[i-1].classList.remove('active'); steps[i-1].classList.add('done'); steps[i-1].querySelector('.step-ico').textContent = '✓'; }
+      if(i >= steps.length){
+        eq.classList.remove('playing'); addBubble('bot', result.bot);
+        document.getElementById('crmService').textContent = result.service;
+        document.getElementById('crmWhen').textContent = result.when;
+        document.getElementById('crmStatus').textContent = 'Записан в расписание';
+        document.getElementById('jsonOut').textContent = JSON.stringify({source:'voice',niche:niche,utterance:phrase,service:result.service,slot:result.when,status:'booked',latency_ms:1550}, null, 2);
+        crmCard.classList.add('show'); running = false; runBtn.disabled = false; return;
+      }
+      steps[i].classList.add('active'); var d = delays[i]; i++; setTimeout(next, d);
+    }
+    setTimeout(next, 200);
+  }
+  renderPhrases();
+})();
+</script>
+</body>
+</html>

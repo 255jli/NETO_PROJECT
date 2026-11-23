@@ -1,0 +1,22 @@
+/* Плоский стиль MVP: без теней у карточек и плашек */
+.widget,
+.widget:hover,
+.card,
+.summary-card,
+.summary-card:hover,
+.group-container,
+.row-container,
+.modal-content,
+.settings-panel,
+.problem-card,
+.how-card,
+.int-card,
+.panel,
+.metric {
+  box-shadow: none !important;
+  filter: none !important;
+}
+.group-container.drag-over,
+.row-container.drag-over {
+  box-shadow: none !important;
+}
